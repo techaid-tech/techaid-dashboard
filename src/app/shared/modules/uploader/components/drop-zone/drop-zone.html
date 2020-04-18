@@ -1,0 +1,22 @@
+<div #parent class="">
+    <div class="drop-target-overlay">
+        <div class="drop-overlay"
+            (dragenter)="dropEnter($event)"
+            (dragover)="dropEnter($event)"
+            (dragleave)="dropLeave($event)"
+            (drop)="dropFile($event)"
+        ></div>
+        <div class="drop-target-content"  (drop)="dropFile($event)">
+            <div class="drop-target-animated"></div>
+            <div class="drop-file-icon drive-sprite-aux-video"></div>
+            <div class="drop-file-icon drive-sprite-aux-image"></div>
+            <div class="drop-file-icon drive-sprite-aux-document"></div>
+            <div class="drop-file-icon drive-sprite-aux-drive-doc"></div>
+            <div class="drop-file-icon drive-sprite-aux-drive-doc-gray"></div>
+            <div class="drop-target-contents-text">
+                <div class="drop-target-contents-main-title">Incoming!</div>
+                <div class="drop-target-contents-main-text">Drop your files to upload them instantly</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+<div class="input-group" #parent (dragover)="dropEnter($event)" (dragenter)="dropEnter($event)"
+    (dragleave)="dropLeave($event)" (drop)="dropFile($event)" (click)="touched()" title="{{file_model?.name}}"
+    [class.disabled]="disabled">
+    <div class="input-group-prepend">
+        <label class="btn btn-primary btn-file" (click)="touched(); !disabled">
+            Browse...
+            <input (change)="fileChange($event)" #fileInput type="file" style="display: none;">
+        </label>
+    </div>
+
+    <div *ngIf="files.length < 1; else multiSelect" class="form-control flex-column"
+        (click)="!disabled && fileInput.click()" style="cursor: pointer;">
+        <div *ngIf="file_model.name; else placeholder" class="d-flex w-100 justify-content-between">
+            <div class="overflow">
+                <span *ngIf="file_model.name.length" title="{{file_model.name}}">
+                    <i class="fa {{file_model.class}}"></i> {{file_model.name}}</span>
+            </div>
+            <div class="" style="text-align: right; margin-right: 3px;">
+                <code><span class="badge " [ngClass]="{'badge-primary': file_model.size > 0, 'badge-danger': !file_model.size}">{{file_model.human_size}}</span></code>
+            </div>
+        </div>
+        <ng-template #placeholder>
+            <div class="overflow">
+                <span class="text-muted" title="{{to.placeholder}}" style="opacity: 0.5">{{to.placeholder}}</span>
+            </div>
+        </ng-template>
+    </div>
+
+    <ng-template #multiSelect>
+        <div class="selectable form-control">
+            <ng-select bindLabel="name" (change)="changeCycle('change', $event)" [searchable]="true"
+                [formControl]="ctrl" [placeholder]="to.placeholder" [items]="files" [clearable]="false">
+                <!-- [disabled]="f.widget?.key?.length > 0 && f.widget?.key != key"  -->
+                <!--
+                    <ng-option *ngFor="let f of files;" [value]="f">
+                        {{f.name}} | {{f.widget.key}} {{key}}
+                    </ng-option>
+                -->
+                <ng-template ng-label-tmp let-item="item">
+                    <code
+                        *ngIf="item?.widget?.human_size"><span class="badge" [ngClass]="{'badge-primary': item?.widget?.size, 'badge-danger': !item?.widget?.size}">{{item.widget.human_size}}</span></code>
+                    {{item.name}}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                    <div class="d-flex w-100 justify-content-between"
+                        [class.disabled]="item.widget?.key?.length > 0 && item.widget?.key != key">
+                        <div class="overflow">
+                            <span>
+                                <i class="fa fa-fw"
+                                    [ngClass]="{'fa-check-square-o': ctrl.value == item, 'fa-square': ctrl.value != item}"></i>
+                                {{item.name}}
+                            </span>
+                        </div>
+                        <div>
+                            <code><span class="badge badge-primary">{{item?.widget?.human_size}}</span></code>
+                        </div>
+                    </div>
+                </ng-template>
+            </ng-select>
+        </div>
+    </ng-template>
+
+    <div class="input-group-append">
+        <a href="#" type="button" class="btn input-group-text" (click)="!disabled && removeFile(); false;">
+            <i aria-hidden="true" class="fa fa-times"></i>
+        </a>
+        <a href="#" [placement]="to?.warning?.placement || 'bottom'" [title]="to?.warning?.title"
+            [popoverTitle]="to?.warning?.title" triggers="mouseenter:mouseleave" [ngbPopover]="warningTpl" type="button"
+            [class.disabled]="disabled" *ngIf="to?.warning?.message" class="btn btn-warning" (click)="accept(); false">
+            <i aria-hidden="true" class="fa fa-check-square-o"></i>
+        </a>
+        <a href="#" title="Retry Upload" *ngIf="to.retry" type="button" [class.disabled]="disabled"
+            class="btn btn-danger" (click)="to.retry(); false;">
+            <i aria-hidden="true" class="fa fa-refresh"></i>
+        </a>
+    </div>
+</div>
+
+<ng-template #warningTpl>
+    <div [innerHTML]="to?.warning?.message"></div>
+</ng-template>

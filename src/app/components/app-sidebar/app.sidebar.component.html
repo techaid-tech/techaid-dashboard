@@ -1,0 +1,106 @@
+<!-- Sidebar -->
+<ul *ngIf="user?.authenticated" 
+    class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#" routerLink="/">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Home</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item" routerLinkActive="active" *ngIf="user?.authorities['read:kits']">
+        <a class="nav-link" href="#" routerLink="/dashboard/devices">
+            <i class="fas fa-laptop-house"></i>    
+            <span>Devices</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider" *ngIf="user?.authorities['read:kits']">
+
+    <!-- Heading -->
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item" routerLinkActive="active" *ngIf="user?.authorities['read:volunteers']">
+        <a class="nav-link" href="#" routerLink="/dashboard/volunteers">
+            <i class="fa fa-fw fa-user"></i>
+            <span>Volunteers</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item" routerLinkActive="active" *ngIf="user?.authorities['read:donors']">
+        <a class="nav-link" href="#" routerLink="/dashboard/donors">
+            <i class="fa fa-fw fa-table"></i>
+            <span>Donors</span></a>
+    </li>
+    
+    <hr class="sidebar-divider my-0">
+
+    <div class="sidebar-heading mt-1">
+        Forms
+    </div>
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" routerLink="/donate">
+            <i class="fas fa-laptop-house"></i>
+            <span>Donations Form</span></a>
+    </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Nav Item - Charts -->
+    <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" routerLink="/volunteer">
+            <i class="fas fa-hands-helping"></i>
+            <span>Volunteer Form</span></a>
+    </li>
+    <hr class="sidebar-divider my-0">
+    <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" href="#" (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span></a>
+    </li>
+</ul>
+<ul *ngIf="!user?.authenticated"
+    class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#" routerLink="/">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Home</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" routerLink="/donate">
+            <i class="fas fa-laptop-house"></i>
+            <span>Donate Device</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" routerLink="/volunteer">
+            <i class="fas fa-hands-helping"></i>
+            <span>Volunteer</span></a>
+    </li>
+
+    <hr class="sidebar-divider my-0">
+    <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" href="#" (click)="login()">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span></a>
+    </li>
+</ul>
+<!-- End of Sidebar -->

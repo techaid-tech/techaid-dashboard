@@ -1,0 +1,68 @@
+.overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0px;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn:focus {
+    box-shadow: none;
+}
+
+.disabled, .disabled > div {
+    background-color: #f1f1f1;
+    opacity: 0.50;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
+
+.selectable.form-control {
+    padding: 0px;
+}
+
+.ng-dropdown-panel  {
+    min-width: 400px !important;
+}
+
+.ng-select .ng-select-container{
+   border-radius: 0px;
+   border: none; 
+}
+
+.file-enter {
+    padding: 5px;
+    border: 2px dashed #9F0053;
+}
+
+:host.ng-touched.ng-invalid {
+    border: 2px solid #9F0053;
+    border-radius: 5px;
+}

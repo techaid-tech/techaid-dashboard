@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppComponent renders markup to snapshot 1`] = `
+<app-root
+  actions={[Function Actions]}
+  store={[Function Store]}
+  toastr={[Function ToastrService]}
+>
+  <app-header
+    _nghost-c1=""
+  >
+    <nav
+      _ngcontent-c1=""
+      class="navbar navbar-expand-lg navbar-light fixed-top bg-white nav-border"
+    >
+      <div
+        _ngcontent-c1=""
+        class="container-fluid"
+      >
+        <a
+          _ngcontent-c1=""
+          class="navbar-brand"
+        >
+          <img
+            _ngcontent-c1=""
+            alt=""
+            src="assets/logo.jpg"
+            width="200px"
+          />
+        </a>
+        <span
+          _ngcontent-c1=""
+        >
+          <sup
+            _ngcontent-c1=""
+            class="text-muted"
+          >
+            v
+          </sup>
+        </span>
+        <button
+          _ngcontent-c1=""
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          class="navbar-toggler"
+          data-target="#navbarNavAltMarkup"
+          data-toggle="collapse"
+          type="button"
+        >
+          <span
+            _ngcontent-c1=""
+            class="navbar-toggler-icon"
+          />
+          _ 
+        </button>
+        <div
+          _ngcontent-c1=""
+          class="collapse navbar-collapse"
+        >
+          <ul
+            _ngcontent-c1=""
+            class="navbar-nav mr-auto"
+          />
+          <div
+            _ngcontent-c1=""
+            class="navbar-nav"
+          >
+            
+            
+          </div>
+        </div>
+      </div>
+    </nav>
+  </app-header><ng-progress
+    color="#FDB918"
+  /><ng-progress
+    color="#FDB918"
+    id="root-http"
+  /><div
+    class="root-container"
+  >
+    <router-outlet />
+  </div>
+</app-root>
+`;

@@ -1,0 +1,114 @@
+<!-- Topbar -->
+<nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
+
+    <!-- Sidebar Toggle (Topbar) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" (click)="toggleSideBar()">
+        <i class="fa fa-bars"></i>
+    </button>
+    <!-- Topbar Search -->
+    <form *ngIf="user?.authenticated" (ngSubmit)="postSearch(srch.value)"
+        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="input-group">
+            <input #srch type="text" class="form-control bg-light border-0 small srch" placeholder="Search for..."
+                aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button *ngIf="srch.value.length" class="btn btn-info" (click)="srch.value = ''; postSearch('');"
+                    type="button">
+                    <i class="fas fa-times fa-sm"></i>
+                </button>
+                <button class="btn btn-primary" type="">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto" *ngIf="user?.authenticated">
+
+        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+        <li class="nav-item dropdown no-arrow d-sm-none">
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+            </a>
+            <!-- Dropdown - Messages -->
+            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                aria-labelledby="searchDropdown">
+                <form (ngSubmit)="postSearch(searchQuery.value)" class="form-inline mr-auto w-100 navbar-search">
+                    <div class="input-group">
+                        <input #searchQuery type="text" class="form-control bg-light border-0 small"
+                            placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+        <div class="topbar-divider d-none d-sm-block"></div>
+        <!-- Nav Item - User Information -->
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{user.name}}</span>
+                <img *ngIf="user?.picture?.length" class="img-profile rounded-circle" [src]="user.picture">
+                <app-initial *ngIf="!user?.picture?.length" [name]="user.name || 'Me'" width="40" height="40"></app-initial>
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#" routerLink="/dashboard/users" *ngIf="user?.authorities['read:users']">
+                    <i class="fas fa-user-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Manage Users
+                </a>
+                <a class="dropdown-item" href="#" routerLink="/dashboard/roles" *ngIf="user?.authorities['read:users']">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Manage Roles
+                </a>
+                <div class="dropdown-divider" *ngIf="user?.authorities['read:users']"></div>
+                <!--
+                <a class="dropdown-item" href="/voyager">
+                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                    GraphQL Voyager
+                </a>
+                <div class="dropdown-divider"></div> -->
+                <a class="dropdown-item" href="#" (click)="logout()" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Logout
+                </a>
+            </div>
+        </li>
+    </ul>
+    <p *ngIf="!user?.authenticated"><strong>Covid TechAid Lambeth</strong></p>
+</nav>
+<!-- End of Topbar -->
+<div class="nav-scroller bg-white box-shadow">
+    <nav class="nav nav-underline">
+        <a class="nav-link"  routerLinkActive="active" href="#" routerLink="/">
+            <i class="fas fa-laugh-wink"></i>
+            Home
+        </a>
+        <a class="nav-link" href="#"  routerLinkActive="active" routerLink="/donate">
+            <i class="fas fa-laptop-house"></i>
+            Donate Device
+        </a>
+        <a class="nav-link" href="#"  routerLinkActive="active" routerLink="/volunteer">
+            <i class="fas fa-hands-helping"></i>
+            Volunteer
+        </a>
+        <a class="nav-link" href="/faqs"  routerLinkActive="active">
+            <i class="fas fa-question-circle"></i>    
+                FAQs
+        </a>
+        <a class="nav-link" href="#"  routerLinkActive="active" (click)="login()" *ngIf="!user?.authenticated">
+            <i class="fas fa-sign-in-alt"></i>
+            Login
+        </a>
+        <a class="nav-link" href="#"  routerLinkActive="active" (click)="logout()" *ngIf="user?.authenticated">
+            <i class="fas fa-sign-out-alt text-gray-400"></i>    
+             Logout
+        </a>
+    </nav>
+</div>
+<div class="mb-3"></div>

@@ -1,0 +1,12 @@
+version: "3.5"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: streatech-ui
+    image: streatech-ui
+    ports:
+      - 8000:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/server.conf

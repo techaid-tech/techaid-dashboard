@@ -1,0 +1,123 @@
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-12 mb-4">
+        <!-- Project Card Example -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#" [routerLink]="['../']">Donors</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ entityName }}</li>
+            </ol>
+        </nav>
+
+        <ngb-tabset>
+            <ngb-tab title="Devices">
+                <ng-template ngbTabContent>
+                    <div class="card shadow mb-4 mt-1">
+                        <div class="card-body">
+                            <div class="w-100">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-bordered table-md"
+                                         style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Model</th>
+                                                <th>Updated</th>
+                                                <th>Age</th>
+                                                <th>Type</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let dt of model.kits">
+                                                <td>
+                                                        <a href="#" [routerLink]="['./', dt.id]">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        </a>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <div class="d-flex flex-column">
+                                                            <div>
+                                                                <a *ngIf="dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.model }}</a>
+                                                                <a *ngIf="!dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.location }}</a>
+                                                            </div>
+                                                            <div *ngIf="dt.model.length"><small>{{ dt.location }}</small></div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ dt.updatedAt | timeAgo}}</td>
+                                                <td>{{ ages[dt.age] }}</td>
+                                                <td>{{ dt.type}}</td>
+                                                <td>{{ dt.status }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Details">
+                <ng-template ngbTabContent>
+                    <div class="card shadow mb-4 mt-1">
+                        <div class="card-header py-3">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">{{entityName}}</h6>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form [formGroup]="form">
+                                <formly-form [options]="options" (ngSubmit)="form.valid && updateEntity(form.value)"
+                                    [form]="form" [model]="model" [fields]="fields">
+                                </formly-form>
+                                <button style="width: 150px" [disabled]="form.invalid" (click)="updateEntity(form.value)"
+                                    type="submit" class="btn btn-info btn-sm p-2">
+                                    <small>Save</small>
+                                </button>
+                            </form>
+
+                            <div class="delete-api mt-5 ">
+                                <h3>Danger Zone</h3>
+                                <div class="border-bottom-danger card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4>Delete Donor</h4>
+                                                <p class="text-muted">The donor will be removed, this action is not reversable</p>
+                                            </div>
+                                            <div>
+                                                <button type="submit" (click)="modal(confirmDelete);"
+                                                    class="btn btn-danger btn-sm">
+                                                    <small>DELETE</small>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </div>
+</div>
+
+<ng-template #confirmDelete let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you absolutely sure?</h4>
+    </div>
+    <div class="modal-body">
+        <small>
+            <p>Are you really sure you want to delete "<strong>{{entityName}}</strong>"? This cannot be undone!</p>
+        </small>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light btn-sm" (click)="c('Close click')">CANCEL</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="deleteEntity(); c('Close click')">YES, DELETE</button>
+    </div>
+</ng-template>

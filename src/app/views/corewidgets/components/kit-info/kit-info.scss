@@ -1,0 +1,38 @@
+.dashboard-container {
+    margin-top: 15%;
+}
+
+.no-data-available {
+   text-align: center;
+}
+
+.dataTables_empty {
+    display: none;
+}
+
+.modal-title{
+    font-size: 0.9em;
+}
+
+form {
+    font-size: 0.9em;
+}
+
+.delete-api {
+    .card {
+        border: 1px solid red;
+    }
+
+    h3 {
+        font-size: 1em;
+        color: #333333;
+        font-weight: bold;
+    }
+
+    h4, p {
+        color: red;
+        font-size: 0.9em;
+    }
+}
+
+

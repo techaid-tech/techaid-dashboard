@@ -1,0 +1,48 @@
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-12 mb-4">
+        <!-- Project Card Example -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard/roles']">Roles</a></li>
+                <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard/users']">Users</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ userName }}</li>
+            </ol>
+        </nav>
+
+        <ngb-tabset>
+            <ngb-tab title="Roles">
+                    <ng-template ngbTabContent>
+                        <div class="mt-1">
+                            <user-roles [userId]="userId"></user-roles>
+                        </div>
+                    </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Permissions">
+                <ng-template ngbTabContent>
+                    <div class="mt-1">
+                        <user-permissions [userId]="userId"></user-permissions>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </div>
+</div>
+
+<ng-template #confirmDelete let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you absolutely sure?</h4>
+    </div>
+    <div class="modal-body">
+        <small>
+            <p>Are you really sure you want to delete "<strong>{{model.email}}</strong>"? This cannot be undone!</p>
+        </small>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="c('Close click')">CANCEL</button>
+        <button type="button" class="btn btn-danger" (click)="deleteUser(); c('Close click')">YES, DELETE
+            IT</button>
+    </div>
+</ng-template>
