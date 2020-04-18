@@ -220,7 +220,7 @@ export class KitIndexComponent {
         label: "Make or model (if known)",
         rows: 2,
         placeholder: "",
-        required: false
+        required: true
       }
     },
     {

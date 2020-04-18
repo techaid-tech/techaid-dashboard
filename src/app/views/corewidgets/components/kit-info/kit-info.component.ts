@@ -287,7 +287,7 @@ export class KitInfoComponent {
         label: "Make or model (if known)",
         rows: 2,
         placeholder: "",
-        required: false
+        required: true
       }
     },
     {
