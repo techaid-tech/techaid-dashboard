@@ -9,8 +9,10 @@ ECR_REGION := us-east-1
 
 all: release
 
-build:
+compile:
 	npm run build
+
+build:
 	docker build --rm --force-rm -t $(DOCKER_IMAGE) .
 
 registry:
@@ -21,4 +23,4 @@ push:
 	docker tag $(DOCKER_IMAGE) $(REGISTRY)/$(REPOSITORY_NAME):latest
 	docker push $(REGISTRY)/$(REPOSITORY_NAME):latest
 
-release: build push
+release: compile build push
