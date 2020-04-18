@@ -76,7 +76,9 @@ const routes: Routes = [
     IndexComponent,
     UserIndexComponent,
     UserInfoComponent,
-    FAQomponent
+    FAQomponent,
+    AboutUsComponent,
+    PrivacyComponent
   ],
   imports: [
     LightboxModule,
