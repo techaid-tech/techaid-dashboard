@@ -450,6 +450,7 @@ export class KitInfoComponent {
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {
+      console.log('res', res);
       if(res.data.deleteKit){
         this.toastr.info(`
         <small>Successfully deleted device ${this.entityName}</small>
