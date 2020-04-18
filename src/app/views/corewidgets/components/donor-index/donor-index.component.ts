@@ -142,7 +142,7 @@ export class DonorIndexComponent {
       templateOptions: {
         label: "PostCode",
         placeholder: "",
-        postCode: true,
+        postCode: false,
         required: false
       }
     },

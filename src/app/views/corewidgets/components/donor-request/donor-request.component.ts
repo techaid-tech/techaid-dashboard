@@ -136,7 +136,7 @@ export class DonorRequestComponent {
       templateOptions: {
         label: "Are you able to drop off your device to a location in Streatham Hill or would you need it to be collected?",
         placeholder: "",
-        postCode: true,
+        postCode: false,
         required: true,
         options: [
           { label: "I am able to drop off my device to a location in Streatham Hill", value: "DROPOFF" },
