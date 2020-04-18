@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: stretech-ui-ingress
+  namespace: apps
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 50m
+spec:
+  tls:
+    - hosts:
+        - lambeth-techaid.ju.ma
+      secretName: stretech-ui-tls-cert
+  rules:
+    - host: lambeth-techaid.ju.ma
+      http:
+        paths:
+          - path: /proxy/api
+            backend:
+              serviceName: stretech-svc
+              servicePort: 8080
+          - path: /
+            backend:
+              serviceName: stretech-ui-svc
+              servicePort: 80
