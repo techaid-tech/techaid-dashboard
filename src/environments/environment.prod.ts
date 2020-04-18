@@ -10,9 +10,9 @@ import { ConfigParams } from '@app/state/config-params';
 export const environment: ConfigParams = {
   production: true,
   environment: 'production',
-  graphql_endpoint: 'https://lambeth-techaid-api.ju.ma/graphql',
+  graphql_endpoint: '/api/graphql',
   version: APP_VERSION,
-  auth_endpoint: "https://lambeth-techaid-api.ju.ma/api/auth/user",
+  auth_endpoint: "/api/auth/user",
   auth_enabled: true,
   remote_config: false,
 };
