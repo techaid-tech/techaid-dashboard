@@ -7,6 +7,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: 50m
+    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
 spec:
   tls:
     - hosts:
@@ -16,10 +17,6 @@ spec:
     - host: lambeth-techaid.ju.ma
       http:
         paths:
-          - path: /proxy/api
-            backend:
-              serviceName: stretech-svc
-              servicePort: 8080
           - path: /
             backend:
               serviceName: stretech-ui-svc
