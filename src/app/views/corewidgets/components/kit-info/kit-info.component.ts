@@ -31,7 +31,10 @@ query findKit($id: Long) {
     createdAt
     updatedAt
     attributes {
-      images
+      images {
+        id
+        url
+      }
       consent
       state
       pickup
@@ -52,7 +55,10 @@ mutation updateKit($data: UpdateKitInput!) {
     createdAt
     updatedAt
     attributes {
-      images
+      images {
+        id
+        url
+      }
       consent
       state
       pickup
@@ -326,6 +332,7 @@ export class KitInfoComponent {
       className: "col-md-12",
       templateOptions: {
         label: "Upload an image of your device if you can",
+        prefix: "/api",
         required: false
       }
     },
@@ -368,7 +375,7 @@ export class KitInfoComponent {
 
   private normalizeData(data: any){
     this.album = (data.attributes.images || []).map(function(src){
-      return {src: src, thumb: src, caption: data.model}
+      return {src: `/api${src.url}`, thumb: `/api${src.url}`, caption: data.model}
     });
     return data;
   }
@@ -423,6 +430,13 @@ export class KitInfoComponent {
 
   updateEntity(data: any) {
     data.id = this.entityId;
+    data.attributes.images = (data.attributes.images || []).map(f => {
+      return {
+        image: f.image, 
+        url: f.url,
+        id: f.id
+      }
+    }); 
     this.apollo.mutate({
       mutation: UPDATE_ENTITY,
       variables: {
@@ -450,7 +464,6 @@ export class KitInfoComponent {
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {
-      console.log('res', res);
       if(res.data.deleteKit){
         this.toastr.info(`
         <small>Successfully deleted device ${this.entityName}</small>

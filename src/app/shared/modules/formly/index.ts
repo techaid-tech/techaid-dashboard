@@ -250,6 +250,7 @@ export const FORMLYCONFIG = {
             defaultOptions: {
                 templateOptions: {
                     placeholder: "",
+                    prefix: ""
                 }
             }
         },

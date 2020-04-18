@@ -10,7 +10,7 @@ import { ConfigParams } from '@app/state/config-params';
 export const environment: ConfigParams = {
   production: false,
   environment: 'development',
-  graphql_endpoint: 'http://localhost:8080/graphql',
+  graphql_endpoint: '/api/graphql',
   version: APP_VERSION,
   auth_endpoint: "http://localhost:8080/auth/user",
   auth_enabled: true,

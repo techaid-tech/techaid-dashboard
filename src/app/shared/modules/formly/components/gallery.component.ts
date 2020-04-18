@@ -47,7 +47,7 @@ import { Subscription } from 'rxjs';
   <div [class.is-invalid]="showError">
      <div class="">
       <div *ngFor="let f of files;" class="file mr-1">
-        <img class="img-thumbnail" [src]="f" />
+        <img class="img-thumbnail" [src]="f.image || to.prefix + f.url" />
         <a href="#" (click)="remove(f)"><i class="fas fa-times"></i></a>
       </div>
       <div class="file file-button img-thumbnail mr-1">
@@ -70,9 +70,19 @@ export class GalleryInput extends FieldType implements OnInit {
   }
 
   ngOnInit(): void {
-    this.files = this.formControl.value || [];
+    this.setFiles(this.formControl.value);
     this.sub = this.formControl.valueChanges.subscribe((val) => {
-      this.files = val || [];
+      this.setFiles(val);
+    });
+  }
+
+  setFiles(files){
+    this.files = (files || []).map(f => {
+      return {
+        url: f.url,
+        image: f.image,
+        id: f.id
+      }
     });
   }
 
@@ -82,7 +92,7 @@ export class GalleryInput extends FieldType implements OnInit {
       var reader = new FileReader();
       reader.onload = (e) => {
         this.resizeImage(e.target['result'], 640, (data) => {
-          this.files.push(data);
+          this.files.push({image: data, id: null, url: null});
           this.fileInput.nativeElement.value = '';
           this.formControl.setValue(this.files); 
         });
