@@ -1,7 +1,8 @@
 <!-- Content Row -->
-<div class="row content">
+<map-index></map-index>
 
-    <!-- Content Column -->
+<div class="row content">
+     <!-- Content Column -->
     <div class="col-lg-12 mb-4">
         <!-- Project Card Example -->
         <div class="card shadow mb-4">
@@ -46,12 +47,11 @@
                                             <div class="d-flex flex-column">
                                                 <div>
                                                     <a href="#" [routerLink]="['./', dt.id]">{{ dt.name }}</a>
-                                                    <span *ngIf="dt.username?.length && dt.email?.length" class="text-muted">
-                                                        ({{dt.username}})</span>
+                                                    <span *ngIf="dt.phoneNumber?.length" class="text-muted">
+                                                        ({{dt.phoneNumber}})</span>
                                                 </div>
                                                 <div class="text-muted">
                                                     <span>{{dt.email}}</span>
-                                                    <span *ngIf="!dt.email?.length">{{dt.username}}</span>
                                                 </div>
                                             </div>
                                         </div>

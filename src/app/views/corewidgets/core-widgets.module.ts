@@ -26,6 +26,7 @@ import { CoreWidgetState } from './state/corewidgets.state';
 import { IndexComponent, FAQomponent, AboutUsComponent, PrivacyComponent } from './components/static/components';
 import { UserIndexComponent } from './components/user-index/user-index.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
+import { MapComponent } from './components/map/map-index.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -78,7 +79,8 @@ const routes: Routes = [
     UserInfoComponent,
     FAQomponent,
     AboutUsComponent,
-    PrivacyComponent
+    PrivacyComponent,
+    MapComponent
   ],
   imports: [
     LightboxModule,

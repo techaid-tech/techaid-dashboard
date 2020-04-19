@@ -36,6 +36,6 @@ export class PlaceInput extends FieldType {
   }
 
   clear(){
-    this.formControl.setValue("");
+    this.formControl.setValue(null);
   }
 }

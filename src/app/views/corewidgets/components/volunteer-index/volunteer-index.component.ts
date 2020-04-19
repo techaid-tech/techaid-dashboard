@@ -23,7 +23,7 @@ query findAllVolunteers($page: PaginationInput,, $term: String) {
       }
       OR: [
         {
-          ward: {
+          postCode: {
             _contains: $term
           }
         },
@@ -153,11 +153,11 @@ export class VolunteersIndexComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "ward",
-          type: "select",
+          key: "postCode",
+          type: "place",
           className: "col-md-6",
           templateOptions: {
-            label: "Ward & Constituency",
+            label: "Address",
             options: [
               {label: "Streatham Hill", value: "Streatham Hill" },
               {label: "Streatham South", value: "Streatham South" },
@@ -446,7 +446,6 @@ export class VolunteersIndexComponent {
       return false;
     }
     data.subGroup = (data.subGroup || [])
-    data.ward = (data.ward || "")
     if(data.organizing){
       if(data.organizing == 'yes'){
         data.subGroup.push('Organizing');

@@ -27,7 +27,7 @@ query findUser($id: Long) {
     createdAt
     updatedAt
     subGroup
-    ward
+    postCode 
     storage
     availability
     expertise
@@ -46,7 +46,7 @@ mutation updateUser($data: UpdateVolunteerInput!) {
     createdAt
     updatedAt
     subGroup
-    ward
+    postCode 
     storage
     availability
     expertise
@@ -137,11 +137,11 @@ export class VolunteerInfoComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "ward",
-          type: "select",
+          key: "postCode",
+          type: "place",
           className: "col-md-6",
           templateOptions: {
-            label: "Ward & Constituency",
+            label: "Address",
             options: [
               {label: "Streatham Hill", value: "Streatham Hill" },
               {label: "Streatham South", value: "Streatham South" },

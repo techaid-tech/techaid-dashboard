@@ -114,23 +114,12 @@ export class VolunteerComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "ward",
-          type: "select",
+          type: "place",
           className: "col-md-6",
+          key: "postCode",
           templateOptions: {
-            label: "Ward & Constituency",
-            options: [
-              {label: "Streatham Hill", value: "Streatham Hill" },
-              {label: "Streatham South", value: "Streatham South" },
-              {label: "Streatham Wells", value: "Streatham Wells" },
-              {label: "Thornton", value: "Thornton" },
-              {label: "St Leonard's", value: "St Lenoard's" },
-              {label: "Tulse Hill", value: "Tulse Hill" },
-              {label: "Clapham Common", value: "Clapham Common" },
-              {label: "Brixton Hill", value: "Brixton Hill" },
-              {label: "Other", value: "Other" }
-            ],
-            required: false
+            label: "Address",
+            required: true
           },
           validation: {
             show: false
@@ -345,7 +334,6 @@ export class VolunteerComponent {
     }
     this.submiting = true;
     data.subGroup = (data.subGroup || [])
-    data.ward = (data.ward || "")
     if(data.organizing){
       if(data.organizing == 'yes'){
         data.subGroup.push('Organizing');
