@@ -25,6 +25,7 @@ query find($kitFilter: KitWhereInput!, $volunteerFilter: VolunteerWhereInput!) {
     type
     model
     donor {
+      id
       name
     }
     coordinates {
@@ -127,8 +128,6 @@ export class MapViewComponent {
           filter["volunteerFilter"]["OR"].push({"subGroup": {"_contains": g}})
       }); 
     }
-
-    console.log(filter, data);
     this.fetchData(filter);
   }
 
