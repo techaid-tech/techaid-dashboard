@@ -203,7 +203,7 @@ export class VolunteerInfoComponent {
           key: "organizing",
           type: "radio",
           className: "col-md-6",
-          defaultValue: "none",
+          defaultValue: "no",
           templateOptions: {
             label: "Would you like to be involved with the organisation of Streatham TechAid?",
             options: [
@@ -337,7 +337,6 @@ export class VolunteerInfoComponent {
     });
   }
 
-
   ngOnInit() {
     this.sub = this.activatedRoute.params.subscribe(params => {
       this.userId = +params['userId'];
@@ -353,7 +352,16 @@ export class VolunteerInfoComponent {
 
   updateEntity(data: any) {
     data.id = this.userId;
-    data.subGroup = (data.subGroup || []).join(',')
+    data.subGroup = (data.subGroup || [])
+    if(data.organizing){
+      if(data.organizing == 'yes'){
+        data.subGroup.push('Organizing');
+      }else if(data.organizing == 'maybe'){
+        data.subGroup.push('MinorOrganizing');
+      }
+    }
+    data.subGroup = (data.subGroup || []).filter((v, i, a) => a.indexOf(v) === i).join(',')
+    delete data.organizing;
     this.apollo.mutate({
       mutation: UPDATE_ENTITY,
       variables: {
