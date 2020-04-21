@@ -63,6 +63,7 @@ export class MapViewComponent {
           key: "type",
           type: "multicheckbox",
           className: "col-md-6",
+          defaultValue: ['LAPTOP', 'TABLET', 'SMARTPHONE', 'ALLINONE', 'OTHER'],
           templateOptions: {
             label: "Type of device",
             type: "array",
@@ -81,6 +82,7 @@ export class MapViewComponent {
       key: "subGroup",
       type: "multicheckbox",
       className: "col-md-6",
+      defaultValue: ['Technical', 'Distribution', 'Findraising', 'Organizing', 'MinorOrganizing', 'Other'],
       templateOptions: {
         label: "Volunteer Type",
         multiple: true,
@@ -122,7 +124,7 @@ export class MapViewComponent {
       filter["kitFilter"]["type"] = {"_in": data.type };
     }
 
-    if(data.subGroup && data.subGroup.length){
+    if(data.subGroup){
       filter["volunteerFilter"]["OR"] = [];
       data.subGroup.forEach(g => {
           filter["volunteerFilter"]["OR"].push({"subGroup": {"_contains": g}})
