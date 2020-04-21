@@ -30,7 +30,9 @@ query findKit($id: Long) {
     location
     createdAt
     updatedAt
+    age
     attributes {
+      notes
       images {
         id
         url
@@ -54,7 +56,9 @@ mutation updateKit($data: UpdateKitInput!) {
     location
     createdAt
     updatedAt
+    age
     attributes {
+      notes
       images {
         id
         url
@@ -267,7 +271,6 @@ export class KitInfoComponent {
           key: "age",
           type: "radio",
           className: "col-md-6",
-          defaultValue: 5,
           templateOptions: {
             label: "Roughly how old is your device?",
             options: [
