@@ -27,6 +27,7 @@ import { IndexComponent, FAQomponent, AboutUsComponent, PrivacyComponent } from 
 import { UserIndexComponent } from './components/user-index/user-index.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { MapComponent } from './components/map/map-index.component';
+import { MapViewComponent } from './components/map-view/map-view.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'faqs', component: FAQomponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'privacy', component: PrivacyComponent },
+  { path: 'dashboard/map', component: MapViewComponent},
   { path: 'dashboard/volunteers', component: VolunteersIndexComponent, canActivate: [AuthGuard] },
   {
     path: 'dashboard/volunteers/:userId', component: VolunteerInfoComponent, canActivate: [AuthGuard]
@@ -80,7 +82,8 @@ const routes: Routes = [
     FAQomponent,
     AboutUsComponent,
     PrivacyComponent,
-    MapComponent
+    MapComponent,
+    MapViewComponent
   ],
   imports: [
     LightboxModule,

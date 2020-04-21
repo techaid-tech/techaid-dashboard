@@ -22,8 +22,6 @@ import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { PicStateModule } from '@app/state/state.module';
 import { FormsModule } from '@angular/forms';
 import { GraphQLModule } from './graphql.module';
-import { AgmCoreModule } from '@agm/core';
-
 
 @NgModule({
   declarations: [
@@ -52,10 +50,7 @@ import { AgmCoreModule } from '@agm/core';
     PicNgProgressHttpModule.forRoot(),
     AppRoutingModule,
     PicStateModule,
-    GraphQLModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyDdo6mFEbfrJafK3tdsebw9ZRirUfHwFQw'
-    })
+    GraphQLModule
   ],
   providers: [
     {

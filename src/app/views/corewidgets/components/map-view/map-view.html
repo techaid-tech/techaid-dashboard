@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-between pb-1 mb-2">
+        <div>
+            <button (click)="back()" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+        <div>
+            <a href="#" (click)="modal(filters); false;" class="btn btn-primary btn-icon-split btn-sm">
+                <span class="icon text-white-50">
+                    <i class="fas fa-filter"></i>
+                </span>
+                <span class="text">Filter</span>
+            </a>
+        </div>
+    </div>
+<div>
+    <map-index [markers]="markers"></map-index>
+</div>
+<ng-template #filters let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Filters</h4>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="form">
+                <formly-form [options]="options" [form]="form" [model]="model" [fields]="fields">
+                </formly-form>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light btn-sm" (click)="c('Close click')">CANCEL</button>
+            <button [disabled]="form.invalid" type="button" class="btn btn-primary btn-sm"
+                (click)="applyFilter(form.value); c('Close click')">
+                Filter
+            </button>
+        </div>
+    </ng-template>

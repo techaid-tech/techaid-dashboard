@@ -49,6 +49,8 @@ query findAllVolunteers($page: PaginationInput,, $term: String) {
      createdAt
      email
      phoneNumber
+     availability
+     subGroup
     }
   }
 }
