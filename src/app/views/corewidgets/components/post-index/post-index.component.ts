@@ -104,7 +104,6 @@ export class PostIndexComponent {
       templateOptions: {
         label: "Url",
         placeholder: "",
-        pattern: /[a-zA-Z0-9_-]+/,
         required: true
       }
     },
