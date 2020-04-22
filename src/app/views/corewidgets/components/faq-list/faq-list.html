@@ -1,0 +1,26 @@
+<div *ngIf="!entities" class="ph-item">
+    <div class="ph-col-12">
+        <div class="ph-picture rounded" style="height: 70px;"></div>
+        <div class="ph-picture rounded" style="height: 70px;"></div>
+    </div>
+ </div>
+<div class="row" *ngIf="entities">
+    <div class="col-sm-12">
+      <div class="d-flex justify-content-between">
+        <div></div>
+        <a *ngIf="user?.authorities['write:content']" href="#" routerLink="/dashboard/faqs" class="btn btn-sm mb-1 btn-primary">
+                <i class="far fa-edit"></i> Edit
+        </a>
+      </div>
+    </div>
+    <div class="col-sm-12 pb-1 acc">
+        <ngb-accordion [closeOthers]="true">
+                <ngb-panel *ngFor="let e of entities" [title]="e.title">
+                    <ng-template ngbPanelContent>
+                        <div [innerHtml]="e.content"></div>
+                    </ng-template>
+                </ngb-panel>
+                <ngb-panel *ngIf="entities?.length == 1"></ngb-panel>
+        </ngb-accordion>
+    </div>
+</div>

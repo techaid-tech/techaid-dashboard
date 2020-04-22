@@ -86,11 +86,8 @@ export class VolunteerComponent {
             label: "Phone Number (Preferred)",
             pattern: /\+?[0-9]+/,
             description: "Required if email is not provided.",
-            required: false
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.email.length == 0',
-          },
+            required: true
+          }
         },
         {
           key: "email",
@@ -102,11 +99,8 @@ export class VolunteerComponent {
             type: "email",
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            description: "Not Required if phone number is provided"
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.phoneNumber.length == 0',
-          },
+            required: true
+          }
         },
       ]
     },

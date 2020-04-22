@@ -1,0 +1,45 @@
+<div *ngIf="!model" class="ph-item">
+  <div class="ph-col-12">
+    <div class="ph-picture"></div>
+    <div class="ph-row">
+      <div class="ph-col-6 big"></div>
+      <div class="ph-col-4 empty big"></div>
+      <div class="ph-col-2 big"></div>
+      <div class="ph-col-4"></div>
+      <div class="ph-col-8 empty"></div>
+      <div class="ph-col-6"></div>
+      <div class="ph-col-6 empty"></div>
+      <div class="ph-col-12"></div>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="model && !model.content">
+  <h1>404</h1>
+  <p><strong>File not found</strong></p>
+  <p>
+    The site configured at this address does not contain the requested file.
+  </p>
+  <p>
+    Please use your browser's back button and check that you're in the right
+    place.
+  </p>
+  <a href="/" class="btn btn-primary btn-sm">Home</a>
+</div>
+<div class="row" *ngIf="model">
+  <div class="col-sm-12">
+    <div class="col-sm-12">
+      <div *ngIf="model?.id?.length" class="d-flex justify-content-between">
+        <div></div>
+        <a
+          *ngIf="(user?.authorities)['write:content']"
+          href="#"
+          [routerLink]="['/dashboard/posts', model.id]"
+          class="btn btn-sm mb-1 btn-primary"
+        >
+          <i class="far fa-edit"></i> Edit
+        </a>
+      </div>
+    </div>
+    <div [innerHtml]="model?.content"></div>
+  </div>
+</div>

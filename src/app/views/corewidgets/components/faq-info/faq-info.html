@@ -1,0 +1,86 @@
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Content Column -->
+    <div class="col-lg-12 mb-4">
+        <!-- Project Card Example -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#" [routerLink]="['../']">FAQs</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ entityName }}</li>
+            </ol>
+        </nav>
+
+        <ngb-tabset>
+            <ngb-tab title="FAQ">
+                <ng-template ngbTabContent>
+                    <div class="card shadow mb-4 mt-1"> 
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">{{entityName}}</h6> 
+                        </div>
+                        <div class="card-body"> 
+                            <div [innerHtml]="model.content"></div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Edit">
+                <ng-template ngbTabContent>
+                    <div class="card shadow mb-4 mt-1">
+                        <div class="card-header py-3">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">{{entityName}}</h6>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form [formGroup]="form">
+                                <formly-form [options]="options" (ngSubmit)="form.valid && updateEntity(form.value)"
+                                    [form]="form" [model]="model" [fields]="fields">
+                                </formly-form>
+                                <button style="width: 150px" [disabled]="form.invalid" (click)="updateEntity(form.value)"
+                                    type="submit" class="btn btn-info btn-sm p-2">
+                                    <small>Save</small>
+                                </button>
+                            </form>
+
+                            <div class="delete-api mt-5 ">
+                                <h3>Danger Zone</h3>
+                                <div class="border-bottom-danger card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4>Delete FAQ</h4>
+                                                <p class="text-muted">The FAQ will be removed, this action is not reversable</p>
+                                            </div>
+                                            <div>
+                                                <button type="submit" (click)="modal(confirmDelete);"
+                                                    class="btn btn-danger btn-sm">
+                                                    <small>DELETE</small>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>
+    </div>
+</div>
+
+<ng-template #confirmDelete let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you absolutely sure?</h4>
+    </div>
+    <div class="modal-body">
+        <small>
+            <p>Are you really sure you want to delete "<strong>{{entityName}}</strong>"? This cannot be undone!</p>
+        </small>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light btn-sm" (click)="c('Close click')">CANCEL</button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="deleteEntity(); c('Close click')">YES, DELETE</button>
+    </div>
+</ng-template>

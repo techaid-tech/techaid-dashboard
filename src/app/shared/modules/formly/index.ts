@@ -18,6 +18,8 @@ import { MaskedInput } from './components/input-mask.component';
 import { PicSharedModule } from '@app/shared';
 import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { GalleryInput } from './components/gallery.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { RichTextComponent } from './components/richtext.component';
 
 export function wrongFileValidator(c: FormControl, field) {
     let match = field.templateOptions.match;
@@ -231,6 +233,17 @@ export const FORMLYCONFIG = {
             }
         },
         {
+            name: 'richtext',
+            component: RichTextComponent,
+            wrappers: ['form-field'],
+            defaultOptions: {
+                templateOptions: {
+                    placeholder: "",
+                    height: "100%"
+                }
+            }
+        },
+        {
             name: 'place',
             component: PlaceInput,
             wrappers: ['form-field'],
@@ -351,7 +364,8 @@ export const FORMLYCONFIG = {
         PicUploaderModule,
         PicSharedModule,
         GooglePlaceModule,
-        NgbModule
+        NgbModule,
+        CKEditorModule
     ],
     declarations: [
         PicFormlyWrapperFormField,
@@ -362,7 +376,8 @@ export const FORMLYCONFIG = {
         MaskedInput,
         DateTimeInputWidget,
         PlaceInput,
-        GalleryInput
+        GalleryInput,
+        RichTextComponent
     ],
     exports: [
         PicFormlyWrapperFormField,

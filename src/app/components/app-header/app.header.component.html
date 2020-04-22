@@ -60,13 +60,23 @@
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#" routerLink="/dashboard/users" *ngIf="user?.authorities['read:users']">
                     <i class="fas fa-user-lock fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Manage Users
+                    Users
                 </a>
                 <a class="dropdown-item" href="#" routerLink="/dashboard/roles" *ngIf="user?.authorities['read:users']">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Manage Roles
+                    Roles
                 </a>
                 <div class="dropdown-divider" *ngIf="user?.authorities['read:users']"></div>
+                <a class="dropdown-item" href="#" routerLink="/dashboard/posts" *ngIf="user?.authorities['write:content']">
+                    <i class="fas fa-blog fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Posts
+                </a> 
+                <a class="dropdown-item" href="#" routerLink="/dashboard/faqs" *ngIf="user?.authorities['write:content']">
+                    <i class="fas fa-question-circle fa-sm fa-fw mr-2 text-gray-400"></i>
+                    FAQs
+                </a> 
+                <div class="dropdown-divider" *ngIf="user?.authorities['write:content']"></div>
+
                 <!--
                 <a class="dropdown-item" href="/voyager">
                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>

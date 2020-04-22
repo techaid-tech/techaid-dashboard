@@ -23,19 +23,22 @@ import { DonorRequestComponent } from './components/donor-request/donor-request.
 import { LightboxModule } from 'ngx-lightbox';
 import { VolunteerComponent } from './components/volunteer/volunteer';
 import { CoreWidgetState } from './state/corewidgets.state';
-import { IndexComponent, FAQomponent, AboutUsComponent, PrivacyComponent } from './components/static/components';
 import { UserIndexComponent } from './components/user-index/user-index.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { MapComponent } from './components/map/map-index.component';
 import { MapViewComponent } from './components/map-view/map-view.component';
+import { FaqIndexComponent } from './components/faq-index/faq-index.component';
+import { FaqInfoComponent } from './components/faq-info/faq-info.component';
+import { FaqListComponent } from './components/faq-list/faq-list.component';
+import { PostIndexComponent } from './components/post-index/post-index.component';
+import { PostInfoComponent } from './components/post-info/post-info.component';
+import { PostDataComponent } from './components/post-data/post-data.component';
 
 const routes: Routes = [
-  { path: '', component: IndexComponent },
+  // { path: '', component: IndexComponent },
   { path: 'donate', component: DonorRequestComponent },
   { path: 'volunteer', component: VolunteerComponent },
-  { path: 'faqs', component: FAQomponent },
-  { path: 'about-us', component: AboutUsComponent },
-  { path: 'privacy', component: PrivacyComponent },
+  { path: 'faqs', component: FaqListComponent },
   { path: 'dashboard/map', component: MapViewComponent},
   { path: 'dashboard/volunteers', component: VolunteersIndexComponent, canActivate: [AuthGuard] },
   {
@@ -57,8 +60,16 @@ const routes: Routes = [
   {
     path: 'dashboard/users/:userId', component: UserInfoComponent,  canActivate: [AuthGuard]
   },
+  { path: 'dashboard/faqs', component: FaqIndexComponent,  canActivate: [AuthGuard] },
+  {
+    path: 'dashboard/faqs/:faqId', component: FaqInfoComponent,  canActivate: [AuthGuard]
+  },
+  { path: 'dashboard/posts', component: PostIndexComponent,  canActivate: [AuthGuard] },
+  {
+    path: 'dashboard/posts/:postId', component: PostInfoComponent,  canActivate: [AuthGuard]
+  },
+  { path: '**', component: PostDataComponent},
 ];
-
 
 @NgModule({
   declarations: [
@@ -76,14 +87,16 @@ const routes: Routes = [
     DonorInfoComponent,
     DonorRequestComponent,
     VolunteerComponent,
-    IndexComponent,
     UserIndexComponent,
     UserInfoComponent,
-    FAQomponent,
-    AboutUsComponent,
-    PrivacyComponent,
     MapComponent,
-    MapViewComponent
+    MapViewComponent,
+    FaqIndexComponent,
+    FaqInfoComponent,
+    FaqListComponent,
+    PostIndexComponent,
+    PostInfoComponent,
+    PostDataComponent,
   ],
   imports: [
     LightboxModule,

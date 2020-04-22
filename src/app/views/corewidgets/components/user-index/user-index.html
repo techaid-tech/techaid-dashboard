@@ -62,6 +62,9 @@
                           >
                             ({{ dt.username }})</span
                           >
+                          <div>
+                            <span *ngFor="let r of dt.roles?.items" class="badge badge-secondary mr-1 mb-1">{{r.name}}</span>
+                          </div>
                         </div>
                         <div class="text-muted">
                           <span>{{ dt.email }}</span>

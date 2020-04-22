@@ -1,5 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
+import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -9,41 +10,62 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
-import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
+import * as Tablesaw from 'tablesaw';
+import 'datatables.net-responsive';
+import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
 
-const QUERY_USERS = gql`
-query findAllUsers($page: PaginationInput!, $term: String) {
-  users(page: $page, filter: $term){
-    totalElements: total
-    number: start
-    content: items{
-     id: userId
-     userId
-     phoneNumber
-     email
-     name
-     picture
-     lastLogin
-     loginsCount
-     roles {
-       items {
-         id
-         name
-       }
-     }
+const QUERY_ENTITY = gql`
+query findAllFaqs($page: PaginationInput,, $term: String) {
+  faqsConnection(page: $page, where: {
+    AND: {
+      OR: [
+        {
+          title: {
+            _contains: $term
+          }
+        },
+        {
+          content: {
+            _contains: $term
+          }
+        }
+      ]
+    }
+  }){
+    totalElements
+    content{
+     id
+     title
+     content
+     position
+     published 
+     createdAt
+     updatedAt
     }
   }
 }
 `;
 
+const CREATE_ENTITY = gql`
+mutation createFaq($data: CreateFaqInput!) {
+  createFaq(data: $data){
+     id
+     title
+     published 
+     createdAt
+     updatedAt
+  }
+}
+`;
+
 @Component({
-  selector: 'user-index',
-  styleUrls: ['user-index.scss'],
+  selector: 'faq-index',
+  styleUrls: ['faq-index.scss'],
   encapsulation: ViewEncapsulation.None,
-  templateUrl: './user-index.html'
+  templateUrl: './faq-index.html'
 })
-export class UserIndexComponent {
+export class FaqIndexComponent {
   @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
@@ -52,9 +74,35 @@ export class UserIndexComponent {
   selections = {};
   selected = [];
   entities = [];
+  form: FormGroup = new FormGroup({});
   model = {};
 
   @Select(CoreWidgetState.query) search$: Observable<string>;
+
+  fields: Array<FormlyFieldConfig> = [
+    {
+      key: "title",
+      type: "input",
+      className: "col-md-12",
+      defaultValue: "",
+      templateOptions: {
+        label: "Name",
+        placeholder: "",
+        required: true
+      }
+    },
+    {
+      key: "published",
+      type: "checkbox",
+      className: "col-md-12",
+      defaultValue: true,
+      templateOptions: {
+        label: "Published?",
+        placeholder: "",
+        required: false
+      }
+    },
+  ];
 
   constructor(
     private modalService: NgbModal,
@@ -65,7 +113,7 @@ export class UserIndexComponent {
   }
 
   modal(content) {
-    this.modalService.open(content, { centered: true });
+    this.modalService.open(content, { centered: true, size: 'lg' });
   }
 
   clearSelection() {
@@ -92,9 +140,10 @@ export class UserIndexComponent {
   ngOnInit() {
     const queryRef = this.apollo
       .watchQuery({
-        query: QUERY_USERS,
+        query: QUERY_ENTITY,
         variables: {}
       });
+
 
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
@@ -102,23 +151,23 @@ export class UserIndexComponent {
         this.table.ajax.reload();
       }
     });
-    const sorted : any = {'name': 'name', 'loginsCount': 'logins_count', 'lastLogin': 'last_login'};
+
     this.dtOptions = {
-      pagingType: 'full_numbers',
+      pagingType: 'simple_numbers',
       dom:
         "<'row'<'col-sm-12 col-md-6'l>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
       pageLength: 10,
-      order: [1, 'desc'],
+      order: [2, 'desc'],
       serverSide: true,
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
         let sort = params.order.map(o => {
           return {
-            key: sorted[`${this.dtOptions.columns[o.column].data}`],
-            value: (o.dir == 'asc') ? 1 : -1
+            key: this.dtOptions.columns[o.column].data,
+            value: o.dir
           }
         });
 
@@ -141,7 +190,7 @@ export class UserIndexComponent {
         queryRef.refetch(vars).then(res => {
           var data: any = {};
           if (res.data) {
-            data = res['data']['users'];
+            data = res['data']['faqsConnection'];
             if (!this.total) {
               this.total = data['totalElements']
             }
@@ -172,12 +221,13 @@ export class UserIndexComponent {
               disableTimeOut: true
             })
         });
-      }, 
+      },
       columns: [
-        { data: null, width: '15px', orderable: false},
-        { data: 'name'},
-        { data: 'loginsCount'},
-        { data: 'lastLogin' }
+        { data: null, width: '15px', orderable: false },
+        { data: 'title' },
+        { data: 'position', width: '15px'},
+        { data: 'updatedAt' },
+        { data: 'published', width: '30px'}
       ]
     };
   }
@@ -192,6 +242,25 @@ export class UserIndexComponent {
     this.grid.dtInstance.then(tbl => {
       this.table = tbl;
     });
+  }
+
+  createEntity(data: any) { 
+    data.position = 0;
+    data.content = "";
+    this.apollo.mutate({
+      mutation: CREATE_ENTITY,
+      variables: { data }
+    }).subscribe(data => {
+      this.total = null;
+      this.table.ajax.reload();
+    }, err => {
+      this.toastr.error(`
+      <small>${err.message}</small>
+      `, 'Create Volunteer Error', {
+          enableHtml: true,
+          timeOut: 15000
+        });
+    })
   }
 
 
