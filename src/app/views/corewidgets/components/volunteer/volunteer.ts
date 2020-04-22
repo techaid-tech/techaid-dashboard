@@ -85,7 +85,6 @@ export class VolunteerComponent {
           templateOptions: {
             label: "Phone Number (Preferred)",
             pattern: /\+?[0-9]+/,
-            description: "Required if email is not provided.",
             required: true
           }
         },

@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
+import { Subject, of, forkJoin, Observable, Subscription, concat, from } from 'rxjs';
 import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +14,7 @@ import { Select } from '@ngxs/store';
 import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 import { Lightbox } from 'ngx-lightbox';
 import { isObject } from 'util';
+import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
 
 
 const QUERY_ENTITY = gql`
@@ -31,6 +32,18 @@ query findKit($id: Long) {
     createdAt
     updatedAt
     age
+    volunteer {
+      id
+      name
+      email
+      phoneNumber
+    }
+    donor {
+      id
+      name
+      email
+      phoneNumber
+    }
     attributes {
       notes
       images {
@@ -57,6 +70,18 @@ mutation updateKit($data: UpdateKitInput!) {
     createdAt
     updatedAt
     age
+    volunteer {
+      id
+      name
+      email
+      phoneNumber
+    }
+    donor {
+      id
+      name
+      email
+      phoneNumber
+    }
     attributes {
       notes
       images {
@@ -78,6 +103,68 @@ mutation deleteKit($id: ID!) {
 }
 `;
 
+const AUTOCOMPLETE_USERS = gql`
+query findAutocompleteVolunteers($term: String) {
+  volunteersConnection(page: {
+    size: 50
+  }, where: {
+    name: {
+      _contains: $term
+    }
+    OR: [ 
+    {
+      phoneNumber: {
+        _contains: $term
+      }
+    },
+    {
+      email: {
+        _contains: $term
+      }
+    }
+    ]
+  }){
+    content  {
+     id
+     name
+     email
+     phoneNumber
+    }
+  }
+}
+`;
+
+const AUTOCOMPLETE_DONORS = gql`
+query findAutocompleteDonors($term: String) {
+  donorsConnection(page: {
+    size: 50
+  }, where: {
+    name: {
+      _contains: $term
+    }
+    OR: [ 
+    {
+      phoneNumber: {
+        _contains: $term
+      }
+    },
+    {
+      email: {
+        _contains: $term
+      }
+    }
+    ]
+  }){
+    content  {
+     id
+     name
+     email
+     phoneNumber
+    }
+  }
+}
+`;
+
 @Component({
   selector: 'kit-info',
   styleUrls: ['kit-info.scss'],
@@ -93,63 +180,45 @@ export class KitInfoComponent {
   entityName: string;
   entityId: number;
   album = [];
-  apis: any[] = [];
-  apiInput$ = new Subject<string>();
-  apiLoading = false;
-  appField: FormlyFieldConfig = {
-    key: "attributes.userId",
+  users$: Observable<any>;
+  userInput$ = new Subject<string>();
+  userLoading = false;
+  userField: FormlyFieldConfig = {
+    key: "userId",
     type: "choice",
     className: "col-md-12",
     templateOptions: {
-      label: "",
-      loading: this.apiLoading,
-      typeahead: this.apiInput$,
-      placeholder: "Assign device to a User",
-      multiple: true,
+      label: "Volunteer",
+      description: "The volunteer this device is currently assigned to.",
+      loading: this.userLoading,
+      typeahead: this.userInput$,
+      placeholder: "Assign device to a Volunteer",
+      multiple: false,
       searchable: true,
-      items: this.apis,
+      items: [],
       required: false
     },
   };
-  deviceFields: Array<FormlyFieldConfig> = [
-  {
-    fieldGroupClassName: "row",
-    fieldGroup: [
-        {
-          key: "status",
-          type: "radio",
-          className: "col-md-6",
-          defaultValue: "REGISTERED",
-          templateOptions: {
-            label: "Status of the device",
-            options: [
-              {label: "Donation Registered", value: "REGISTERED" },
-              {label: "Pickup Scheduled", value: "PICKUP_SCHEDULED" },
-              {label: "Picked up from Donor / Dropped off by Donor", value: "PICKED_UP" },
-              {label: "Updating Software", value: "TECH_UPDATE" },
-              {label: "Software Updated & Ready for deployment", value: "READY" },
-              {label: "Issued to Recepient", value: "DEPLOYED" },
-              {label: "Recycled", value: "RECYCLED" },
-              {label: "Other", value: "OTHER" }
-            ],
-            required: true
-          } 
-        },
-        {
-          key: "attributes.notes",
-          type: "textarea",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Technical notes about the device",
-            rows: 3,
-            required: false
-          } 
-        },
-        this.appField
-      ]
-    }
-  ];
+
+  donors$: Observable<any>;
+  donorInput$ = new Subject<string>();
+  donorLoading = false;
+  donorField: FormlyFieldConfig = {
+    key: "donorId",
+    type: "choice",
+    className: "col-md-12",
+    templateOptions: {
+      label: "Donor",
+      description: "The donor this device is currently assigned to.",
+      loading: this.donorLoading,
+      typeahead: this.donorInput$,
+      placeholder: "Assign device to a Donor",
+      multiple: false,
+      searchable: true,
+      items: [],
+      required: false
+    },
+  };
 
   fields: Array<FormlyFieldConfig> = [
     {
@@ -187,6 +256,8 @@ export class KitInfoComponent {
         },
       ]
     },
+    this.userField,
+    this.donorField,
     {
       key: "location",
       type: "place",
@@ -379,6 +450,18 @@ export class KitInfoComponent {
     this.album = (data.attributes.images || []).map(function(src){
       return {src: `/api${src.url}`, thumb: `/api${src.url}`, caption: data.model}
     });
+    if(data.volunteer && data.volunteer.id){
+      data.userId = data.volunteer.id;
+      this.userField.templateOptions['items'] = [
+        {label: this.volunteerName(data.volunteer), value: data.volunteer.id}
+      ]; 
+    }
+    if(data.donor && data.donor.id){
+      data.donorId = data.donor.id;
+      this.donorField.templateOptions['items'] = [
+        {label: this.volunteerName(data.donor), value: data.donor.id}
+      ]; 
+    }
     return data;
   }
 
@@ -418,10 +501,80 @@ export class KitInfoComponent {
 
 
   ngOnInit() {
+    const userRef = this.apollo
+    .watchQuery({
+      query: AUTOCOMPLETE_USERS,
+      variables: {
+      }
+    });
+    const donorRef = this.apollo
+    .watchQuery({
+      query: AUTOCOMPLETE_DONORS,
+      variables: {
+      }
+    });
+    this.users$ = concat(
+      of([]),
+      this.userInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.userLoading = true),
+        switchMap(term => from(userRef.refetch({
+          term: term
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.userLoading = false),
+          switchMap(res => {
+            const data = res['data']['volunteersConnection']['content'].map(v => {
+              return {
+                label: `${this.volunteerName(v)}`, value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
+    this.donors$ = concat(
+      of([]),
+      this.donorInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.donorLoading = true),
+        switchMap(term => from(donorRef.refetch({
+          term: term
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.donorLoading = false),
+          switchMap(res => {
+            const data = res['data']['donorsConnection']['content'].map(v => {
+              return {
+                label: `${this.volunteerName(v)}`, value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
     this.sub = this.activatedRoute.params.subscribe(params => {
       this.entityId = +params['kitId'];
       this.fetchData();
     });
+
+    this.sub.add(this.users$.subscribe(data => {
+      this.userField.templateOptions['items'] = data;
+    }));
+
+    this.sub.add(this.donors$.subscribe(data => {
+      this.donorField.templateOptions['items'] = data;
+    }));
+  }
+
+  volunteerName(data) {
+    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
   }
 
   ngOnDestory() {

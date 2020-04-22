@@ -47,6 +47,12 @@ query findAllKits($page: PaginationInput,, $term: String) {
        email
        phoneNumber
      }
+     volunteer {
+       id
+       name 
+       email
+       phoneNumber
+     }
     }
   }
 }
@@ -368,13 +374,10 @@ export class KitIndexComponent {
             }
             data.content.forEach(d => {
               if(d.donor){
-                if(d.donor.name && d.donor.name.length){
-                  d.donorName = d.donor.name;
-                }else if(d.donor.email && d.donor.email.length){
-                  d.donorName = d.donor.email;
-                }else if(d.donor.phoneNumber && d.donor.phoneNumber.length){
-                  d.donorName = d.donor.phoneNumber;
-                }
+                d.donorName = this.userName(d.donor);
+              }
+              if(d.volunteer){
+                d.volunteerName = this.userName(d.volunteer);
               }
             });
             this.entities = data.content;
@@ -408,13 +411,18 @@ export class KitIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false  },
         { data: 'model' },
-        { data: 'donor.name' },
+        { data: 'donor' },
+        { data: 'volunteer' },
         { data: 'updatedAt'},
         { data: 'age'},
         { data: 'type' },
         { data: 'status' },
       ]
     };
+  }
+
+  userName(data) {
+    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length)[0];
   }
 
   ngOnDestory() {

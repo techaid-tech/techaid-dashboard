@@ -127,11 +127,8 @@ export class VolunteersIndexComponent {
             label: "Phone Number (Preferred)",
             pattern: /\+?[0-9]+/,
             description: "Required if email is not provided.",
-            required: false
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.email.length == 0',
-          },
+            required: true
+          }
         },
         {
           key: "email",
@@ -143,11 +140,9 @@ export class VolunteersIndexComponent {
             type: "email",
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            description: "Not Required if phone number is provided"
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.phoneNumber.length == 0',
-          },
+            description: "Not Required if phone number is provided",
+            required: true
+          }
         },
       ]
     },
@@ -160,18 +155,7 @@ export class VolunteersIndexComponent {
           className: "col-md-6",
           templateOptions: {
             label: "Address",
-            options: [
-              {label: "Streatham Hill", value: "Streatham Hill" },
-              {label: "Streatham South", value: "Streatham South" },
-              {label: "Streatham Wells", value: "Streatham Wells" },
-              {label: "Thornton", value: "Thornton" },
-              {label: "St Lenoard's", value: "St Lenoard's" },
-              {label: "Tulse Hill", value: "Tulse Hill" },
-              {label: "Clapham Common", value: "Clapham Common" },
-              {label: "Brixton Hill", value: "Brixton Hill" },
-              {label: "Other", value: "Other" }
-            ],
-            required: false
+            required: true
           } 
         },
         {

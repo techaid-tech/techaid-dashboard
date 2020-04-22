@@ -91,7 +91,7 @@ export class PostIndexComponent {
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
-        label: "Name",
+        label: "Page Title",
         placeholder: "",
         required: true
       }
