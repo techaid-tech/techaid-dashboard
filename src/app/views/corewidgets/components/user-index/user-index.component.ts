@@ -26,12 +26,6 @@ query findAllUsers($page: PaginationInput!, $term: String) {
      picture
      lastLogin
      loginsCount
-     roles {
-       items {
-         id
-         name
-       }
-     }
     }
   }
 }

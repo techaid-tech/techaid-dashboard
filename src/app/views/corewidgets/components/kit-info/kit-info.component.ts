@@ -48,7 +48,6 @@ query findKit($id: Long) {
       notes
       images {
         id
-        url
       }
       consent
       state
@@ -86,7 +85,6 @@ mutation updateKit($data: UpdateKitInput!) {
       notes
       images {
         id
-        url
       }
       consent
       state
@@ -405,7 +403,7 @@ export class KitInfoComponent {
       className: "col-md-12",
       templateOptions: {
         label: "Upload an image of your device if you can",
-        prefix: "/api",
+        prefix: "",
         required: false
       }
     },
@@ -448,7 +446,8 @@ export class KitInfoComponent {
 
   private normalizeData(data: any){
     this.album = (data.attributes.images || []).map(function(src){
-      return {src: `/api${src.url}`, thumb: `/api${src.url}`, caption: data.model}
+      src.url = `/api/kits/${data.id}/images/${src.id}`;
+      return {src: src.url, thumb: src.url, caption: data.model}
     });
     if(data.volunteer && data.volunteer.id){
       data.userId = data.volunteer.id;

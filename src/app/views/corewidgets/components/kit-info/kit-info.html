@@ -66,7 +66,7 @@
                     <div class="row p-3">
                         <div class="col-lg-12">
                             <span *ngFor="let f of model.attributes.images; let i=index;" class="mr-1 mb-1 thumbnail">
-                                <a href="#" (click)="open(i); false"><img class="img-thumbnail" [src]="'/api'+ f.url" /></a>
+                                <a href="#" (click)="open(i); false"><img class="img-thumbnail" [src]="f.url" /></a>
                             </span>
                         </div>
                     </div>
