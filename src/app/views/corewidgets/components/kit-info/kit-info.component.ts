@@ -587,7 +587,6 @@ export class KitInfoComponent {
     data.attributes.images = (data.attributes.images || []).map(f => {
       return {
         image: f.image, 
-        url: f.url,
         id: f.id
       }
     }); 
