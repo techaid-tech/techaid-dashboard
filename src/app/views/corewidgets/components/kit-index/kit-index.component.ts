@@ -438,6 +438,12 @@ export class KitIndexComponent {
   }
 
   createEntity(data: any) {
+    data.attributes.images = (data.attributes.images || []).map(f => {
+      return {
+        image: f.image, 
+        id: f.id
+      }
+    }); 
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: { data }
