@@ -12,6 +12,8 @@ import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 import { UpdateFormDirty } from '@ngxs/form-plugin';
 import { Select } from '@ngxs/store';
 import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
+import { UserState } from '@app/state/state.module';
+import { User } from '@app/state/user/user.state';
 
 const QUERY_ENTITY = gql`
 query findUser($id: Long) {
@@ -75,6 +77,8 @@ export class VolunteerInfoComponent {
   };
   userName: string;
   userId: number;
+  public user: User;
+  @Select(UserState.user) user$: Observable<User>;
 
   fields: Array<FormlyFieldConfig> = [
     {
@@ -278,7 +282,6 @@ export class VolunteerInfoComponent {
     }
   ];
 
-
   constructor(
     private modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
@@ -342,6 +345,9 @@ export class VolunteerInfoComponent {
       this.userId = +params['userId'];
       this.fetchData();
     });
+    this.sub.add(this.user$.subscribe(user => {
+        this.user = user;
+    }));
   }
 
   ngOnDestory() {

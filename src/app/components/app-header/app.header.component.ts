@@ -20,9 +20,9 @@ import * as $ from 'jquery';
     `]
 })
 export class AppHeader {
-    public user: User;
     private sub: Subscription;
     apis$: Observable<any>;
+    public user: User;
     @Select(UserState.user) user$: Observable<User>;
     constructor(
         private store: Store,

@@ -54,6 +54,11 @@
                     </div>
                 </ng-template>
             </ngb-tab>
+            <ngb-tab title="Emails" *ngIf="model?.email?.length && user?.authorities['read:emails']">
+                <ng-template ngbTabContent>
+                    <email-threads [email]="model.email"></email-threads>
+                </ng-template>
+             </ngb-tab>  
         </ngb-tabset>
     </div>
 </div>

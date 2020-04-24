@@ -12,6 +12,7 @@ import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 import { UpdateFormDirty } from '@ngxs/form-plugin';
 import { Select } from '@ngxs/store';
 import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
+import { User, UserState } from '@app/state/user/user.state';
 
 const QUERY_ENTITY = gql`
 query findDonor($id: Long) {
@@ -80,6 +81,8 @@ export class DonorInfoComponent {
   model = {};
   entityName: string;
   entityId: number;
+  public user: User;
+  @Select(UserState.user) user$: Observable<User>;
 
   ages = {
     0: "I don't know",
@@ -221,6 +224,9 @@ export class DonorInfoComponent {
       this.entityId = +params['donorId'];
       this.fetchData();
     });
+    this.sub.add(this.user$.subscribe(user => {
+        this.user = user;
+    }));
   }
 
   ngOnDestory() {

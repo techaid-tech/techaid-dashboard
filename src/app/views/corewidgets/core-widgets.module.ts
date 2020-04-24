@@ -33,6 +33,7 @@ import { FaqListComponent } from './components/faq-list/faq-list.component';
 import { PostIndexComponent } from './components/post-index/post-index.component';
 import { PostInfoComponent } from './components/post-info/post-info.component';
 import { PostDataComponent } from './components/post-data/post-data.component';
+import { EmailThreadsComponent } from './components/email-threads/email-threads.component';
 
 const routes: Routes = [
   // { path: '', component: IndexComponent },
@@ -97,6 +98,7 @@ const routes: Routes = [
     PostIndexComponent,
     PostInfoComponent,
     PostDataComponent,
+    EmailThreadsComponent,
   ],
   imports: [
     LightboxModule,

@@ -1,0 +1,86 @@
+<!-- Content Row -->
+<div>
+    <div class="w-100">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered table-md">
+                <thead>
+                    <tr>
+                        <th>Details</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="loading">
+                        <td colspan="2">
+                            <div class="d-flex justify-content-center">
+                                <span><i class="fas fa-spinner fa-spin"></i> &nbsp; Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="!loading && !entities?.length">
+                            <td colspan="2">
+                                <div class="d-flex justify-content-center">
+                                    <span>No data!</span>
+                                </div>
+                            </td>
+                    </tr>
+                    <tr *ngFor="let dt of entities" (click)="selected = dt; modal(viewMessage)">
+                        <td>
+                            <span *ngFor="let h of dt.messages[0]?.payload?.to" class="badge badge-secondary mr-1 mb-1">{{h.value}}</span>
+                            <div class="text-muted"><small [innerHtml]="dt.snippet"></small></div>
+                        </td>
+                        <td>{{ dt.messages[0]?.internalDate | timeAgo }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item" [class.disabled]="loading || !pages.stack.length">
+                    <a class="page-link"  href="#" aria-label="Previous" (click)="paginate(false)">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span>&nbsp;Previous</span>
+                    </a>
+                    </li>
+                    <li class="page-item" [class.disabled]="loading || !pages.nextPageToken?.length" >
+                    <a class="page-link" href="#" (click)="paginate(true)" aria-label="Next">
+                        <span>Next&nbsp;</span>
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    </li>
+                </ul>
+             </nav>
+        </div>
+    </div>
+</div>
+
+<ng-template #viewMessage let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">{{selected.messages[0].payload.subject[0].value}}</h4>
+    </div>
+    <div class="modal-body">
+        <div>
+            <div *ngFor="let m of selected.messages">
+                <div *ngFor="let p of m.payload.parts">
+                    <div *ngIf="p.mimeType == 'text/html'">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <span *ngFor="let h of m.payload?.to" class=" mr-1 mb-1"><small>{{h.value}}</small></span> 
+                            </div>
+                            <div>
+                                <small>
+                                    <span class="mr-1 mb-1">{{m.internalDate | date:'medium'}}</span>
+                                    <span>{{m.internalDate | timeAgo }}</span>
+                                </small>
+                            </div>
+                        </div>
+                        <div [innerHtml]="p.body.decodedData"></div>
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" (click)="c('Close click')">CLOSE</button>
+    </div>
+</ng-template>
