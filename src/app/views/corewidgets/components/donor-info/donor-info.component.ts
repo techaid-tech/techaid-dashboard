@@ -78,7 +78,7 @@ export class DonorInfoComponent {
   sub: Subscription;
   form: FormGroup = new FormGroup({});
   options: FormlyFormOptions = {};
-  model = {};
+  model : any = {};
   entityName: string;
   entityId: number;
   public user: User;
