@@ -14,7 +14,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod --aot --base-href /",
-    "debug": "ng build --prod --aot --base-href /",
+    "debug": "ng build --base-href /",
     "ng:test": "ng test",
     "ng:lint": "ng lint",
     "test": "jest",
