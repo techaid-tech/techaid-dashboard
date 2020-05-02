@@ -108,7 +108,7 @@ export class KitIndexComponent {
 
   filter: any = {};
   filterCount = 0;
-  filterModel: any = {};
+  filterModel: any = {archived: false};
   filterForm: FormGroup = new FormGroup({});
   filterFields: Array<FormlyFieldConfig> = [
     {
@@ -153,6 +153,7 @@ export class KitIndexComponent {
           key: "archived",
           type: "radio",
           className: "col-sm-4",
+          defaultValue: false,
           templateOptions: {
             type: 'array',
             label: "Filter by Archived?",
@@ -635,11 +636,14 @@ export class KitIndexComponent {
       this.table = tbl;
       try {
         this.filterModel = JSON.parse(localStorage.getItem('kitFilters'));
+      }catch(_){
+      }
+
+      try {
         this.applyFilter(this.filterModel);
         this.filterForm.patchValue(this.filterModel);
       }catch(_){
       }
-
     });
   }
 
