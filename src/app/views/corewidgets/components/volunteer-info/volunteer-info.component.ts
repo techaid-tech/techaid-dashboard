@@ -375,7 +375,7 @@ export class VolunteerInfoComponent {
         },
         {
           className: "col-md-6",
-          hideExpression: "!model.attributes.accepts?.length",
+          hideExpression: "!model.attributes.accepts.length",
           fieldGroup: [
             {
               key: "attributes.hasCapacity",
@@ -398,7 +398,7 @@ export class VolunteerInfoComponent {
             },
             {
               fieldGroupClassName: "row",
-              hideExpression: "!model.attributes?.hasCapacity",
+              hideExpression: "!model.attributes.hasCapacity",
               fieldGroup: [
                 {
                   className: "col-12",
