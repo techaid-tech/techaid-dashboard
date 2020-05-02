@@ -13,19 +13,22 @@ import { Select } from '@ngxs/store';
 import 'datatables.net-responsive';
 import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
+import { HashUtils } from '@app/shared/utils';
 
 const QUERY_ENTITY = gql`
-query findAllKits($page: PaginationInput,, $term: String) {
+query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) {
   kitsConnection(page: $page, where: {
     AND: {
       model: {
         _contains: $term
       }
+      AND: [ $where ]
       OR: [
         {
           location: {
             _contains: $term
           }
+          AND: [ $where ]
         }
       ]
     }
@@ -47,11 +50,14 @@ query findAllKits($page: PaginationInput,, $term: String) {
        email
        phoneNumber
      }
-     volunteer {
-       id
-       name 
-       email
-       phoneNumber
+     volunteers {
+      type
+      volunteer {
+        id
+        name 
+        email
+        phoneNumber
+      }
      }
     }
   }
@@ -94,6 +100,127 @@ export class KitIndexComponent {
      6: 'more than 6 years old'
   };
 
+  classes = {
+    'LOGISTICS': 'dark',
+    'TECHNICIAN': 'info',
+    'ORGANISER': 'success'
+  };
+
+  filter: any = {};
+  filterCount = 0;
+  filterModel: any = {};
+  filterForm: FormGroup = new FormGroup({});
+  filterFields: Array<FormlyFieldConfig> = [
+    {
+      fieldGroupClassName: "row",
+      fieldGroup: [
+        {
+          key: "type",
+          type: "multicheckbox",
+          className: "col-sm-4",
+          defaultValue: [],
+          templateOptions: {
+            label: "Type of device",
+            type: "array",
+            options: [
+              {label: "Laptop", value: "LAPTOP" },
+              {label: "Tablet", value: "TABLET" },
+              {label: "Smart Phone", value: "SMARTPHONE" },
+              {label: "All In One (PC)", value: "ALLINONE" },
+              {label: "Other", value: "OTHER" }
+            ],
+          } 
+        },
+        {
+          key: "age",
+          type: "multicheckbox",
+          className: "col-sm-4",
+          templateOptions: {
+            label: "Roughly how old is your device?",
+            type: 'array',
+            options: [
+              {label: "Less than a year", value: 1},
+              {label: "1 - 2 years", value: 2},
+              {label: "3 - 4 years", value: 4 },
+              {label: "5 - 6 years", value: 5},
+              {label: "More than 6 years old", value: 6 },
+              {label: "I don't know!", value: 0 }
+            ],
+            required: false
+          } 
+        },
+        {
+          key: "archived",
+          type: "radio",
+          className: "col-sm-4",
+          templateOptions: {
+            type: 'array',
+            label: "Filter by Archived?",
+            options: [
+              {label: "Active Devices", value: false },
+              {label: "Archived Devices", value: true },
+            ],
+            required: true,
+          }
+        }, 
+        {
+          key: "status",
+          type: "choice",
+          className: "col-md-12",
+          templateOptions: {
+            label: "Status of the device",
+            items: [
+              {label: "New - Donation Registered", value: "NEW" },
+              {label: "Declined - Not Suitable", value: "DECLINED" },
+              {label: "Accepted - Assesment Needed", value: "ASSESSMENT_NEEDED" },
+              {label: "Accepted - No Assesment Required", value: "ACCEPTED" },
+              {label: "Collection from donor scheduled", value: "PICKUP_SCHEDULED" },
+              {label: "Donor drop off agreed", value: "DROPOFF_AGGREED" },
+              {label: "Donation received by Tech Team", value: "WITH_TECHIE" },
+              {label: "Donation faulty - collect for recycling", value: "UPDATE_FAILED" },
+              {label: "Donation updated - arrange collection", value: "READY" },
+              {label: "Device allocated to referring organisation", value: "ALLOCATED" },
+              {label: "Collection / drop off to referring organisation agreed", value: "DELIVERY_ARRANGED" },
+              {label: "Device received by organisation", value: "DELIVERED" }
+            ],
+            multiple: true,
+            required: false
+          } 
+        },
+      ]
+    }
+  ];
+
+  applyFilter(data){
+    var filter = {};
+    var count = 0;
+
+    if(data.type && data.type.length) {
+      count = count + data.type.length;
+      filter["type"] = {"_in": data.type };
+    }
+
+    if(data.status && data.status.length) {
+      count = count + data.status.length;
+      filter["status"] = {"_in": data.status };
+    }
+
+    if(data.age && data.age.length) {
+      count = count + data.age.length;
+      filter["age"] = {"_in": data.age };
+    }
+
+    if(data.archived != null){
+      count += 1;
+      filter["archived"] = {_eq: data.archived}
+    }
+
+    localStorage.setItem('kitFilters', JSON.stringify(data));
+    this.filter = filter;
+    this.filterCount = count;
+    this.table.ajax.reload();
+  }
+
   @Select(CoreWidgetState.query) search$: Observable<string>;
 
   fields: Array<FormlyFieldConfig> = [
@@ -103,7 +230,7 @@ export class KitIndexComponent {
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
-        label: "PostCode",
+        label: "Address",
         description: "The address of the device",
         placeholder: "",
         postCode: false,
@@ -127,6 +254,23 @@ export class KitIndexComponent {
       }
     },
     {
+      key: "attributes.pickupAvailability",
+      type: "input",
+      className: "col-md-12",
+      defaultValue: "",
+      templateOptions: {
+        label: "Pickup Availability",
+        rows: 2,
+        description: `
+          Please let us know when you are typically available at home for someone 
+          to arrange to come and pick up your device. Alternatively provide us with times 
+          when you are usually not available. 
+          `,
+        required: true
+      },
+      hideExpression: "model.attributes.pickup != 'PICKUP'",
+    },
+    {
       template: `
       <div class="row">
         <div class="col-md-12">
@@ -145,37 +289,109 @@ export class KitIndexComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "type",
-          type: "radio",
           className: "col-md-6",
-          defaultValue: "LAPTOP",
-          templateOptions: {
-            label: "Type of device",
-            options: [
-              {label: "Laptop", value: "LAPTOP" },
-              {label: "Tablet", value: "TABLET" },
-              {label: "Smart Phone", value: "SMARTPHONE" },
-              {label: "All In One (PC)", value: "ALLINONE" },
-              {label: "Other", value: "OTHER" }
-            ],
-            required: true
-          } 
+          fieldGroup: [
+            {
+              key: "type",
+              type: "radio",
+              className: "",
+              defaultValue: "LAPTOP",
+              templateOptions: {
+                label: "Type of device",
+                options: [
+                  {label: "Laptop", value: "LAPTOP" },
+                  {label: "Tablet", value: "TABLET" },
+                  {label: "Smart Phone", value: "SMARTPHONE" },
+                  {label: "All In One (PC)", value: "ALLINONE" },
+                  {label: "Other", value: "OTHER" }
+                ],
+                required: true
+              } 
+            },
+            {
+              key: "attributes.otherType",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Type of device",
+                rows: 2,
+                placeholder: "(Other device type)",
+                required: true
+              },
+              hideExpression: "model.type != 'OTHER'",
+              expressionProperties: {
+                'templateOptions.required': "model.type == 'OTHER'",
+              },
+            },
+          ]
         },
         {
-          key: "attributes.otherType",
-          type: "input",
           className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Type of device",
-            rows: 2,
-            placeholder: "(Other device type)",
-            required: true
-          },
-          hideExpression: "model.type != 'OTHER'",
-          expressionProperties: {
-            'templateOptions.required': "model.type == 'OTHER'",
-          },
+          fieldGroup: [
+            {
+              key: "attributes.status",
+              type: "multicheckbox",
+              className: "",
+              templateOptions: {
+                type: "array",
+                options: [],
+                description: "Please select all options that apply"
+              },
+              defaultValue: [],
+              expressionProperties: {
+                'templateOptions.options': (model, state)=> {
+                  const props = {
+                    'LAPTOP': [
+                      {label: "Do you have the charger / power cable for the Laptop?", value: "CHARGER"},
+                      {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
+                    ],
+                    'TABLET': [
+                      {label: "Do you have the charger for the Tablet?", value: "CHARGER"},
+                      {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
+                    ],
+                    'SMARTPHONE': [
+                      {label: "Do you have the charger for the Phone?", value: "CHARGER"},
+                      {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
+                    ],
+                    'ALLINONE': [
+                      {label: "Do you have the charger for the Computer?", value: "CHARGER"},
+                      {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
+                      {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
+                      {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
+                    ],
+                    'OTHER': [
+                      {label: "Do you have the charger or power cable for the device?", value: "CHARGER"}
+                    ],
+                  };
+                  return props[model.type] || props['OTHER']
+                },
+              },
+            },
+            {
+              key: "attributes.credentials",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Device Password",
+                description: "If your device requires a password or a PIN to sign in, please provide it here",
+                rows: 2,
+                placeholder: "Password",
+                required: false
+              },
+              hideExpression: (model, state) => {
+                if(['LAPTOP', 'ALLINONE'].indexOf(model.type) == -1){
+                  return true;
+                }
+                const status = HashUtils.dotNotation(model, 'attributes.status') || [];
+                if(status && status.length) {
+                  return status.indexOf('PASSWORD_PROTECTED') == -1
+                }
+                return true;
+              }
+            },
+          ]
         },
         {
           key: "age",
@@ -195,25 +411,6 @@ export class KitIndexComponent {
             required: true
           } 
         },
-        {
-          key: "status",
-          type: "radio",
-          className: "col-md-6",
-          defaultValue: "REGISTERED",
-          templateOptions: {
-            label: "Status of the device",
-            options: [
-              {label: "Donation Registered", value: "REGISTERED" },
-              {label: "Pickup Scheduled", value: "PICKUP_SCHEDULED" },
-              {label: "Picked up from Donor", value: "PICKED_UP" },
-              {label: "Software Updated", value: "TECH_UPDATE" },
-              {label: "Issued to Recepient", value: "DEPLOYED" },
-              {label: "Recycled", value: "RECYCLED" },
-              {label: "Other", value: "OTHER" }
-            ],
-            required: true
-          } 
-        }
       ]
     },
     {
@@ -339,6 +536,7 @@ export class KitIndexComponent {
       pageLength: 10,
       order: [1, 'desc'],
       serverSide: true,
+      stateSave: true,
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
@@ -355,6 +553,7 @@ export class KitIndexComponent {
             size: params.length,
             page: 0,
           },
+          where: this.filter,
           term: params['search']['value']
         }
 
@@ -412,7 +611,7 @@ export class KitIndexComponent {
         { data: null, width: '15px', orderable: false  },
         { data: 'model' },
         { data: 'donor' },
-        { data: 'volunteer' },
+        { data: 'volunteers.volunteer.name', orderable: false },
         { data: 'updatedAt'},
         { data: 'age'},
         { data: 'type' },
@@ -434,10 +633,17 @@ export class KitIndexComponent {
   ngAfterViewInit() {
     this.grid.dtInstance.then(tbl => {
       this.table = tbl;
+      try {
+        this.filterModel = JSON.parse(localStorage.getItem('kitFilters'));
+        this.applyFilter(this.filterModel);
+      }catch(_){
+      }
+
     });
   }
 
   createEntity(data: any) {
+    data.status = "NEW";
     data.attributes.images = (data.attributes.images || []).map(f => {
       return {
         image: f.image, 

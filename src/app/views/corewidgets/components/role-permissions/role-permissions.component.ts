@@ -136,6 +136,7 @@ export class RolePermissionsComponent {
       pageLength: 10,
       order: [1, 'desc'],
       serverSide: true,
+      stateSave: true,
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {

@@ -12,6 +12,7 @@ import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 import { UpdateFormDirty } from '@ngxs/form-plugin';
 import { Select } from '@ngxs/store';
 import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
+import { HashUtils } from '@app/shared/utils';
 
 const CREATE_ENTITY = gql`
 mutation updateDonor($data: DonateItemInput!) {
@@ -83,21 +84,6 @@ export class DonorRequestComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "donor.phoneNumber",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Telephone Number (Preferred)",
-            pattern: /\+?[0-9]+/,
-            description: "Required if email is not provided.",
-            required: false
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.donor.email.length == 0',
-          },
-        },
-        {
           key: "donor.email",
           type: "input",
           className: "col-md-6",
@@ -107,11 +93,22 @@ export class DonorRequestComponent {
             type: "email",
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            description: "Not Required if phone number is provided"
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.donor.phoneNumber.length == 0',
-          },
+            description: "",
+            required: true
+          }
+        },
+        {
+          key: "donor.phoneNumber",
+          type: "input",
+          className: "col-md-6",
+          defaultValue: "",
+          templateOptions: {
+            type: "tel",
+            label: "Telephone Number",
+            pattern: /\+?[0-9]+/,
+            description: "Enter your phone number no spaces",
+            required: true
+          }
         }
       ]
     },
@@ -121,7 +118,7 @@ export class DonorRequestComponent {
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
-        label: "PostCode",
+        label: "Address",
         description: "The address of the device",
         placeholder: "",
         postCode: false,
@@ -134,16 +131,33 @@ export class DonorRequestComponent {
       className: "col-md-12",
       defaultValue: "DROPOFF",
       templateOptions: {
-        label: "Are you able to drop off your device to a location in Streatham Hill or would you need it to be collected?",
+        label: "Are you able to drop off your device to a location in Streatham or would you need it to be collected?",
         placeholder: "",
         postCode: false,
         required: true,
         options: [
-          { label: "I am able to drop off my device to a location in Streatham Hill", value: "DROPOFF" },
+          { label: "I am able to drop off my device to a location in Streatham", value: "DROPOFF" },
           { label: "I would need you to come and collect my device", value: "PICKUP" },
           { label: "I'm not sure – it depends on the exact location", value: "NOTSURE" }
         ]
       }
+    },
+    {
+      key: "kit.attributes.pickupAvailability",
+      type: "input",
+      className: "col-md-12",
+      defaultValue: "",
+      templateOptions: {
+        label: "Pickup Availability",
+        rows: 2,
+        description: `
+          Please let us know when you are typically available at home for someone 
+          to arrange to come and pick up your device. Alternatively provide us with times 
+          when you are usually not available. 
+          `,
+        required: true
+      },
+      hideExpression: "model.kit.attributes.pickup != 'PICKUP'",
     },
     {
       template: `
@@ -164,43 +178,114 @@ export class DonorRequestComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "kit.type",
-          type: "radio",
           className: "col-md-6",
-          defaultValue: "LAPTOP",
-          templateOptions: {
-            label: "Type of device",
-            options: [
-              {label: "Laptop", value: "LAPTOP" },
-              {label: "Tablet", value: "TABLET" },
-              {label: "Smart Phone", value: "SMARTPHONE" },
-              {label: "All In One (PC)", value: "ALLINONE" },
-              {label: "Other", value: "OTHER" }
-            ],
-            required: true
-          } 
+          fieldGroup: [
+            {
+              key: "kit.type",
+              type: "radio",
+              className: "",
+              defaultValue: "LAPTOP",
+              templateOptions: {
+                label: "Type of device",
+                options: [
+                  {label: "Laptop", value: "LAPTOP" },
+                  {label: "Tablet", value: "TABLET" },
+                  {label: "Smart Phone", value: "SMARTPHONE" },
+                  {label: "All In One (PC)", value: "ALLINONE" },
+                  {label: "Other", value: "OTHER" }
+                ],
+                required: true
+              } 
+            },
+            {
+              key: "kit.attributes.otherType",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Type of device",
+                rows: 2,
+                placeholder: "(Other device type)",
+                required: true
+              },
+              hideExpression: "model.kit.type != 'OTHER'",
+              expressionProperties: {
+                'templateOptions.required': "model.kit.type == 'OTHER'",
+              },
+            },
+          ]
         },
         {
-          key: "kit.attributes.otherType",
-          type: "input",
           className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Type of device",
-            rows: 2,
-            placeholder: "(Other device type)",
-            required: true
-          },
-          hideExpression: "model.kit.type != 'OTHER'",
-          expressionProperties: {
-            'templateOptions.required': "model.kit.type == 'OTHER'",
-          },
+          fieldGroup: [
+            {
+              key: "kit.attributes.status",
+              type: "multicheckbox",
+              className: "",
+              templateOptions: {
+                type: "array",
+                options: [],
+                description: "Please select all options that apply"
+              },
+              defaultValue: [],
+              expressionProperties: {
+                'templateOptions.options': (model, state)=> {
+                  const props = {
+                    'LAPTOP': [
+                      {label: "Do you have the charger / power cable for the Laptop?", value: "CHARGER"},
+                      {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
+                    ],
+                    'TABLET': [
+                      {label: "Do you have the charger for the Tablet?", value: "CHARGER"},
+                      {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
+                    ],
+                    'SMARTPHONE': [
+                      {label: "Do you have the charger for the Phone?", value: "CHARGER"},
+                      {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
+                    ],
+                    'ALLINONE': [
+                      {label: "Do you have the charger for the Computer?", value: "CHARGER"},
+                      {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
+                      {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
+                      {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
+                    ],
+                    'OTHER': [
+                      {label: "Do you have the charger or power cable for the device?", value: "CHARGER"}
+                    ],
+                  };
+                  return props[model.kit.type] || props['OTHER']
+                },
+              },
+            },
+            {
+              key: "kit.attributes.credentials",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Device Password",
+                description: "If your device requires a password or a PIN to sign in, please provide it here",
+                rows: 2,
+                placeholder: "Password",
+                required: false
+              },
+              hideExpression: (model, state) => {
+                if(['LAPTOP', 'ALLINONE'].indexOf(model.kit.type) == -1){
+                  return true;
+                }
+                const status = HashUtils.dotNotation(model, 'kit.attributes.status') || [];
+                if(status && status.length) {
+                  return status.indexOf('PASSWORD_PROTECTED') == -1
+                }
+                return true;
+              }
+            },
+          ]
         },
         {
           key: "kit.age",
           type: "radio",
           className: "col-md-6",
-          defaultValue: 5,
           templateOptions: {
             label: "Roughly how old is your device?",
             options: [
@@ -316,7 +401,7 @@ export class DonorRequestComponent {
       return;
     }
     this.submiting = true;
-    data.kit.status = 'REGISTERED';
+    data.kit.status = 'NEW';
     data.kit.location = data.donor.postCode;
    
     this.apollo.mutate({

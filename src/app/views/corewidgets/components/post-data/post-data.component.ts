@@ -84,8 +84,8 @@ export class PostDataComponent {
     this.sub = this.user$.subscribe(user => {
         this.user = user;
     });
-    const url = this.router.url.replace(/^\//, '');
-    if(url.trim().length){
+    const url = (this.router.url||'').split('?', 2)[0].replace(/^\//, '');
+    if(url.trim().length > 0){
       this.fetchData({slug: url})
     }else{
       this.fetchData({slug: '/'}) 

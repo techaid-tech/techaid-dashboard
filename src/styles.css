@@ -435,3 +435,34 @@ blockquote {
     padding: 0.5em 10px;
 }
 
+
+i.input-group-text {
+    font-weight: 900 !important;
+}
+
+.thumbnail img {
+    width: 480px;
+    height: 320px;
+    object-fit: contain;
+}
+
+@media only screen and (max-width: 375px) {
+  .card-main {
+    width: 95vw;
+  }
+
+  .thumbnail img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+  }
+}
+
+.container,  .container-fluid {
+  padding-left: 0.5em !important;
+  padding-right: 0.5em !important;
+}
+
+.sidebar-toggled .sidebar {
+  display: none;
+}

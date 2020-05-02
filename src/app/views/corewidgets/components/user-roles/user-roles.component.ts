@@ -209,6 +209,7 @@ export class UserRolesComponent {
       order: [1, 'desc'],
       serverSide: true,
       processing: true,
+      stateSave: true,
       searching: true,
       ajax: (params: any, callback) => {
         let sort = params.order.map(o => {

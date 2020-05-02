@@ -1,6 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -8,10 +7,7 @@ import { Apollo } from 'apollo-angular';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
-import { UpdateFormDirty } from '@ngxs/form-plugin';
 import { Select } from '@ngxs/store';
-import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 import { UserState } from '@app/state/state.module';
 import { User } from '@app/state/user/user.state';
 
@@ -34,6 +30,17 @@ query findUser($id: Long) {
     availability
     expertise
     transport
+    attributes {
+      accepts
+      dropOffAvailability
+      hasCapacity
+      capacity {
+        phones
+        tablets
+        laptops
+        allInOnes
+      }
+    }
   }
 }
 `;
@@ -53,6 +60,17 @@ mutation updateUser($data: UpdateVolunteerInput!) {
     availability
     expertise
     transport
+    attributes {
+      accepts
+      dropOffAvailability
+      hasCapacity
+      capacity {
+        phones
+        tablets
+        laptops
+        allInOnes
+      }
+    }
   }
 }
 `;
@@ -92,30 +110,15 @@ export class VolunteerInfoComponent {
         required: true
       },
       validation: {
-        show: true
+        show: false
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
       }
     },
     {
       fieldGroupClassName: "row",
       fieldGroup: [
-        {
-          key: "phoneNumber",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Phone Number (Preferred)",
-            pattern: /\+?[0-9]+/,
-            description: "Required if email is not provided.",
-            required: false
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.email.length == 0',
-          },
-          validation: {
-            show: true
-          }
-        },
         {
           key: "email",
           type: "input",
@@ -124,103 +127,21 @@ export class VolunteerInfoComponent {
           templateOptions: {
             label: "Email",
             type: "email",
-            pattern: /^[a-zA-Z0-9\*.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-\*]+(?:\.[a-zA-Z0-9-\*]+)*$/,
+            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            description: "Not Required if phone number is provided"
-          },
-          expressionProperties: {
-            'templateOptions.required': 'model.phoneNumber.length == 0',
-          },
-          validation: {
-            show: true
-          }
-        },
-      ]
-    },
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "postCode",
-          type: "place",
-          className: "col-md-6",
-          templateOptions: {
-            label: "Address",
-            options: [
-              {label: "Streatham Hill", value: "Streatham Hill" },
-              {label: "Streatham South", value: "Streatham South" },
-              {label: "Streatham Wells", value: "Streatham Wells" },
-              {label: "Thornton", value: "Thornton" },
-              {label: "St Lenoard's", value: "St Lenoard's" },
-              {label: "Tulse Hill", value: "Tulse Hill" },
-              {label: "Clapham Common", value: "Clapham Common" },
-              {label: "Brixton Hill", value: "Brixton Hill" },
-              {label: "Other", value: "Other" }
-            ],
-            required: false
-          },
-          validation: {
-            show: true
-          }
-        },
-        {
-          key: "subGroup",
-          type: "multicheckbox",
-          className: "col-md-6",
-          templateOptions: {
-            label: "How would you like to help",
-            description: "Please let us know what tasks you would like to help with eg organisation, technical support, collection and delivery, training, fundraising etc.",
-            multiple: true,
-            type: 'array',
-            options: [
-              {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
-              {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
-              {value: "Findraising", label: "Fundraising" },
-              {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
-              {value: "MinorOrganizing", label: "Organizing(Might be interested in helping with group administration)" },
-              {value: "Other", label: "Other" }
-            ],
             required: true
-          },
-          validation: {
-            show: true
-          } 
+          }
         },
         {
-          key: "expertise",
+          key: "phoneNumber",
           type: "input",
           className: "col-md-6",
           defaultValue: "",
           templateOptions: {
-            label: "How would you like to help",
+            label: "Phone Number",
+            pattern: /\+?[0-9]+/,
             required: true
-          },
-          hideExpression: "(model.subGroup || []).indexOf('Other') == -1",
-          expressionProperties: {
-            'templateOptions.required': "(model.subGroup || []).indexOf('Other') > -1",
-          },
-          validation: {
-            show: true
           }
-        },
-        {
-          key: "organizing",
-          type: "radio",
-          className: "col-md-6",
-          defaultValue: "no",
-          templateOptions: {
-            label: "Would you like to be involved with the organisation of Streatham TechAid?",
-            options: [
-              {label: "Yes", value: "yes" },
-              {label: "No", value: "no" },
-              {label: "Maybe", value: "maybe" } 
-            ],
-            required: true
-          },
-          validation: {
-            show: true
-          },
-          hideExpression: "(model.subGroup || []).indexOf('Organizing') > -1 || (model.subGroup || []).indexOf('MinorOrganizing') > -1",
         },
       ]
     },
@@ -228,41 +149,309 @@ export class VolunteerInfoComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "transport",
-          type: "radio",
           className: "col-md-6",
-          defaultValue: "none",
-          templateOptions: {
-            label: "Do you have use of a car or bike?",
-            description: "Mode of travel",
-            options: [
-              {label: "Car", value: "car" },
-              {label: "Bike", value: "bike" },
-              {label: "Neither", value: "none" } 
-            ]
-          },
-          validation: {
-            show: true
-          }
+          fieldGroup: [
+            {
+              key: "subGroup",
+              type: "multicheckbox",
+              className: "",
+              defaultValue: [],
+              templateOptions: {
+                type: 'array',
+                label: "How would you like to help? Select all that apply.",
+                description: "Please let us know what tasks you would like to help with eg organisation, technical support, collection and delivery, training, fundraising etc. If none of these apply, select `Other` and define how you would be able to help.",
+                multiple: true,
+                options: [
+                  {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
+                  {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
+                  {value: "Findraising", label: "Fundraising" },
+                  {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
+                  {value: "MinorOrganizing", label: "Minor Organizing(Might be interested in helping with minor group administration)" },
+                  {value: "Other", label: "Other" }
+                ],
+                required: true
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              } 
+            },
+            {
+              key: "expertise",
+              type: "input",
+              className: "",
+              templateOptions: {
+                label: "How would you like to help",
+                required: true
+              },
+              hideExpression: "(model.subGroup || []).indexOf('Other') == -1",
+              validation: {
+                show: false,
+              },
+              expressionProperties: {
+                'templateOptions.required': "(model.subGroup || []).indexOf('Other') > -1",
+                'validation.show': 'model.showErrorState',
+              },
+            },
+            {
+              key: "organizing",
+              type: "radio",
+              className: "",
+              defaultValue: "no",
+              templateOptions: {
+                label: "Would you like to be involved with the organisation of Streatham TechAid?",
+                options: [
+                  {label: "Yes", value: "yes" },
+                  {label: "No", value: "no" },
+                  {label: "Maybe", value: "maybe" } 
+                ],
+                required: true
+              },
+              hideExpression: "(model.subGroup || []).indexOf('Organizing') > -1 || (model.subGroup || []).indexOf('MinorOrganizing') > -1",
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              }
+            }
+          ]
         },
         {
-          key: "storage",
-          type: "radio",
           className: "col-md-6",
-          defaultValue: "no",
-          templateOptions: {
-            label: "Are you able to store equipment?",
-            description: "This is for devices that have been picked up from donors",
-            options: [
-              {label: "No", value: "no" },
-              {label: "Limited storage possible", value: "limited" },
-              {label: "Yes", value: "yes" }
-            ],
-            required: true
-          },
-          validation: {
-            show: true
-          }
+          fieldGroup: [
+            {
+              type: "place",
+              className: "",
+              key: "postCode",
+              templateOptions: {
+                label: "Address",
+                required: true
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              } 
+            },
+            {
+              className: 'col-md-6',
+              fieldGroupClassName: 'row',
+              fieldGroup: [
+                {
+                  key: "transport",
+                  type: "radio",
+                  className: "col-md-6",
+                  defaultValue: "none",
+                  templateOptions: {
+                    label: "Do you have use of a car or bike?",
+                    description: "Mode of travel",
+                    options: [
+                      {label: "Car", value: "car" },
+                      {label: "Bike", value: "bike" },
+                      {label: "Neither", value: "none" } 
+                    ]
+                  },
+                  validation: {
+                    show: false
+                  },
+                  expressionProperties: {
+                    'validation.show': 'model.showErrorState',
+                  }
+                },
+                {
+                  key: "storage",
+                  type: "radio",
+                  className: "col-md-6",
+                  defaultValue: "no",
+                  templateOptions: {
+                    label: "Are you able to store equipment?",
+                    description: "This is for devices that have been picked up from donors",
+                    options: [
+                      {label: "No", value: "no" },
+                      {label: "Limited storage possible", value: "limited" },
+                      {label: "Yes", value: "yes" }
+                    ],
+                    required: true
+                  },
+                  validation: {
+                    show: false
+                  },
+                  expressionProperties: {
+                    'validation.show': 'model.showErrorState',
+                  }
+                }
+              ]
+            },
+          ]
+        }
+      ]
+    },
+    {
+      fieldGroupClassName: "row",
+      hideExpression: "(model.subGroup || []).indexOf('Technical') == -1",
+      fieldGroup: [
+        {
+          className: 'col-md-6',
+          fieldGroup: [
+            {
+              key: "attributes.accepts",
+              type: "multicheckbox",
+              className: "",
+              defaultValue: [],
+              templateOptions: {
+                type: 'array',
+                label: "As a Tech volunteer, what sort of devices are you willing to take?",
+                description: "Please select all the devices that you are happy to help with",
+                multiple: true,
+                options: [
+                  {value: "APPLE_PHONES", label: "Apple iPhones"},
+                  {value: "ANDROID_PHONES", label: "Android Phones"},
+                  {value: "IOS_TABLETS", label: "iPads" },
+                  {value: "ANDROID_TABLETS", label: "Android Tablets" },
+                  {value: "OTHER_TABLETS", label: "All Other Tablets ( Windows )" },
+                  {value: "WINDOWS_LAPTOPS", label: "Windows Laptops" },
+                  {value: "WINDOWS_ALLINONES", label: "Windows All In Ones" },
+                  {value: "LINUX_LAPTOPS", label: "Capable of Installing Linux on Old Windows Laptops" },
+                  {value: "APPLE_LAPTOPS", label: "Apple Macbooks" },
+                  {value: "APPLE_ALLINONES", label: "Apple iMacs (All In One)" },
+                ],
+                required: true
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              }
+            },
+            {
+              key: "attributes.dropOffAvailability",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Device Dropoff Availability",
+                placeholder: "",
+                description: "Please specify what times you are usually available to have devices dropped off at your address",
+                required: true
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              }
+            },  
+          ]
+        },
+        {
+          className: 'col-md-6',
+          hideExpression: '!model.attributes.accepts?.length',
+          fieldGroup: [
+            {
+              key: "attributes.hasCapacity",
+              type: "radio",
+              className: "",
+              templateOptions: {
+                label: "Do you currently have capacity to take on new devices?",
+                options: [
+                  {label: "Yes", value: true },
+                  {label: "No", value: false },
+                ],
+                required: true,
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              }
+            }, 
+            {
+              fieldGroupClassName: 'row',
+              hideExpression: "!model.attributes?.hasCapacity",
+              fieldGroup: [
+                {
+                  className: 'col-12',
+                  template: `
+                    <p>How many of the following items can you currently take?</p>
+                  `
+                },
+                {
+                  key: "attributes.capacity.laptops",
+                  type: "input",
+                  className: "col-6",
+                  defaultValue: 0,
+                  hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
+                  templateOptions: {
+                    min: 0,
+                    label: 'Laptops', 
+                    addonLeft: {
+                      class: 'fas fa-laptop'
+                    },
+                    type: "number",
+                    placeholder: "",
+                    required: true
+                  }
+                },
+                {
+                  key: "attributes.capacity.phones",
+                  type: "input",
+                  className: "col-6",
+                  hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') < 0",
+                  defaultValue: 0,
+                  templateOptions: {
+                    min: 0,
+                    label: "Phones",
+                    addonLeft: {
+                      class: 'fas fa-mobile-alt'
+                    },
+                    type: "number",
+                    placeholder: "",
+                    required: true
+                  }
+                },
+                {
+                  key: "attributes.capacity.tablets",
+                  type: "input",
+                  className: "col-6",
+                  defaultValue: 0,
+                  hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') < 0",
+                  templateOptions: {
+                    min: 0,
+                    label: "Tablets",
+                    addonLeft: {
+                      class: 'fas fa-tablet-alt'
+                    },
+                    type: "number",
+                    placeholder: "",
+                    required: true
+                  }
+                },
+                {
+                  key: "attributes.capacity.allInOnes",
+                  type: "input",
+                  className: "col-6",
+                  hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') < 0",
+                  defaultValue: 0,
+                  templateOptions: {
+                    min: 0,
+                    label: "All In Ones",
+                    addonLeft: {
+                      class: 'fas fa-desktop'
+                    },
+                    type: "number",
+                    placeholder: "",
+                    required: true
+                  }
+                },
+              ]
+            }
+          ]
         }
       ]
     },
@@ -274,10 +463,14 @@ export class VolunteerInfoComponent {
       templateOptions: {
         label: "Availability",
         placeholder: "",
+        description: "Please provide your general availability for attending mettings",
         required: false
       },
       validation: {
-        show: true
+        show: false
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
       }
     }
   ];
@@ -357,6 +550,10 @@ export class VolunteerInfoComponent {
   }
 
   updateEntity(data: any) {
+    if(!this.form.valid){
+      this.model['showErrorState'] = true;
+      return;
+    }
     data.id = this.userId;
     data.subGroup = (data.subGroup || [])
     if(data.organizing){

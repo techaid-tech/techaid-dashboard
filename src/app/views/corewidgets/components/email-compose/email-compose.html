@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <div class="d-flex justify-content-between pb-1 mb-2">
+                    <div>
+                        <button (click)="back()" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="form">
+                    <formly-form [options]="options" (ngSubmit)="form.valid && save(form.value)"
+                        [form]="form" [model]="model" [fields]="fields">
+                    </formly-form>
+                    <div *ngIf="message?.id">
+                        <div #quote>
+                            <div>
+                                <div>
+                                    On {{message.internalDate | date:'medium'}}
+                                    {{ message.payload?.from[0]?.value }} wrote:
+                                </div>
+                            </div>
+                            <div [innerHtml]="message.payload.body?.decodedData || message.payload.html?.body?.decodedData || message.payload.text?.body?.decodedData"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex justify-content-end">
+                                <button [disabled]="form.invalid" (click)="form.valid && save(form.value)"
+                                type="submit" class="btn btn-dark btn-sm">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                            </div>
+                        </div>
+                    </div>
+                </form> 
+                <div class="mt-2 shadow p-3 rounded" *ngIf="model.email">
+                    <email-threads #threads [email]="model.email" [thread]="model.thread"></email-threads>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

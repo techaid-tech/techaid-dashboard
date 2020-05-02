@@ -147,7 +147,7 @@ export class DonorInfoComponent {
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
-        label: "PostCode",
+        label: "Address",
         placeholder: "",
         postCode: false,
         required: false
@@ -202,7 +202,7 @@ export class DonorInfoComponent {
       if (res.data && res.data['donor']) {
         var data = res.data['donor'];
         this.model = this.normalizeData(data);
-        this.entityName = `${this.model['name'] || ""} ${this.model['email'] || ""} ${this.model['phoneNumber'] || ""}`.trim().split(" ")[0];
+        this.entityName = `${this.model['name'] || ""}/${this.model['email'] || ""}/${this.model['phoneNumber'] || ""}`.trim().split("/").filter(f => f.trim().length > 0)[0];
       } else {
         this.model = {};
         this.entityName = "Not Found!"

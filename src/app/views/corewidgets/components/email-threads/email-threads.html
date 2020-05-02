@@ -7,29 +7,33 @@
                     <tr>
                         <th>Details</th>
                         <th>Date</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngIf="loading">
-                        <td colspan="2">
+                        <td colspan="3">
                             <div class="d-flex justify-content-center">
                                 <span><i class="fas fa-spinner fa-spin"></i> &nbsp; Loading...</span>
                             </div>
                         </td>
                     </tr>
                     <tr *ngIf="!loading && !entities?.length">
-                            <td colspan="2">
+                            <td colspan="3">
                                 <div class="d-flex justify-content-center">
-                                    <span>No data!</span>
+                                    <span>No emails <span *ngIf="filter.email?.length">for {{filter.email}}</span></span>
                                 </div>
                             </td>
                     </tr>
-                    <tr *ngFor="let dt of entities" (click)="selected = dt; modal(viewMessage)">
-                        <td>
+                    <tr *ngFor="let dt of entities">
+                        <td (click)="selected = dt; modal(viewMessage)">
                             <span *ngFor="let h of dt.messages[0]?.payload?.to" class="badge badge-secondary mr-1 mb-1">{{h.value}}</span>
-                            <div class="text-muted"><small [innerHtml]="dt.snippet"></small></div>
+                            <div class="text-muted"><small [innerHtml]="dt.snippet || dt.messages[0]?.snippet"></small></div>
                         </td>
-                        <td>{{ dt.messages[0]?.internalDate | timeAgo }}</td>
+                        <td (click)="selected = dt; modal(viewMessage)">{{ dt.messages[0]?.internalDate | timeAgo }}</td>
+                        <td>
+                            <a [routerLink]="['/dashboard/email']" [queryParams]="{to: dt.messages[0]?.payload?.to[0]?.value, thread: dt.id, id: dt.messages[dt.messages.length -1].id}"><i class="fas fa-reply"></i></a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -60,22 +64,20 @@
     <div class="modal-body">
         <div>
             <div *ngFor="let m of selected.messages">
-                <div *ngFor="let p of m.payload.parts">
-                    <div *ngIf="p.mimeType == 'text/html'">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <span *ngFor="let h of m.payload?.to" class=" mr-1 mb-1"><small>{{h.value}}</small></span> 
-                            </div>
-                            <div>
-                                <small>
-                                    <span class="mr-1 mb-1">{{m.internalDate | date:'medium'}}</span>
-                                    <span>{{m.internalDate | timeAgo }}</span>
-                                </small>
-                            </div>
+                <div>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <span *ngFor="let h of m.payload?.to" class=" mr-1 mb-1"><small>{{h.value}}</small></span> 
                         </div>
-                        <div [innerHtml]="p.body.decodedData"></div>
-                        <hr />
+                        <div>
+                            <small>
+                                <span class="mr-1 mb-1">{{m.internalDate | date:'medium'}}</span>
+                                <span>( {{m.internalDate | timeAgo }} )</span>
+                            </small>
+                        </div>
                     </div>
+                    <div [innerHtml]="m.payload?.body?.decodedData || m.payload?.html?.body?.decodedData || m.payload?.text?.body?.decodedData"></div>
+                    <hr />
                 </div>
             </div>
         </div>

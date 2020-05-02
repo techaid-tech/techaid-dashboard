@@ -15,6 +15,7 @@ import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group
 import { Lightbox } from 'ngx-lightbox';
 import { isObject } from 'util';
 import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
+import { HashUtils } from '@app/shared/utils';
 
 
 const QUERY_ENTITY = gql`
@@ -32,11 +33,15 @@ query findKit($id: Long) {
     createdAt
     updatedAt
     age
-    volunteer {
-      id
-      name
-      email
-      phoneNumber
+    archived
+    volunteers {
+      type
+      volunteer {
+        id
+        name 
+        email
+        phoneNumber
+      }
     }
     donor {
       id
@@ -45,6 +50,9 @@ query findKit($id: Long) {
       phoneNumber
     }
     attributes {
+      credentials
+      status
+      pickupAvailability
       notes
       images {
         id
@@ -69,11 +77,15 @@ mutation updateKit($data: UpdateKitInput!) {
     createdAt
     updatedAt
     age
-    volunteer {
-      id
-      name
-      email
-      phoneNumber
+    archived
+    volunteers {
+      type
+      volunteer {
+        id
+        name 
+        email
+        phoneNumber
+      }
     }
     donor {
       id
@@ -82,6 +94,9 @@ mutation updateKit($data: UpdateKitInput!) {
       phoneNumber
     }
     attributes {
+      credentials
+      pickupAvailability
+      status
       notes
       images {
         id
@@ -102,25 +117,33 @@ mutation deleteKit($id: ID!) {
 `;
 
 const AUTOCOMPLETE_USERS = gql`
-query findAutocompleteVolunteers($term: String) {
+query findAutocompleteVolunteers($term: String, $subGroup: String) {
   volunteersConnection(page: {
     size: 50
   }, where: {
     name: {
       _contains: $term
     }
+    subGroup: {
+      _contains: $subGroup
+    }
     OR: [ 
     {
+      subGroup: {
+        _contains: $subGroup
+      }
       phoneNumber: {
         _contains: $term
       }
     },
     {
+       subGroup: {
+        _contains: $subGroup
+      }
       email: {
         _contains: $term
       }
-    }
-    ]
+    }]
   }){
     content  {
      id
@@ -178,20 +201,61 @@ export class KitInfoComponent {
   entityName: string;
   entityId: number;
   album = [];
-  users$: Observable<any>;
-  userInput$ = new Subject<string>();
-  userLoading = false;
-  userField: FormlyFieldConfig = {
-    key: "userId",
+
+  organisers$: Observable<any>;
+  organisersInput$ = new Subject<string>();
+  organisersLoading = false;
+  organisersField: FormlyFieldConfig = {
+    key: "organiserIds",
     type: "choice",
     className: "col-md-12",
     templateOptions: {
-      label: "Volunteer",
-      description: "The volunteer this device is currently assigned to.",
-      loading: this.userLoading,
-      typeahead: this.userInput$,
-      placeholder: "Assign device to a Volunteer",
-      multiple: false,
+      label: "Organising Volunteer",
+      description: "The organising volunteer this device is currently assigned to.",
+      loading: this.organisersLoading,
+      typeahead: this.organisersInput$,
+      placeholder: "Assign device to Organiser Volunteers",
+      multiple: true,
+      searchable: true,
+      items: [],
+      required: false
+    },
+  };
+
+  logistics$: Observable<any>;
+  logisticsInput$ = new Subject<string>();
+  logisticsLoading = false;
+  logisticsField: FormlyFieldConfig = {
+    key: "logisticIds",
+    type: "choice",
+    className: "col-md-12",
+    templateOptions: {
+      label: "Logistics Volunteer",
+      description: "The Logistics volunteer this device is currently assigned to.",
+      loading: this.logisticsLoading,
+      typeahead: this.logisticsInput$,
+      placeholder: "Assign device to Logistic Volunteers",
+      multiple: true,
+      searchable: true,
+      items: [],
+      required: false
+    },
+  };
+
+  technicians$: Observable<any>;
+  techniciansInput$ = new Subject<string>();
+  techniciansLoading = false;
+  techniciansField: FormlyFieldConfig = {
+    key: "technicianIds",
+    type: "choice",
+    className: "col-md-12",
+    templateOptions: {
+      label: "Techie Volunteer",
+      description: "The techie volunteers this device is currently assigned to.",
+      loading: this.techniciansLoading,
+      typeahead: this.techniciansInput$,
+      placeholder: "Assign device to Tech Volunteers",
+      multiple: true,
       searchable: true,
       items: [],
       required: false
@@ -225,36 +289,73 @@ export class KitInfoComponent {
         {
           key: "status",
           type: "radio",
-          className: "col-md-6",
+          className: "col-md-6 kit-status",
           defaultValue: "REGISTERED",
           templateOptions: {
             label: "Status of the device",
             options: [
-              {label: "Donation Registered", value: "REGISTERED" },
-              {label: "Pickup Scheduled", value: "PICKUP_SCHEDULED" },
-              {label: "Picked up from Donor", value: "PICKED_UP" },
-              {label: "Software Updated", value: "TECH_UPDATE" },
-              {label: "Issued to Recepient", value: "DEPLOYED" },
-              {label: "Recycled", value: "RECYCLED" },
-              {label: "Other", value: "OTHER" }
+              {label: "New - Donation Registered", value: "NEW" },
+              {label: "Declined - Not Suitable", value: "DECLINED" },
+              {label: "Accepted - Assesment Needed", value: "ASSESSMENT_NEEDED" },
+              {label: "Accepted - No Assesment Required", value: "ACCEPTED" },
+              {label: "Collection from donor scheduled", value: "PICKUP_SCHEDULED" },
+              {label: "Donor drop off agreed", value: "DROPOFF_AGGREED" },
+              {label: "Donation received by Tech Team", value: "WITH_TECHIE" },
+              {label: "Donation faulty - collect for recycling", value: "UPDATE_FAILED" },
+              {label: "Donation updated - arrange collection", value: "READY" },
+              {label: "Device allocated to referring organisation", value: "ALLOCATED" },
+              {label: "Collection / drop off to referring organisation agreed", value: "DELIVERY_ARRANGED" },
+              {label: "Device received by organisation", value: "DELIVERED" }
             ],
             required: true
           } 
         },
         {
-          key: "attributes.notes",
-          type: "textarea",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Technical notes about the device",
-            rows: 3,
-            required: false
-          } 
-        },
+          fieldGroupClassName: 'd-flex flex-column justify-content-between',
+          className: 'col-md-6',
+          fieldGroup: [
+            {
+              key: "attributes.notes",
+              type: "textarea",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Notes about the device",
+                rows: 5,
+                required: false
+              } 
+            },
+            {
+              key: "archived",
+              type: "radio",
+              className: "",
+              templateOptions: {
+                type: 'array',
+                label: "Archived?",
+                description: "Archived kits are hidden from view",
+                options: [
+                  {label: "Device Active and Visible", value: false },
+                  {label: "Archive and Hide this Device", value: true },
+                ],
+                required: true,
+              }
+            }, 
+            {
+              template: `
+              <div class="alert alert-warning shadow" role="alert">
+                Please ensure the donor has been updated with the reasons why 
+                the donation has been <span class="badge badge-danger">DECLINED<span>
+              </div>
+              `,
+              hideExpression: "model.status != 'DECLINED'"
+            },
+          ] 
+        }
       ]
     },
-    this.userField,
+    this.techniciansField,
+    this.organisersField,
+    this.logisticsField,
     this.donorField,
     {
       key: "location",
@@ -262,7 +363,7 @@ export class KitInfoComponent {
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
-        label: "PostCode",
+        label: "Address",
         description: "The address of the device",
         placeholder: "",
         postCode: false,
@@ -286,6 +387,23 @@ export class KitInfoComponent {
       }
     },
     {
+      key: "attributes.pickupAvailability",
+      type: "input",
+      className: "col-md-12",
+      defaultValue: "",
+      templateOptions: {
+        label: "Pickup Availability",
+        rows: 2,
+        description: `
+          Please let us know when you are typically available at home for someone 
+          to arrange to come and pick up your device. Alternatively provide us with times 
+          when you are usually not available. 
+          `,
+        required: true
+      },
+      hideExpression: "model.attributes.pickup != 'PICKUP'",
+    },
+    {
       template: `
       <div class="row">
         <div class="col-md-12">
@@ -304,37 +422,109 @@ export class KitInfoComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
-          key: "type",
-          type: "radio",
           className: "col-md-6",
-          defaultValue: "LAPTOP",
-          templateOptions: {
-            label: "Type of device",
-            options: [
-              {label: "Laptop", value: "LAPTOP" },
-              {label: "Tablet", value: "TABLET" },
-              {label: "Smart Phone", value: "SMARTPHONE" },
-              {label: "All In One (PC)", value: "ALLINONE" },
-              {label: "Other", value: "OTHER" }
-            ],
-            required: true
-          } 
+          fieldGroup: [
+            {
+              key: "type",
+              type: "radio",
+              className: "",
+              defaultValue: "LAPTOP",
+              templateOptions: {
+                label: "Type of device",
+                options: [
+                  {label: "Laptop", value: "LAPTOP" },
+                  {label: "Tablet", value: "TABLET" },
+                  {label: "Smart Phone", value: "SMARTPHONE" },
+                  {label: "All In One (PC)", value: "ALLINONE" },
+                  {label: "Other", value: "OTHER" }
+                ],
+                required: true
+              } 
+            },
+            {
+              key: "attributes.otherType",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Type of device",
+                rows: 2,
+                placeholder: "(Other device type)",
+                required: true
+              },
+              hideExpression: "model.type != 'OTHER'",
+              expressionProperties: {
+                'templateOptions.required': "model.type == 'OTHER'",
+              },
+            },
+          ]
         },
         {
-          key: "attributes.otherType",
-          type: "input",
           className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Type of device",
-            rows: 2,
-            placeholder: "(Other device type)",
-            required: true
-          },
-          hideExpression: "model.type != 'OTHER'",
-          expressionProperties: {
-            'templateOptions.required': "model.type == 'OTHER'",
-          },
+          fieldGroup: [
+            {
+              key: "attributes.status",
+              type: "multicheckbox",
+              className: "",
+              templateOptions: {
+                type: "array",
+                options: [],
+                description: "Please select all options that apply"
+              },
+              defaultValue: [],
+              expressionProperties: {
+                'templateOptions.options': (model, state)=> {
+                  const props = {
+                    'LAPTOP': [
+                      {label: "Do you have the charger / power cable for the Laptop?", value: "CHARGER"},
+                      {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
+                    ],
+                    'TABLET': [
+                      {label: "Do you have the charger for the Tablet?", value: "CHARGER"},
+                      {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
+                    ],
+                    'SMARTPHONE': [
+                      {label: "Do you have the charger for the Phone?", value: "CHARGER"},
+                      {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
+                    ],
+                    'ALLINONE': [
+                      {label: "Do you have the charger for the Computer?", value: "CHARGER"},
+                      {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
+                      {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
+                      {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
+                    ],
+                    'OTHER': [
+                      {label: "Do you have the charger or power cable for the device?", value: "CHARGER"}
+                    ],
+                  };
+                  return props[model.type] || props['OTHER']
+                },
+              },
+            },
+            {
+              key: "attributes.credentials",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "Device Password",
+                description: "If your device requires a password or a PIN to sign in, please provide it here",
+                rows: 2,
+                placeholder: "Password",
+                required: false
+              },
+              hideExpression: (model, state) => {
+                if(['LAPTOP', 'ALLINONE'].indexOf(model.type) == -1){
+                  return true;
+                }
+                const status = HashUtils.dotNotation(model, 'attributes.status') || [];
+                if(status && status.length) {
+                  return status.indexOf('PASSWORD_PROTECTED') == -1
+                }
+                return true;
+              }
+            },
+          ]
         },
         {
           key: "age",
@@ -449,11 +639,20 @@ export class KitInfoComponent {
       src.url = `/api/kits/${data.id}/images/${src.id}`;
       return {src: src.url, thumb: src.url, caption: data.model}
     });
-    if(data.volunteer && data.volunteer.id){
-      data.userId = data.volunteer.id;
-      this.userField.templateOptions['items'] = [
-        {label: this.volunteerName(data.volunteer), value: data.volunteer.id}
-      ]; 
+    if(data.volunteers){
+      const volunteers = {};
+      data.volunteers.forEach(v => {
+        volunteers[v.type] = volunteers[v.type] || [];
+        volunteers[v.type].push({label: this.volunteerName(v.volunteer), value: v.volunteer.id});
+      });
+
+      data.organiserIds = (volunteers['ORGANISER'] || []).map(v => v.value);
+      data.technicianIds = (volunteers['TECHNICIAN'] || []).map(v => v.value);
+      data.logisticIds = (volunteers['LOGISTICS'] || []).map(v => v.value);
+
+      this.organisersField.templateOptions['items'] = volunteers['ORGANISER']; 
+      this.techniciansField.templateOptions['items'] = volunteers['TECHNICIAN']; 
+      this.logisticsField.templateOptions['items'] = volunteers['LOGISTICS']; 
     }
     if(data.donor && data.donor.id){
       data.donorId = data.donor.id;
@@ -512,17 +711,67 @@ export class KitInfoComponent {
       variables: {
       }
     });
-    this.users$ = concat(
+    
+    this.organisers$ = concat(
       of([]),
-      this.userInput$.pipe(
+      this.organisersInput$.pipe(
         debounceTime(200),
         distinctUntilChanged(),
-        tap(() => this.userLoading = true),
+        tap(() => this.organisersLoading = true),
         switchMap(term => from(userRef.refetch({
-          term: term
+          term: term,
+          subGroup: "Organizing"
         })).pipe(
           catchError(() => of([])),
-          tap(() => this.userLoading = false),
+          tap(() => this.organisersLoading = false),
+          switchMap(res => {
+            const data = res['data']['volunteersConnection']['content'].map(v => {
+              return {
+                label: `${this.volunteerName(v)}`, value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
+    this.logistics$ = concat(
+      of([]),
+      this.logisticsInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.logisticsLoading = true),
+        switchMap(term => from(userRef.refetch({
+          term: term,
+          subGroup: "Distribution"
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.logisticsLoading = false),
+          switchMap(res => {
+            const data = res['data']['volunteersConnection']['content'].map(v => {
+              return {
+                label: `${this.volunteerName(v)}`, value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
+    this.technicians$ = concat(
+      of([]),
+      this.techniciansInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.techniciansLoading = true),
+        switchMap(term => from(userRef.refetch({
+          term: term,
+          subGroup: "Technical"
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.techniciansLoading = false),
           switchMap(res => {
             const data = res['data']['volunteersConnection']['content'].map(v => {
               return {
@@ -563,9 +812,18 @@ export class KitInfoComponent {
       this.fetchData();
     });
 
-    this.sub.add(this.users$.subscribe(data => {
-      this.userField.templateOptions['items'] = data;
+    this.sub.add(this.organisers$.subscribe(data => {
+      this.organisersField.templateOptions['items'] = data;
     }));
+
+    this.sub.add(this.logistics$.subscribe(data => {
+      this.logisticsField.templateOptions['items'] = data;
+    }));
+
+    this.sub.add(this.technicians$.subscribe(data => {
+      this.techniciansField.templateOptions['items'] = data;
+    }));
+
 
     this.sub.add(this.donors$.subscribe(data => {
       this.donorField.templateOptions['items'] = data;

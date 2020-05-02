@@ -35,4 +35,45 @@ form {
     }
 }
 
+.kit-status {
+    .custom-control {
+        color: black;
+    }
+    .custom-control:nth-child(1){
+        border-radius: 5px 5px 0px 0px;
+        background-color: #CC4126;
+        color: white;
+    }
+    .custom-control:nth-child(2),
+    .custom-control:nth-child(3),
+    .custom-control:nth-child(4){
+        background-color: #E16666;
+    }
 
+    .custom-control:nth-child(5),
+    .custom-control:nth-child(6){
+        background-color: #E69138;
+    }
+
+    .custom-control:nth-child(7){
+        background-color: #F7B26C;
+    }
+
+    .custom-control:nth-child(8),
+    .custom-control:nth-child(9){
+        background-color: #F1C233;
+    }
+
+    .custom-control:nth-child(10){
+        background-color: #69A84F;
+    }
+
+    .custom-control:nth-child(11){
+        background-color: #B6D7A7;
+    }
+
+    .custom-control:nth-child(12){
+        background-color: #A2C4C9;
+        border-radius: 0px 0px 5px 5px;
+    }
+}

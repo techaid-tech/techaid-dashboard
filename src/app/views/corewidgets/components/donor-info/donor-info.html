@@ -11,7 +11,7 @@
             </ol>
         </nav>
 
-        <ngb-tabset>
+        <ngb-tabset [destroyOnHide]="false">
             <ngb-tab title="Devices">
                 <ng-template ngbTabContent>
                     <div class="card shadow mb-4 mt-1">
@@ -31,6 +31,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <tr *ngIf="!model?.kits?.length">
+                                                    <td colspan="6">
+                                                        <div class="d-flex justify-content-center">
+                                                            <span>No devices for donor</span>
+                                                        </div>
+                                                    </td>
+                                            </tr>
                                             <tr *ngFor="let dt of model.kits">
                                                 <td>
                                                         <a href="#" [routerLink]="['./', dt.id]">
@@ -61,7 +68,7 @@
                     </div> 
                 </ng-template>
             </ngb-tab>
-            <ngb-tab title="Emails" *ngIf="model?.email?.length && user?.authorities['read:emails']">
+            <ngb-tab title="Emails" *ngIf="user?.authorities['read:emails'] && model?.email?.length > 0">
                 <ng-template ngbTabContent>
                     <email-threads [email]="model.email"></email-threads>
                 </ng-template>
@@ -80,7 +87,7 @@
                                     [form]="form" [model]="model" [fields]="fields">
                                 </formly-form>
                                 <button style="width: 150px" [disabled]="form.invalid" (click)="updateEntity(form.value)"
-                                    type="submit" class="btn btn-info btn-sm p-2">
+                                    type="submit" class="btn btn-primary btn-sm p-2">
                                     <small>Save</small>
                                 </button>
                             </form>

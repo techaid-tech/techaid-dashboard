@@ -218,6 +218,7 @@ export class RoleUsersComponent {
       pageLength: 10,
       order: [0, 'desc'],
       serverSide: true,
+      stateSave: true,
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {

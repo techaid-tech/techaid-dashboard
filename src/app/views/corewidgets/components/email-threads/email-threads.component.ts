@@ -15,11 +15,12 @@ import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
 
 const QUERY_ENTITY = gql`
-query findAllThreads($query: String, $pageToken: String) {
+query findAllThreads($query: String, $pageToken: String, $id: String) {
   emailThreads(filter: {
     maxResults: 5
    	query: $query
     pageToken: $pageToken
+    id: $id
   }){
     resultSizeEstimate
     nextPageToken
@@ -35,6 +36,9 @@ query findAllThreads($query: String, $pageToken: String) {
         raw
         threadId
         payload {
+          body {
+            decodedData
+          }
           to: headers(keys: ["To"]) {
             name
             value
@@ -42,6 +46,16 @@ query findAllThreads($query: String, $pageToken: String) {
           subject: headers(keys: ["Subject"]) {
             name
             value
+          }
+          html: content(mimeType: "text/html") {
+            body {
+              decodedData
+            }
+          }
+          text: content(mimeType: "text/plain") {
+            body {
+              decodedData
+            }
           }
           parts {
             mimeType
@@ -68,6 +82,7 @@ export class EmailThreadsComponent {
   sub: Subscription;
   table: any;
   selections = {};
+  filter = {email: "", threadId: ""};
   entities = [];
   form: FormGroup = new FormGroup({});
   model = {};
@@ -105,11 +120,18 @@ export class EmailThreadsComponent {
     return false;
   }
 
-  _email : string
   @Input()
   set email(value){
-    this._email = value;
+    this.filter.email = value;
+    this.refresh();
   }
+
+  @Input()
+  set thread(value){
+    this.filter.threadId = value;
+    this.refresh();
+  }
+ 
 
   modal(content) {
     this.modalService.open(content, { centered: true, size: 'lg' });
@@ -117,7 +139,8 @@ export class EmailThreadsComponent {
 
   fetchData(vars = {}){
     this.loading = true;
-    vars["query"] = `${this._email} ${vars['query'] || ''}`;
+    vars["query"] = `${this.filter.email} ${vars['query'] || ''}`;
+    vars["id"] = this.filter.threadId;
     this.queryRef.refetch(vars).then(res => {
         this.loading = false;
         var data: any = {};
@@ -129,6 +152,11 @@ export class EmailThreadsComponent {
     }, err =>  {
       this.loading = false;
     });
+  }
+
+
+  refresh(){
+    this.fetchData();
   }
 
   ngOnInit() {

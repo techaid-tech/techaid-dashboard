@@ -11,7 +11,7 @@
             </ol>
         </nav>
 
-        <ngb-tabset>
+        <ngb-tabset [destroyOnHide]="false">
             <ngb-tab title="Details">
                 <ng-template ngbTabContent>
                     <div class="card shadow mb-4 mt-1">
@@ -22,11 +22,11 @@
                         </div>
                         <div class="card-body">
                             <form [formGroup]="form">
-                                <formly-form [options]="options" (ngSubmit)="form.valid && updateEntity(form.value)"
+                                <formly-form [options]="options" (ngSubmit)="updateEntity(form.value)"
                                     [form]="form" [model]="model" [fields]="fields">
                                 </formly-form>
-                                <button style="width: 150px" [disabled]="form.invalid" (click)="updateEntity(form.value)"
-                                    type="submit" class="btn btn-info btn-sm p-2">
+                                <button style="width: 150px" (click)="updateEntity(form.value)"
+                                    type="submit" class="btn btn-primary btn-sm p-2">
                                     <small>Save</small>
                                 </button>
                             </form>

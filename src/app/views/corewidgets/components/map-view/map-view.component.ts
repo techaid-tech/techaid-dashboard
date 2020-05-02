@@ -53,7 +53,7 @@ export class MapViewComponent {
 
   markers: Array<any> = [];
   form: FormGroup = new FormGroup({});
-  model = {}
+  model = {};
 
   fields: Array<FormlyFieldConfig> = [
     {
@@ -82,7 +82,7 @@ export class MapViewComponent {
       key: "subGroup",
       type: "multicheckbox",
       className: "col-md-6",
-      defaultValue: ['Technical', 'Distribution', 'Findraising', 'Organizing', 'MinorOrganizing', 'Other'],
+      defaultValue: ['Technical', 'Distribution'],
       templateOptions: {
         label: "Volunteer Type",
         multiple: true,

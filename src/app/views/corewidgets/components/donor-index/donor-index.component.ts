@@ -140,7 +140,7 @@ export class DonorIndexComponent {
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
-        label: "PostCode",
+        label: "Address",
         placeholder: "",
         postCode: false,
         required: false
@@ -216,6 +216,7 @@ export class DonorIndexComponent {
       pageLength: 10,
       order: [1, 'desc'],
       serverSide: true,
+      stateSave: true,
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {

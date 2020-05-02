@@ -161,6 +161,7 @@ export class FaqIndexComponent {
       pageLength: 10,
       order: [2, 'desc'],
       serverSide: true,
+      stateSave: true,
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {

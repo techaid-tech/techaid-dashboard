@@ -239,7 +239,10 @@ export const FORMLYCONFIG = {
             defaultOptions: {
                 templateOptions: {
                     placeholder: "",
-                    height: "100%"
+                    height: "100%",
+                    htmlEdit: true,
+                    editor: "classic",
+                    html: false,
                 }
             }
         },

@@ -3464,6 +3464,7 @@
   
   .input-group-prepend {
     margin-right: -1px;
+    margin-top: -1px;
   }
   
   .input-group-append {
@@ -11175,29 +11176,3 @@
     width: 100%;
   }
 
-  .thumbnail img {
-      width: 480px;
-      height: 320px;
-      object-fit: contain;
-  }
-
-  @media only screen and (max-width: 375px) {
-    .card-main {
-      width: 95vw;
-    }
-
-    .thumbnail img {
-        width: 150px;
-        height: 150px;
-        object-fit: contain;
-    }
-  }
-
-.container,  .container-fluid {
-    padding-left: 0.5em !important;
-    padding-right: 0.5em !important;
-}
-
-.sidebar-toggled .sidebar {
-  display: none;
-}
