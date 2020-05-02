@@ -804,6 +804,7 @@ export class VolunteersIndexComponent {
       try {
         this.filterModel = JSON.parse(localStorage.getItem('volunteerFilters'));
         this.applyFilter(this.filterModel);
+        this.filterForm.patchValue(this.filterModel);
       }catch(_){
       }
     });

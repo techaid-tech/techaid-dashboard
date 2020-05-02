@@ -636,6 +636,7 @@ export class KitIndexComponent {
       try {
         this.filterModel = JSON.parse(localStorage.getItem('kitFilters'));
         this.applyFilter(this.filterModel);
+        this.filterForm.patchValue(this.filterModel);
       }catch(_){
       }
 
