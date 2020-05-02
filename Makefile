@@ -12,6 +12,9 @@ all: release
 compile:
 	npm run build
 
+compile-debug:
+	npm run debug
+
 build:
 	docker build --rm --force-rm -t $(DOCKER_IMAGE) .
 
@@ -24,3 +27,4 @@ push:
 	docker push $(REGISTRY)/$(REPOSITORY_NAME):latest
 
 release: compile build push
+debug: compile-debug build push

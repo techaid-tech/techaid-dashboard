@@ -1,98 +1,93 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrService } from 'ngx-toastr';
-import gql from 'graphql-tag';
-import { Apollo } from 'apollo-angular';
-import { FormGroup } from '@angular/forms';
-import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Select } from '@ngxs/store';
-import { UserState } from '@app/state/state.module';
-import { User } from '@app/state/user/user.state';
+import { Component, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Subject, of, forkJoin, Observable, Subscription } from "rxjs";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrService } from "ngx-toastr";
+import gql from "graphql-tag";
+import { Apollo } from "apollo-angular";
+import { FormGroup } from "@angular/forms";
+import { FormlyFormOptions, FormlyFieldConfig } from "@ngx-formly/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Select } from "@ngxs/store";
+import { UserState } from "@app/state/state.module";
+import { User } from "@app/state/user/user.state";
 
 const QUERY_ENTITY = gql`
-query findUser($id: Long) {
-  volunteer(where: {
-    id: {
-      _eq: $id
-    }
-  }){
-    id
-    name
-    phoneNumber
-    email
-    createdAt
-    updatedAt
-    subGroup
-    postCode 
-    storage
-    availability
-    expertise
-    transport
-    attributes {
-      accepts
-      dropOffAvailability
-      hasCapacity
-      capacity {
-        phones
-        tablets
-        laptops
-        allInOnes
+  query findUser($id: Long) {
+    volunteer(where: { id: { _eq: $id } }) {
+      id
+      name
+      phoneNumber
+      email
+      createdAt
+      updatedAt
+      subGroup
+      postCode
+      storage
+      availability
+      expertise
+      transport
+      attributes {
+        accepts
+        dropOffAvailability
+        hasCapacity
+        capacity {
+          phones
+          tablets
+          laptops
+          allInOnes
+        }
       }
     }
   }
-}
 `;
 
 const UPDATE_ENTITY = gql`
-mutation updateUser($data: UpdateVolunteerInput!) {
-  updateVolunteer(data: $data){
-    id
-    name
-    phoneNumber
-    email
-    createdAt
-    updatedAt
-    subGroup
-    postCode 
-    storage
-    availability
-    expertise
-    transport
-    attributes {
-      accepts
-      dropOffAvailability
-      hasCapacity
-      capacity {
-        phones
-        tablets
-        laptops
-        allInOnes
+  mutation updateUser($data: UpdateVolunteerInput!) {
+    updateVolunteer(data: $data) {
+      id
+      name
+      phoneNumber
+      email
+      createdAt
+      updatedAt
+      subGroup
+      postCode
+      storage
+      availability
+      expertise
+      transport
+      attributes {
+        accepts
+        dropOffAvailability
+        hasCapacity
+        capacity {
+          phones
+          tablets
+          laptops
+          allInOnes
+        }
       }
     }
   }
-}
 `;
 
 const DELETE_ENTITY = gql`
-mutation deleteVolunteer($id: ID!) {
-  deleteVolunteer(id: $id)
-}
+  mutation deleteVolunteer($id: ID!) {
+    deleteVolunteer(id: $id)
+  }
 `;
 
 @Component({
-  selector: 'volunteer-info',
-  styleUrls: ['volunteer-info.scss'],
+  selector: "volunteer-info",
+  styleUrls: ["volunteer-info.scss"],
   encapsulation: ViewEncapsulation.None,
-  templateUrl: './volunteer-info.html'
+  templateUrl: "./volunteer-info.html",
 })
 export class VolunteerInfoComponent {
   sub: Subscription;
   form: FormGroup = new FormGroup({});
   options: FormlyFormOptions = {};
-  model : any = {
-  };
+  model: any = {};
   userName: string;
   userId: number;
   public user: User;
@@ -107,14 +102,14 @@ export class VolunteerInfoComponent {
       templateOptions: {
         label: "Name",
         placeholder: "",
-        required: true
+        required: true,
       },
       validation: {
-        show: false
+        show: false,
       },
       expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
+        "validation.show": "model.showErrorState",
+      },
     },
     {
       fieldGroupClassName: "row",
@@ -129,8 +124,8 @@ export class VolunteerInfoComponent {
             type: "email",
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            required: true
-          }
+            required: true,
+          },
         },
         {
           key: "phoneNumber",
@@ -140,10 +135,10 @@ export class VolunteerInfoComponent {
           templateOptions: {
             label: "Phone Number",
             pattern: /\+?[0-9]+/,
-            required: true
-          }
+            required: true,
+          },
         },
-      ]
+      ],
     },
     {
       fieldGroupClassName: "row",
@@ -157,26 +152,40 @@ export class VolunteerInfoComponent {
               className: "",
               defaultValue: [],
               templateOptions: {
-                type: 'array',
+                type: "array",
                 label: "How would you like to help? Select all that apply.",
-                description: "Please let us know what tasks you would like to help with eg organisation, technical support, collection and delivery, training, fundraising etc. If none of these apply, select `Other` and define how you would be able to help.",
+                description:
+                  "Please let us know what tasks you would like to help with eg organisation, technical support, collection and delivery, training, fundraising etc. If none of these apply, select `Other` and define how you would be able to help.",
                 multiple: true,
                 options: [
-                  {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
-                  {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
-                  {value: "Findraising", label: "Fundraising" },
-                  {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
-                  {value: "MinorOrganizing", label: "Minor Organizing(Might be interested in helping with minor group administration)" },
-                  {value: "Other", label: "Other" }
+                  {
+                    value: "Technical",
+                    label: "Technical (Fixing & Updating Equipment)",
+                  },
+                  {
+                    value: "Distribution",
+                    label: "Distribution (Picking up and delivering devices)",
+                  },
+                  { value: "Findraising", label: "Fundraising" },
+                  {
+                    value: "Organizing",
+                    label: "Organizing(Co-ordinating group activities)",
+                  },
+                  {
+                    value: "MinorOrganizing",
+                    label:
+                      "Minor Organizing(Might be interested in helping with minor group administration)",
+                  },
+                  { value: "Other", label: "Other" },
                 ],
-                required: true
+                required: true,
               },
               validation: {
-                show: false
+                show: false,
               },
               expressionProperties: {
-                'validation.show': 'model.showErrorState',
-              } 
+                "validation.show": "model.showErrorState",
+              },
             },
             {
               key: "expertise",
@@ -184,15 +193,16 @@ export class VolunteerInfoComponent {
               className: "",
               templateOptions: {
                 label: "How would you like to help",
-                required: true
+                required: true,
               },
               hideExpression: "(model.subGroup || []).indexOf('Other') == -1",
               validation: {
                 show: false,
               },
               expressionProperties: {
-                'templateOptions.required': "(model.subGroup || []).indexOf('Other') > -1",
-                'validation.show': 'model.showErrorState',
+                "templateOptions.required":
+                  "(model.subGroup || []).indexOf('Other') > -1",
+                "validation.show": "model.showErrorState",
               },
             },
             {
@@ -201,23 +211,25 @@ export class VolunteerInfoComponent {
               className: "",
               defaultValue: "no",
               templateOptions: {
-                label: "Would you like to be involved with the organisation of Streatham TechAid?",
+                label:
+                  "Would you like to be involved with the organisation of Streatham TechAid?",
                 options: [
-                  {label: "Yes", value: "yes" },
-                  {label: "No", value: "no" },
-                  {label: "Maybe", value: "maybe" } 
+                  { label: "Yes", value: "yes" },
+                  { label: "No", value: "no" },
+                  { label: "Maybe", value: "maybe" },
                 ],
-                required: true
+                required: true,
               },
-              hideExpression: "(model.subGroup || []).indexOf('Organizing') > -1 || (model.subGroup || []).indexOf('MinorOrganizing') > -1",
+              hideExpression:
+                "(model.subGroup || []).indexOf('Organizing') > -1 || (model.subGroup || []).indexOf('MinorOrganizing') > -1",
               validation: {
-                show: false
+                show: false,
               },
               expressionProperties: {
-                'validation.show': 'model.showErrorState',
-              }
-            }
-          ]
+                "validation.show": "model.showErrorState",
+              },
+            },
+          ],
         },
         {
           className: "col-md-6",
@@ -228,18 +240,18 @@ export class VolunteerInfoComponent {
               key: "postCode",
               templateOptions: {
                 label: "Address",
-                required: true
+                required: true,
               },
               validation: {
-                show: false
+                show: false,
               },
               expressionProperties: {
-                'validation.show': 'model.showErrorState',
-              } 
+                "validation.show": "model.showErrorState",
+              },
             },
             {
-              className: 'col-md-6',
-              fieldGroupClassName: 'row',
+              className: "col-md-6",
+              fieldGroupClassName: "row",
               fieldGroup: [
                 {
                   key: "transport",
@@ -250,17 +262,17 @@ export class VolunteerInfoComponent {
                     label: "Do you have use of a car or bike?",
                     description: "Mode of travel",
                     options: [
-                      {label: "Car", value: "car" },
-                      {label: "Bike", value: "bike" },
-                      {label: "Neither", value: "none" } 
-                    ]
+                      { label: "Car", value: "car" },
+                      { label: "Bike", value: "bike" },
+                      { label: "Neither", value: "none" },
+                    ],
                   },
                   validation: {
-                    show: false
+                    show: false,
                   },
                   expressionProperties: {
-                    'validation.show': 'model.showErrorState',
-                  }
+                    "validation.show": "model.showErrorState",
+                  },
                 },
                 {
                   key: "storage",
@@ -269,33 +281,34 @@ export class VolunteerInfoComponent {
                   defaultValue: "no",
                   templateOptions: {
                     label: "Are you able to store equipment?",
-                    description: "This is for devices that have been picked up from donors",
+                    description:
+                      "This is for devices that have been picked up from donors",
                     options: [
-                      {label: "No", value: "no" },
-                      {label: "Limited storage possible", value: "limited" },
-                      {label: "Yes", value: "yes" }
+                      { label: "No", value: "no" },
+                      { label: "Limited storage possible", value: "limited" },
+                      { label: "Yes", value: "yes" },
                     ],
-                    required: true
+                    required: true,
                   },
                   validation: {
-                    show: false
+                    show: false,
                   },
                   expressionProperties: {
-                    'validation.show': 'model.showErrorState',
-                  }
-                }
-              ]
+                    "validation.show": "model.showErrorState",
+                  },
+                },
+              ],
             },
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     },
     {
       fieldGroupClassName: "row",
       hideExpression: "(model.subGroup || []).indexOf('Technical') == -1",
       fieldGroup: [
         {
-          className: 'col-md-6',
+          className: "col-md-6",
           fieldGroup: [
             {
               key: "attributes.accepts",
@@ -303,30 +316,41 @@ export class VolunteerInfoComponent {
               className: "",
               defaultValue: [],
               templateOptions: {
-                type: 'array',
-                label: "As a Tech volunteer, what sort of devices are you willing to take?",
-                description: "Please select all the devices that you are happy to help with",
+                type: "array",
+                label:
+                  "As a Tech volunteer, what sort of devices are you willing to take?",
+                description:
+                  "Please select all the devices that you are happy to help with",
                 multiple: true,
                 options: [
-                  {value: "APPLE_PHONES", label: "Apple iPhones"},
-                  {value: "ANDROID_PHONES", label: "Android Phones"},
-                  {value: "IOS_TABLETS", label: "iPads" },
-                  {value: "ANDROID_TABLETS", label: "Android Tablets" },
-                  {value: "OTHER_TABLETS", label: "All Other Tablets ( Windows )" },
-                  {value: "WINDOWS_LAPTOPS", label: "Windows Laptops" },
-                  {value: "WINDOWS_ALLINONES", label: "Windows All In Ones" },
-                  {value: "LINUX_LAPTOPS", label: "Capable of Installing Linux on Old Windows Laptops" },
-                  {value: "APPLE_LAPTOPS", label: "Apple Macbooks" },
-                  {value: "APPLE_ALLINONES", label: "Apple iMacs (All In One)" },
+                  { value: "APPLE_PHONES", label: "Apple iPhones" },
+                  { value: "ANDROID_PHONES", label: "Android Phones" },
+                  { value: "IOS_TABLETS", label: "iPads" },
+                  { value: "ANDROID_TABLETS", label: "Android Tablets" },
+                  {
+                    value: "OTHER_TABLETS",
+                    label: "All Other Tablets ( Windows )",
+                  },
+                  { value: "WINDOWS_LAPTOPS", label: "Windows Laptops" },
+                  { value: "WINDOWS_ALLINONES", label: "Windows All In Ones" },
+                  {
+                    value: "LINUX_LAPTOPS",
+                    label: "Capable of Installing Linux on Old Windows Laptops",
+                  },
+                  { value: "APPLE_LAPTOPS", label: "Apple Macbooks" },
+                  {
+                    value: "APPLE_ALLINONES",
+                    label: "Apple iMacs (All In One)",
+                  },
                 ],
-                required: true
+                required: true,
               },
               validation: {
-                show: false
+                show: false,
               },
               expressionProperties: {
-                'validation.show': 'model.showErrorState',
-              }
+                "validation.show": "model.showErrorState",
+              },
             },
             {
               key: "attributes.dropOffAvailability",
@@ -336,21 +360,22 @@ export class VolunteerInfoComponent {
               templateOptions: {
                 label: "Device Dropoff Availability",
                 placeholder: "",
-                description: "Please specify what times you are usually available to have devices dropped off at your address",
-                required: true
+                description:
+                  "Please specify what times you are usually available to have devices dropped off at your address",
+                required: true,
               },
               validation: {
-                show: false
+                show: false,
               },
               expressionProperties: {
-                'validation.show': 'model.showErrorState',
-              }
-            },  
-          ]
+                "validation.show": "model.showErrorState",
+              },
+            },
+          ],
         },
         {
-          className: 'col-md-6',
-          hideExpression: '!model.attributes.accepts?.length',
+          className: "col-md-6",
+          hideExpression: "!model.attributes.accepts?.length",
           fieldGroup: [
             {
               key: "attributes.hasCapacity",
@@ -359,101 +384,105 @@ export class VolunteerInfoComponent {
               templateOptions: {
                 label: "Do you currently have capacity to take on new devices?",
                 options: [
-                  {label: "Yes", value: true },
-                  {label: "No", value: false },
+                  { label: "Yes", value: true },
+                  { label: "No", value: false },
                 ],
                 required: true,
               },
               validation: {
-                show: false
+                show: false,
               },
               expressionProperties: {
-                'validation.show': 'model.showErrorState',
-              }
-            }, 
+                "validation.show": "model.showErrorState",
+              },
+            },
             {
-              fieldGroupClassName: 'row',
+              fieldGroupClassName: "row",
               hideExpression: "!model.attributes?.hasCapacity",
               fieldGroup: [
                 {
-                  className: 'col-12',
+                  className: "col-12",
                   template: `
                     <p>How many of the following items can you currently take?</p>
-                  `
+                  `,
                 },
                 {
                   key: "attributes.capacity.laptops",
                   type: "input",
                   className: "col-6",
                   defaultValue: 0,
-                  hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
+                  hideExpression:
+                    "model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
                   templateOptions: {
                     min: 0,
-                    label: 'Laptops', 
+                    label: "Laptops",
                     addonLeft: {
-                      class: 'fas fa-laptop'
+                      class: "fas fa-laptop",
                     },
                     type: "number",
                     placeholder: "",
-                    required: true
-                  }
+                    required: true,
+                  },
                 },
                 {
                   key: "attributes.capacity.phones",
                   type: "input",
                   className: "col-6",
-                  hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') < 0",
+                  hideExpression:
+                    "model.attributes.accepts.toString().indexOf('PHONE') < 0",
                   defaultValue: 0,
                   templateOptions: {
                     min: 0,
                     label: "Phones",
                     addonLeft: {
-                      class: 'fas fa-mobile-alt'
+                      class: "fas fa-mobile-alt",
                     },
                     type: "number",
                     placeholder: "",
-                    required: true
-                  }
+                    required: true,
+                  },
                 },
                 {
                   key: "attributes.capacity.tablets",
                   type: "input",
                   className: "col-6",
                   defaultValue: 0,
-                  hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') < 0",
+                  hideExpression:
+                    "model.attributes.accepts.toString().indexOf('TABLET') < 0",
                   templateOptions: {
                     min: 0,
                     label: "Tablets",
                     addonLeft: {
-                      class: 'fas fa-tablet-alt'
+                      class: "fas fa-tablet-alt",
                     },
                     type: "number",
                     placeholder: "",
-                    required: true
-                  }
+                    required: true,
+                  },
                 },
                 {
                   key: "attributes.capacity.allInOnes",
                   type: "input",
                   className: "col-6",
-                  hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') < 0",
+                  hideExpression:
+                    "model.attributes.accepts.toString().indexOf('ALLINONE') < 0",
                   defaultValue: 0,
                   templateOptions: {
                     min: 0,
                     label: "All In Ones",
                     addonLeft: {
-                      class: 'fas fa-desktop'
+                      class: "fas fa-desktop",
                     },
                     type: "number",
                     placeholder: "",
-                    required: true
-                  }
+                    required: true,
+                  },
                 },
-              ]
-            }
-          ]
-        }
-      ]
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       key: "availability",
@@ -463,16 +492,17 @@ export class VolunteerInfoComponent {
       templateOptions: {
         label: "Availability",
         placeholder: "",
-        description: "Please provide your general availability for attending mettings",
-        required: false
+        description:
+          "Please provide your general availability for attending mettings",
+        required: false,
       },
       validation: {
-        show: false
+        show: false,
       },
       expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    }
+        "validation.show": "model.showErrorState",
+      },
+    },
   ];
 
   constructor(
@@ -481,27 +511,27 @@ export class VolunteerInfoComponent {
     private router: Router,
     private toastr: ToastrService,
     private apollo: Apollo
-  ) {
-
-  }
+  ) {}
 
   modal(content) {
     this.modalService.open(content, { centered: true });
   }
 
-  private queryRef = this.apollo
-    .watchQuery({
-      query: QUERY_ENTITY,
-      variables: {}
-    });
+  private queryRef = this.apollo.watchQuery({
+    query: QUERY_ENTITY,
+    variables: {},
+  });
 
-  private normalizeData(data: any){
-    if(data.subGroup){
-      if(!Array.isArray(data.subGroup)){
-        data.subGroup = (data.subGroup || "").toString().split(',').filter(value => value.trim().length > 0); 
+  private normalizeData(data: any) {
+    if (data.subGroup) {
+      if (!Array.isArray(data.subGroup)) {
+        data.subGroup = (data.subGroup || "")
+          .toString()
+          .split(",")
+          .filter((value) => value.trim().length > 0);
       }
-    }else {
-      data.subGroup = []
+    } else {
+      data.subGroup = [];
     }
     return data;
   }
@@ -511,36 +541,47 @@ export class VolunteerInfoComponent {
       return;
     }
 
-    this.queryRef.refetch({
-      id: this.userId
-    }).then(res => {
-      if (res.data && res.data['volunteer']) {
-        var data = res.data['volunteer'];
-        this.model = this.normalizeData(data);
-        this.userName = this.model['name'];
-      } else {
-        this.model = {};
-        this.userName = "Not Found!"
-      }
-    }, err => {
-      this.toastr.warning(`
+    this.queryRef
+      .refetch({
+        id: this.userId,
+      })
+      .then(
+        (res) => {
+          if (res.data && res.data["volunteer"]) {
+            var data = res.data["volunteer"];
+            this.model = this.normalizeData(data);
+            this.userName = this.model["name"];
+          } else {
+            this.model = {};
+            this.userName = "Not Found!";
+          }
+        },
+        (err) => {
+          this.toastr.warning(
+            `
           <small>${err.message}</small>
-        `, 'GraphQL Error', {
-          enableHtml: true,
-          timeOut: 15000,
-          disableTimeOut: true
-        })
-    });
+        `,
+            "GraphQL Error",
+            {
+              enableHtml: true,
+              timeOut: 15000,
+              disableTimeOut: true,
+            }
+          );
+        }
+      );
   }
 
   ngOnInit() {
-    this.sub = this.activatedRoute.params.subscribe(params => {
-      this.userId = +params['userId'];
+    this.sub = this.activatedRoute.params.subscribe((params) => {
+      this.userId = +params["userId"];
       this.fetchData();
     });
-    this.sub.add(this.user$.subscribe(user => {
+    this.sub.add(
+      this.user$.subscribe((user) => {
         this.user = user;
-    }));
+      })
+    );
   }
 
   ngOnDestory() {
@@ -550,62 +591,90 @@ export class VolunteerInfoComponent {
   }
 
   updateEntity(data: any) {
-    if(!this.form.valid){
-      this.model['showErrorState'] = true;
+    if (!this.form.valid) {
+      this.model["showErrorState"] = true;
       return;
     }
     data.id = this.userId;
-    data.subGroup = (data.subGroup || [])
-    if(data.organizing){
-      if(data.organizing == 'yes'){
-        data.subGroup.push('Organizing');
-      }else if(data.organizing == 'maybe'){
-        data.subGroup.push('MinorOrganizing');
+    data.subGroup = data.subGroup || [];
+    if (data.organizing) {
+      if (data.organizing == "yes") {
+        data.subGroup.push("Organizing");
+      } else if (data.organizing == "maybe") {
+        data.subGroup.push("MinorOrganizing");
       }
     }
-    data.subGroup = (data.subGroup || []).filter((v, i, a) => a.indexOf(v) === i).join(',')
+    data.subGroup = (data.subGroup || [])
+      .filter((v, i, a) => a.indexOf(v) === i)
+      .join(",");
     delete data.organizing;
-    this.apollo.mutate({
-      mutation: UPDATE_ENTITY,
-      variables: {
-        data
-      }
-    }).subscribe(res => {
-      this.model = this.normalizeData(res.data['updateVolunteer']);
-      this.userName = this.model['name'];
-      this.toastr.info(`
+    this.apollo
+      .mutate({
+        mutation: UPDATE_ENTITY,
+        variables: {
+          data,
+        },
+      })
+      .subscribe(
+        (res) => {
+          this.model = this.normalizeData(res.data["updateVolunteer"]);
+          this.userName = this.model["name"];
+          this.toastr.info(
+            `
       <small>Successfully updated volunteer ${this.userName}</small>
-      `, 'Updated Volunteer', {
-          enableHtml: true
-        });
-    }, err => {
-      this.toastr.error(`
+      `,
+            "Updated Volunteer",
+            {
+              enableHtml: true,
+            }
+          );
+        },
+        (err) => {
+          this.toastr.error(
+            `
       <small>${err.message}</small>
-      `, 'Update Error', {
-          enableHtml: true
-        });
-    })
+      `,
+            "Update Error",
+            {
+              enableHtml: true,
+            }
+          );
+        }
+      );
   }
 
   deleteEntity() {
-    this.apollo.mutate({
-      mutation: DELETE_ENTITY,
-      variables: { id: this.userId }
-    }).subscribe(res => {
-      if(res.data.deleteVolunteer){
-        this.toastr.info(`
+    this.apollo
+      .mutate({
+        mutation: DELETE_ENTITY,
+        variables: { id: this.userId },
+      })
+      .subscribe(
+        (res) => {
+          if (res.data.deleteVolunteer) {
+            this.toastr.info(
+              `
         <small>Successfully deleted volunteer ${this.userName}</small>
-        `, 'User Deleted', {
-            enableHtml: true
-          });
-        this.router.navigate(['/dashboard/volunteers'])
-      }
-    }, err => {
-      this.toastr.error(`
+        `,
+              "User Deleted",
+              {
+                enableHtml: true,
+              }
+            );
+            this.router.navigate(["/dashboard/volunteers"]);
+          }
+        },
+        (err) => {
+          this.toastr.error(
+            `
       <small>${err.message}</small>
-      `, 'Error Deleting Volunteer', {
-          enableHtml: true
-        });
-    })
+      `,
+            "Error Deleting Volunteer",
+            {
+              enableHtml: true,
+            }
+          );
+        }
+      );
   }
 }
