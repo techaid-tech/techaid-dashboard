@@ -37,6 +37,8 @@ import { EmailThreadsComponent } from './components/email-threads/email-threads.
 import { EmailComposeComponent } from './components/email-compose/email-compose.component';
 import { EmailTemplatesIndexComponent } from './components/etemplates-index/etemplates-index.component';
 import { EmailTemplatesInfoComponent } from './components/etemplates-info/etemplates-info.component';
+import { OrgIndexComponent } from './components/org-index/org-index.component';
+import { OrgInfoComponent } from './components/org-info/org-info.component';
 
 const routes: Routes = [
   // { path: '', component: IndexComponent },
@@ -81,6 +83,12 @@ const routes: Routes = [
   {
     path: 'dashboard/email/templates/:templateId', component: EmailTemplatesInfoComponent,  canActivate: [AuthGuard]
   },
+  {
+    path: 'dashboard/organisations', component: OrgIndexComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboard/organisations/:orgId', component: OrgInfoComponent, canActivate: [AuthGuard]
+  },
   { path: '**', component: PostDataComponent},
 ];
 
@@ -113,7 +121,9 @@ const routes: Routes = [
     EmailThreadsComponent,
     EmailComposeComponent,
     EmailTemplatesIndexComponent,
-    EmailTemplatesInfoComponent
+    EmailTemplatesInfoComponent,
+    OrgIndexComponent,
+    OrgInfoComponent
   ],
   imports: [
     LightboxModule,

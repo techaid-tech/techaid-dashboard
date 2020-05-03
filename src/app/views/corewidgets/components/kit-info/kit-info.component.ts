@@ -49,6 +49,12 @@ query findKit($id: Long) {
       email
       phoneNumber
     }
+    organisation {
+      id
+      name
+      email
+      phoneNumber
+    }
     attributes {
       credentials
       status
@@ -88,6 +94,12 @@ mutation updateKit($data: UpdateKitInput!) {
       }
     }
     donor {
+      id
+      name
+      email
+      phoneNumber
+    }
+    organisation {
       id
       name
       email
@@ -186,6 +198,41 @@ query findAutocompleteDonors($term: String) {
 }
 `;
 
+const AUTOCOMPLETE_ORGANISATION = gql`
+query findAutocompleteOrgs($term: String) {
+  organisationsConnection(page: {
+    size: 50
+  }, where: {
+    name: {
+      _contains: $term
+    }
+    OR: [ 
+    {
+      phoneNumber: {
+        _contains: $term
+      }
+    },
+    {
+      email: {
+        _contains: $term
+      }
+    },
+    {
+      website: {
+        _contains: $term
+      }
+    }
+    ]
+  }){
+    content  {
+     id
+     name
+     email
+     phoneNumber
+    }
+  }
+}
+`;
 @Component({
   selector: 'kit-info',
   styleUrls: ['kit-info.scss'],
@@ -282,6 +329,26 @@ export class KitInfoComponent {
     },
   };
 
+  orgs$: Observable<any>;
+  orgInput$ = new Subject<string>();
+  orgLoading = false;
+  orgField: FormlyFieldConfig = {
+    key: "organisationId",
+    type: "choice",
+    className: "col-md-12",
+    templateOptions: {
+      label: "Organisation",
+      description: "The organisation this device is currently assigned to.",
+      loading: this.orgLoading,
+      typeahead: this.orgInput$,
+      placeholder: "Assign device to an Organisation",
+      multiple: false,
+      searchable: true,
+      items: [],
+      required: false
+    },
+  };
+
   fields: Array<FormlyFieldConfig> = [
     {
       fieldGroupClassName: "row border-bottom-warning bordered p-2 mb-3",
@@ -300,6 +367,7 @@ export class KitInfoComponent {
               {label: "Accepted - No Assesment Required", value: "ACCEPTED" },
               {label: "Collection from donor scheduled", value: "PICKUP_SCHEDULED" },
               {label: "Donor drop off agreed", value: "DROPOFF_AGGREED" },
+              {label: "Donor drop off pending", value:  "DROPOFF_PENDING"},
               {label: "Donation received by Tech Team", value: "WITH_TECHIE" },
               {label: "Donation faulty - collect for recycling", value: "UPDATE_FAILED" },
               {label: "Donation updated - arrange collection", value: "READY" },
@@ -357,6 +425,7 @@ export class KitInfoComponent {
     this.organisersField,
     this.logisticsField,
     this.donorField,
+    this.orgField,
     {
       key: "location",
       type: "place",
@@ -660,6 +729,13 @@ export class KitInfoComponent {
         {label: this.volunteerName(data.donor), value: data.donor.id}
       ]; 
     }
+
+    if(data.organisation && data.organisation.id){
+      data.organisationId = data.organisation.id;
+      this.orgField.templateOptions['items'] = [
+        {label: this.volunteerName(data.organisation), value: data.organisation.id}
+      ]; 
+    }
     return data;
   }
 
@@ -708,6 +784,13 @@ export class KitInfoComponent {
     const donorRef = this.apollo
     .watchQuery({
       query: AUTOCOMPLETE_DONORS,
+      variables: {
+      }
+    });
+
+    const orgRef = this.apollo
+    .watchQuery({
+      query: AUTOCOMPLETE_ORGANISATION,
       variables: {
       }
     });
@@ -807,6 +890,29 @@ export class KitInfoComponent {
       )
     );
 
+    this.orgs$ = concat(
+      of([]),
+      this.orgInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.orgLoading = true),
+        switchMap(term => from(orgRef.refetch({
+          term: term
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.orgLoading = false),
+          switchMap(res => {
+            const data = res['data']['organisationsConnection']['content'].map(v => {
+              return {
+                label: `${this.volunteerName(v)}`, value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
     this.sub = this.activatedRoute.params.subscribe(params => {
       this.entityId = +params['kitId'];
       this.fetchData();
@@ -824,9 +930,12 @@ export class KitInfoComponent {
       this.techniciansField.templateOptions['items'] = data;
     }));
 
-
     this.sub.add(this.donors$.subscribe(data => {
       this.donorField.templateOptions['items'] = data;
+    }));
+
+    this.sub.add(this.orgs$.subscribe(data => {
+      this.orgField.templateOptions['items'] = data;
     }));
   }
 

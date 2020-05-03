@@ -39,6 +39,13 @@
             <span>Donors</span></a>
     </li>
     
+    <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" routerLink="/faqs">
+            <i class="fas fa-sitemap"></i>
+            <span>Orgs</span>
+        </a>
+    </li>
+    
     <hr class="sidebar-divider my-0">
 
     <div class="sidebar-heading mt-1">
@@ -60,14 +67,14 @@
     </li>
     <hr class="sidebar-divider my-0">
     <li class="nav-item" routerLinkActive="active">
-            <a class="nav-link" href="#" (click)="logout()">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span></a>
-    </li>
-    <li class="nav-item" routerLinkActive="active">
             <a class="nav-link" href="#" routerLink="/faqs">
                 <i class="fas fa-question-circle"></i>
                 <span>FAQs</span></a>
+    </li>
+    <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" href="#" (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span></a>
     </li>
 </ul>
 <ul *ngIf="!user?.authenticated"
