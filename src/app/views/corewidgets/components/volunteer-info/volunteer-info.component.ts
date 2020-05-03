@@ -375,7 +375,7 @@ export class VolunteerInfoComponent {
         },
         {
           className: "col-md-6",
-          hideExpression: "!model.attributes.accepts.length",
+          hideExpression: "!model.attributes.accepts || !model.attributes.accepts.length",
           fieldGroup: [
             {
               key: "attributes.hasCapacity",
