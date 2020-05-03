@@ -366,6 +366,7 @@ export class EmailComposeComponent {
             if(res.data.sendEmail){
                 this.message = data.sendEmail;
                 this.form.setValue({
+                    subject: "",
                     body: "",
                     to: this.model.to,
                 });
