@@ -10,6 +10,18 @@ import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EmailThreadsComponent } from '../email-threads/email-threads.component';
 
+const QUERY_TEMPLATES = gql`
+  query findTemplates {
+    emailTemplates(where: {
+      active: {_eq: true}
+    }){
+      id
+      subject
+      body
+    }
+  }
+`;
+
 const SEND_EMAIL = gql`
 mutation sendEmail($data: EmailInput!) {
   sendEmail(data: $data){
@@ -142,6 +154,38 @@ export class EmailComposeComponent {
     messageThread: any = {};
     message: any = {};
     sub: Subscription;
+    templatesField: FormlyFieldConfig = {
+        key: "template",
+        type: "choice",
+        className: "col-md-12",
+        hide: true,
+        hooks: {
+            onInit: (field)=> {
+                this.sub.add(field.formControl.valueChanges.subscribe(v => {
+                    if(v && v.body){
+                        var data  = v.body;
+                        if(this.model.body && this.model.body.trim().length){
+                            data = `${this.model.body}<br />${data}`;
+                        }
+                        this.form.patchValue({
+                            template: null,
+                            body: data
+                        });
+                    }
+                }));
+            }
+        },
+        templateOptions: {
+          label: "Email Template",
+          description: "The pre-configured email template to use.",
+          placeholder: "Select an email template",
+          multiple: false,
+          searchable: true,
+          items: [],
+          required: false
+        },
+    };
+
     fields: Array<FormlyFieldConfig> = [
         {
             key: "to",
@@ -149,7 +193,7 @@ export class EmailComposeComponent {
             className: "col-md-12",
             defaultValue: "",
             templateOptions: {
-              placeholder: "Subject",
+              placeholder: "To",
               required: true,
               addonLeft: {
                   class: 'fa fa-envelope',
@@ -167,6 +211,7 @@ export class EmailComposeComponent {
             },
             hideExpression: "model.messageId"
         },
+        this.templatesField,
         {
             key: "body",
             type: "richtext",
@@ -178,7 +223,7 @@ export class EmailComposeComponent {
               required: false,
               htmlEdit: false
             }
-          },
+        },
     ];
 
     constructor(
@@ -196,6 +241,18 @@ export class EmailComposeComponent {
         .watchQuery({
           query: QUERY_EMAIL,
           variables: {}
+        });
+
+        this.apollo.query({
+        query: QUERY_TEMPLATES,
+        }).toPromise().then(res => {
+            if(res.data && res.data['emailTemplates']){
+                const templates = res.data['emailTemplates'].map((r) => {
+                    return {label: r.subject, value: r}
+                });
+                this.templatesField.hide = templates.length <= 0;
+                this.templatesField.templateOptions.items = templates;
+            }
         });
 
         this.sub = this.activatedRoute.queryParams.subscribe(params => {
@@ -252,6 +309,7 @@ export class EmailComposeComponent {
     }
 
     save(data: any){
+        delete data['template'];
         if(this.model.messageId && this.model.messageId.length){
             this.quoted.nativeElement.innerHTML
             if(this.quoted && this.quoted.nativeElement && this.quoted.nativeElement.innerHTML){

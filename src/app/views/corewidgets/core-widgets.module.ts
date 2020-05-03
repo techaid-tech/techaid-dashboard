@@ -35,6 +35,8 @@ import { PostInfoComponent } from './components/post-info/post-info.component';
 import { PostDataComponent } from './components/post-data/post-data.component';
 import { EmailThreadsComponent } from './components/email-threads/email-threads.component';
 import { EmailComposeComponent } from './components/email-compose/email-compose.component';
+import { EmailTemplatesIndexComponent } from './components/etemplates-index/etemplates-index.component';
+import { EmailTemplatesInfoComponent } from './components/etemplates-info/etemplates-info.component';
 
 const routes: Routes = [
   // { path: '', component: IndexComponent },
@@ -73,6 +75,12 @@ const routes: Routes = [
   {
     path: 'dashboard/email', component: EmailComposeComponent, canActivate: [AuthGuard]
   },
+  {
+    path: 'dashboard/email/templates', component: EmailTemplatesIndexComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboard/email/templates/:templateId', component: EmailTemplatesInfoComponent,  canActivate: [AuthGuard]
+  },
   { path: '**', component: PostDataComponent},
 ];
 
@@ -103,7 +111,9 @@ const routes: Routes = [
     PostInfoComponent,
     PostDataComponent,
     EmailThreadsComponent,
-    EmailComposeComponent
+    EmailComposeComponent,
+    EmailTemplatesIndexComponent,
+    EmailTemplatesInfoComponent
   ],
   imports: [
     LightboxModule,
