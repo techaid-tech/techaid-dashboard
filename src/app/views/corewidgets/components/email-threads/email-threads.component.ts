@@ -15,12 +15,13 @@ import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
 
 const QUERY_ENTITY = gql`
-query findAllThreads($query: String, $pageToken: String, $id: String) {
+query findAllThreads($query: String, $pageToken: String, $id: String, $labels: [String!]) {
   emailThreads(filter: {
     maxResults: 5
    	query: $query
     pageToken: $pageToken
     id: $id
+    labelIds: $labels
   }){
     resultSizeEstimate
     nextPageToken
@@ -82,7 +83,7 @@ export class EmailThreadsComponent {
   sub: Subscription;
   table: any;
   selections = {};
-  filter = {email: "", threadId: ""};
+  filter = {email: "", threadId: "", labelIds: []};
   entities = [];
   form: FormGroup = new FormGroup({});
   model = {};
@@ -131,6 +132,12 @@ export class EmailThreadsComponent {
     this.filter.threadId = value;
     this.refresh();
   }
+
+  @Input()
+  set labelIds(value){
+    this.filter.labelIds = value;
+    this.refresh();
+  }
  
 
   modal(content) {
@@ -139,8 +146,9 @@ export class EmailThreadsComponent {
 
   fetchData(vars = {}){
     this.loading = true;
-    vars["query"] = `${this.filter.email} ${vars['query'] || ''}`;
+    vars["query"] = `${this.filter.email} ${vars['query'] || ''}`.trim();
     vars["id"] = this.filter.threadId;
+    vars["labels"] = this.filter.labelIds;
     this.queryRef.refetch(vars).then(res => {
         this.loading = false;
         var data: any = {};

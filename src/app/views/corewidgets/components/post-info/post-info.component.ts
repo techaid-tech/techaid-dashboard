@@ -23,6 +23,7 @@ query findPost($id: Long!) {
      id
      title
      slug
+     secured
      content
      published 
      createdAt
@@ -38,6 +39,7 @@ mutation updatePost($data: UpdatePostInput!) {
      content
      slug
      title
+     secureds
      published 
      createdAt
      updatedAt
@@ -102,7 +104,19 @@ export class PostInfoComponent {
             placeholder: "",
             required: false
           }
-        }
+        },
+        {
+          key: "secured",
+          type: "checkbox",
+          className: "col-md-6",
+          defaultValue: false,
+          templateOptions: {
+            label: "Secured?",
+            description: "Secured pages are only visible to logged in users",
+            placeholder: "",
+            required: false
+          }
+        },
       ]
     },
     {

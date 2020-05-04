@@ -31,6 +31,11 @@ query findAllOrgs($page: PaginationInput,, $term: String) {
           }
         },
         {
+          contact: {
+            _contains: $term
+          }
+        },
+        {
           email: {
             _contains: $term
           }
@@ -43,6 +48,7 @@ query findAllOrgs($page: PaginationInput,, $term: String) {
      id
      website
      phoneNumber
+     contact
      name
      email
      createdAt
@@ -119,6 +125,23 @@ export class OrgIndexComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
+          key: "contact",
+          type: "input",
+          className: "col-md-12",
+          defaultValue: "",
+          templateOptions: {
+            label: "Primary Contact Name",
+            placeholder: "",
+            required: true
+          },
+          validation: {
+            show: false
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+          }
+        },
+        {
           key: "email",
           type: "input",
           className: "col-md-6",
@@ -129,6 +152,9 @@ export class OrgIndexComponent {
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
             required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.phoneNumber.length'
           }
         },
         {
@@ -140,6 +166,9 @@ export class OrgIndexComponent {
             label: "Primary Contact Phone Number",
             pattern: /\+?[0-9]+/,
             required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.email.length'
           }
         },
       ]
@@ -278,7 +307,6 @@ export class OrgIndexComponent {
             {value: "TABLETS", label: "Tablets" },
             {value: "ALLINONES", label: "All In Ones" },
           ];
-
           var values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
           return values;
         }
@@ -299,7 +327,7 @@ export class OrgIndexComponent {
           type: "input",
           className: "col-6",
           defaultValue: 0,
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('LAPTOP') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') > -1 || model.attributes.alternateAccepts.toString().indexOf('LAPTOP') < 0",
           templateOptions: {
             min: 0,
             label: 'Laptops', 
@@ -315,7 +343,7 @@ export class OrgIndexComponent {
           key: "attributes.alternateRequest.phones",
           type: "input",
           className: "col-6",
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('PHONE') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('PHONE') < 0",
           defaultValue: 0,
           templateOptions: {
             min: 0,
@@ -333,7 +361,7 @@ export class OrgIndexComponent {
           type: "input",
           className: "col-6",
           defaultValue: 0,
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('TABLET') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') > -1 || model.attributes.alternateAccepts.toString().indexOf('TABLET') < 0",
           templateOptions: {
             min: 0,
             label: "Tablets",
@@ -346,10 +374,10 @@ export class OrgIndexComponent {
           }
         },
         {
-          key: "attributes.capacity.allInOnes",
+          key: "attributes.alternateRequest.allInOnes",
           type: "input",
           className: "col-6",
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('ALLINONE') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('ALLINONE') < 0",
           defaultValue: 0,
           templateOptions: {
             min: 0,
@@ -488,7 +516,8 @@ export class OrgIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false },
         { data: 'name' },
-        { data: 'email'},
+        { data: 'contact' },
+        { data: 'email' },
         { data: 'phoneNumber'},
         { data: 'updatedAt' },
       ]

@@ -29,6 +29,7 @@
                                 <tr>
                                     <th></th>
                                     <th>Name</th>
+                                    <th>Contact</th>
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Updated</th>
@@ -53,6 +54,7 @@
                                             </div>
                                         </div>
                                     </td>
+                                    <td>{{dt.contact}}</td>
                                     <td>
                                         <a routerLink="/dashboard/email" [queryParams]="{to: dt.email}">{{dt.email}}</a>
                                     </td>

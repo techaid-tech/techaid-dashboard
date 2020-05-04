@@ -218,6 +218,11 @@ query findAutocompleteOrgs($term: String) {
       }
     },
     {
+      contact: {
+        _contains: $term
+      }
+    },
+    {
       website: {
         _contains: $term
       }

@@ -18,6 +18,7 @@ query findOrganisation($id: Long!) {
      id
      website
      phoneNumber
+     contact
      name
      email
      createdAt
@@ -33,6 +34,7 @@ query findOrganisation($id: Long!) {
       createdAt
     }
      attributes {
+       notes
        accepts
        alternateAccepts
        request {
@@ -58,6 +60,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      id
      website
      phoneNumber
+     contact
      name
      email
      createdAt
@@ -73,6 +76,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
       createdAt
      }
      attributes {
+       notes
        accepts
        alternateAccepts
        request {
@@ -108,11 +112,22 @@ export class OrgInfoComponent {
   sub: Subscription;
   form: FormGroup = new FormGroup({});
   options: FormlyFormOptions = {};
-  model = {};
+  model : any = {};
   entityName: string;
   entityId: number;
 
   fields: Array<FormlyFieldConfig> = [
+    {
+      key: "attributes.notes",
+      type: "textarea",
+      className: "col-md-12",
+      defaultValue: "",
+      templateOptions: {
+        label: "Notes about the organisation",
+        rows: 5,
+        required: false
+      } 
+    },
     {
       key: "name",
       type: "input",
@@ -151,6 +166,23 @@ export class OrgInfoComponent {
       fieldGroupClassName: "row",
       fieldGroup: [
         {
+          key: "contact",
+          type: "input",
+          className: "col-md-12",
+          defaultValue: "",
+          templateOptions: {
+            label: "Primary Contact Name",
+            placeholder: "",
+            required: true
+          },
+          validation: {
+            show: false
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+          }
+        },
+        {
           key: "email",
           type: "input",
           className: "col-md-6",
@@ -161,6 +193,9 @@ export class OrgInfoComponent {
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
             required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.phoneNumber.length'
           }
         },
         {
@@ -172,6 +207,9 @@ export class OrgInfoComponent {
             label: "Primary Contact Phone Number",
             pattern: /\+?[0-9]+/,
             required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.email.length'
           }
         },
       ]
@@ -310,7 +348,6 @@ export class OrgInfoComponent {
             {value: "TABLETS", label: "Tablets" },
             {value: "ALLINONES", label: "All In Ones" },
           ];
-
           var values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
           return values;
         }
@@ -331,7 +368,7 @@ export class OrgInfoComponent {
           type: "input",
           className: "col-6",
           defaultValue: 0,
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('LAPTOP') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') > -1 || model.attributes.alternateAccepts.toString().indexOf('LAPTOP') < 0",
           templateOptions: {
             min: 0,
             label: 'Laptops', 
@@ -347,7 +384,7 @@ export class OrgInfoComponent {
           key: "attributes.alternateRequest.phones",
           type: "input",
           className: "col-6",
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('PHONE') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('PHONE') < 0",
           defaultValue: 0,
           templateOptions: {
             min: 0,
@@ -365,7 +402,7 @@ export class OrgInfoComponent {
           type: "input",
           className: "col-6",
           defaultValue: 0,
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('TABLET') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') > -1 || model.attributes.alternateAccepts.toString().indexOf('TABLET') < 0",
           templateOptions: {
             min: 0,
             label: "Tablets",
@@ -381,7 +418,7 @@ export class OrgInfoComponent {
           key: "attributes.alternateRequest.allInOnes",
           type: "input",
           className: "col-6",
-          hideExpression: "model.attributes.alternateAccepts.toString().indexOf('ALLINONE') < 0",
+          hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('ALLINONE') < 0",
           defaultValue: 0,
           templateOptions: {
             min: 0,
@@ -463,6 +500,10 @@ export class OrgInfoComponent {
   }
 
   updateEntity(data: any) {
+    if(!this.form.valid){
+      this.model.showErrorState = true;
+      return false;
+    }
     data.id = this.entityId;
     this.apollo.mutate({
       mutation: UPDATE_ENTITY,

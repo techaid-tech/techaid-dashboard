@@ -36,7 +36,7 @@
                             <tbody *ngIf="entities?.length != 0;">
                                 <tr *ngFor="let dt of entities" [class.selected]="selections[dt.id]" (click)="select(dt)">
                                     <td>
-                                        <a href="#" [routerLink]="['./', dt.id]">
+                                        <a href="#" [routerLink]="['/dashboard/posts', dt.id]">
                                           <i class="fas fa-info-circle"></i>
                                         </a>
                                     </td>
@@ -44,7 +44,7 @@
                                         <div class="d-flex">
                                             <div class="d-flex flex-column">
                                                 <div>
-                                                    <a href="#" [routerLink]="['./', dt.id]">{{ dt.title }}</a>
+                                                    <a href="#" [routerLink]="['/dashboard/posts', dt.id]">{{ dt.title }}</a>
                                                     <div class="text-muted snippet" [innerHtml]="dt.content"></div>
                                                     <span class="badge badge-secondary">{{dt.slug}}</span>
                                                 </div>

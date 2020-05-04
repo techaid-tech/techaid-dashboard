@@ -6,8 +6,7 @@
         <!-- Project Card Example -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#" [routerLink]="['../../']">Emails</a></li>
-                <li class="breadcrumb-item"><a href="#" [routerLink]="['../']">Templates</a></li>
+                <li class="breadcrumb-item"><a href="#" [routerLink]="['../']">Organisations</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ entityName }}</li>
             </ol>
         </nav>
@@ -80,7 +79,7 @@
                                 <formly-form [options]="options" (ngSubmit)="form.valid && updateEntity(form.value)"
                                     [form]="form" [model]="model" [fields]="fields">
                                 </formly-form>
-                                <button style="width: 150px" [disabled]="form.invalid" (click)="updateEntity(form.value)"
+                                <button style="width: 150px"  (click)="updateEntity(form.value)"
                                     type="submit" class="btn btn-primary btn-sm p-2">
                                     <small>Save</small>
                                 </button>

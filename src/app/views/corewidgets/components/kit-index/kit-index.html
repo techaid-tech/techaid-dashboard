@@ -49,7 +49,7 @@
                             <tbody *ngIf="entities?.length > 0;">
                                 <tr *ngFor="let dt of entities" [class.selected]="selections[dt.id]" (click)="select(dt)">
                                     <td>
-                                            <a href="#" [routerLink]="['./', dt.id]">
+                                            <a href="#" [routerLink]="['/dashboard/devices', dt.id]">
                                                 <i class="fas fa-info-circle"></i>
                                               </a>
                                     </td>
@@ -57,8 +57,8 @@
                                         <div class="d-flex">
                                             <div class="d-flex flex-column">
                                                 <div>
-                                                    <a *ngIf="dt.model.length" href="#" [routerLink]="['./', dt.id]">{{ dt.model }}</a>
-                                                    <a *ngIf="!dt.model.length" href="#" [routerLink]="['./', dt.id]">{{ dt.location }}</a>
+                                                    <a *ngIf="dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.model }}</a>
+                                                    <a *ngIf="!dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.location }}</a>
                                                 </div>
                                                 <div *ngIf="dt.model.length"><small>{{ dt.location }}</small></div>
                                             </div>
@@ -70,7 +70,7 @@
                                     </td>
                                     <td>
                                         <a *ngIf="dt.volunteerName?.length" href="#" [routerLink]="['/dashboard/volunteers', dt.volunteer.id]">{{ dt.volunteerName }}</a>
-                                        <span *ngFor="let v of dt.volunteers">
+                                        <span *ngFor="let v of dt.volunteers" class="mr-1 mb-1">
                                             <span [class]="'badge badge-' + classes[v.type]"><span class="badge badge-primary mr-1">{{v.type}}</span> 
                                             <a [class]="'btn-'+ classes[v.type]" [routerLink]="['/dashboard/volunteers', v.volunteer.id]">{{v.volunteer.name}}</a>
                                             </span>

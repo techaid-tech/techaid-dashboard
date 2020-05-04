@@ -1,0 +1,98 @@
+<div class="container-fluid" *ngIf="model">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    <a href="/" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-home fa-sm text-white-50"></i> Home</a>
+  </div>
+  <div class="row">
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Devices</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{model.kits.totalElements}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Donors</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{model.donors.totalElements}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fa fa-table fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Volunteers</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{model.volunteers.totalElements}}</div>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-hands-helping fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6" *ngIf="user?.authorities['read:emails']">
+        <div class="card shadow mb-4">
+          <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-primary">Unread Emails</h6>
+          </div>
+          <div class="card-body">
+             <email-threads [labelIds]="['UNREAD']"></email-threads>
+          </div>
+        </div>
+    </div>
+    <div class="col-lg-6" *ngIf="user?.authorities['write:emails']">
+      <etemplates-index></etemplates-index>
+    </div>
+    <div class="col-lg-6" *ngIf="user?.authorities['read:kits']">
+      <kit-index></kit-index>
+    </div>
+    <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
+      <faq-index></faq-index>
+    </div>
+    <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
+      <post-index></post-index>
+    </div>
+  </div>
+</div>
+<div *ngIf="!model" class="ph-item">
+  <div class="ph-col-12">
+    <div class="ph-picture"></div>
+    <div class="ph-row">
+      <div class="ph-col-6 big"></div>
+      <div class="ph-col-4 empty big"></div>
+      <div class="ph-col-2 big"></div>
+      <div class="ph-col-4"></div>
+      <div class="ph-col-8 empty"></div>
+      <div class="ph-col-6"></div>
+      <div class="ph-col-6 empty"></div>
+      <div class="ph-col-12"></div>
+    </div>
+  </div>
+</div>
+

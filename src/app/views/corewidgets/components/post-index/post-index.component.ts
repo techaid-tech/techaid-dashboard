@@ -110,10 +110,22 @@ export class PostIndexComponent {
     {
       key: "published",
       type: "checkbox",
-      className: "col-md-12",
+      className: "col-md-6",
       defaultValue: true,
       templateOptions: {
         label: "Published?",
+        placeholder: "",
+        required: false
+      }
+    },
+    {
+      key: "secured",
+      type: "checkbox",
+      className: "col-md-6",
+      defaultValue: false,
+      templateOptions: {
+        label: "Secured?",
+        description: "Secured pages are only visible to logged in users",
         placeholder: "",
         required: false
       }
