@@ -164,6 +164,7 @@ export class EmailThreadsComponent {
             (thread.messages || []).forEach(m => {
               var addr = [].concat(m.payload.to).concat(m.payload.from);
               m.address = (addr.find(x => x.value.toLowerCase().indexOf('covidtechaid@gmail.com') == -1) || {}).value;
+              m.email = (m.address || "").replace(/.*<([^>]+)>/, "$1");
             });
           });
         }
