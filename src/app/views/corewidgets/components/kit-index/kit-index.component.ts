@@ -153,7 +153,7 @@ export class KitIndexComponent {
     type: "choice",
     className: "col-md-12",
     templateOptions: {
-      label: "User",
+      label: "Assigned Volunteer",
       description: "Filter by assigned user.",
       loading: this.usersLoading,
       typeahead: this.userInput$,
