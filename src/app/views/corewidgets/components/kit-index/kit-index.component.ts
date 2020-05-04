@@ -74,6 +74,45 @@ mutation createKits($data: CreateKitInput!) {
 }
 `;
 
+const AUTOCOMPLETE_USERS = gql`
+query findAutocompleteVolunteers($term: String, $subGroup: String) {
+  volunteersConnection(page: {
+    size: 50
+  }, where: {
+    name: {
+      _contains: $term
+    }
+    subGroup: {
+      _contains: $subGroup
+    }
+    OR: [ 
+    {
+      subGroup: {
+        _contains: $subGroup
+      }
+      phoneNumber: {
+        _contains: $term
+      }
+    },
+    {
+       subGroup: {
+        _contains: $subGroup
+      }
+      email: {
+        _contains: $term
+      }
+    }]
+  }){
+    content  {
+     id
+     name
+     email
+     phoneNumber
+    }
+  }
+}
+`;
+
 @Component({
   selector: 'kit-index',
   styleUrls: ['kit-index.scss'],
@@ -104,6 +143,25 @@ export class KitIndexComponent {
     'LOGISTICS': 'dark',
     'TECHNICIAN': 'info',
     'ORGANISER': 'success'
+  };
+
+  users$: Observable<any>;
+  userInput$ = new Subject<string>();
+  usersLoading = false;
+  userField: FormlyFieldConfig = {
+    key: "userIds",
+    type: "choice",
+    className: "col-md-12",
+    templateOptions: {
+      label: "User",
+      description: "Filter by assigned user.",
+      loading: this.usersLoading,
+      typeahead: this.userInput$,
+      multiple: true,
+      searchable: true,
+      items: [],
+      required: false
+    },
   };
 
   filter: any = {};
@@ -188,6 +246,7 @@ export class KitIndexComponent {
             required: false
           } 
         },
+        this.userField
       ]
     }
   ];
@@ -216,6 +275,11 @@ export class KitIndexComponent {
       filter["archived"] = {_eq: data.archived}
     }
 
+    if(data.userIds && data.userIds.length){
+      count += data.userIds.length;
+      filter["volunteer"] = {id: {_in: data.userIds}};
+      data.users = this.userField.templateOptions['items'];
+    }
     localStorage.setItem(`kitFilters-${this.tableId}`, JSON.stringify(data));
     this.filter = filter;
     this.filterCount = count;
@@ -526,6 +590,12 @@ export class KitIndexComponent {
         variables: {}
       });
 
+      const userRef = this.apollo
+      .watchQuery({
+        query: AUTOCOMPLETE_USERS,
+        variables: {
+        }
+      });
 
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
@@ -533,6 +603,34 @@ export class KitIndexComponent {
         this.table.ajax.reload();
       }
     });
+
+     
+    this.users$ = concat(
+      of([]),
+      this.userInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.usersLoading = true),
+        switchMap(term => from(userRef.refetch({
+          term: term
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.usersLoading = false),
+          switchMap(res => {
+            const data = res['data']['volunteersConnection']['content'].map(v => {
+              return {
+                label: this.volunteerName(v), value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
+    this.sub.add(this.users$.subscribe(data => {
+      this.userField.templateOptions['items'] = data;
+    }));
 
     this.dtOptions = {
       pagingType: 'simple_numbers',
@@ -632,6 +730,11 @@ export class KitIndexComponent {
     return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length)[0];
   }
 
+  volunteerName(data) {
+    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
+  }
+
+
   ngOnDestory() {
     if (this.sub) {
       this.sub.unsubscribe();
@@ -643,6 +746,10 @@ export class KitIndexComponent {
       this.table = tbl;
       try {
         this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`));
+        if(this.filterModel && this.filterModel.users){
+          this.userField.templateOptions['items'] = this.filterModel.users.slice();
+        }
+        delete this.filterModel['users'];
       }catch(_){
       }
 
