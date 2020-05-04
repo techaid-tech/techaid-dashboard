@@ -75,29 +75,25 @@ mutation createKits($data: CreateKitInput!) {
 `;
 
 const AUTOCOMPLETE_USERS = gql`
-query findAutocompleteVolunteers($term: String, $subGroup: String) {
+query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
   volunteersConnection(page: {
     size: 50
   }, where: {
     name: {
       _contains: $term
     }
-    subGroup: {
-      _contains: $subGroup
-    }
     OR: [ 
     {
-      subGroup: {
-        _contains: $subGroup
+      id: {
+        _in: $ids
       }
+    },
+    {
       phoneNumber: {
         _contains: $term
       }
     },
     {
-       subGroup: {
-        _contains: $subGroup
-      }
       email: {
         _contains: $term
       }
@@ -627,7 +623,8 @@ export class KitIndexComponent {
         distinctUntilChanged(),
         tap(() => this.usersLoading = true),
         switchMap(term => from(userRef.refetch({
-          term: term
+          term: term,
+          ids: this.filterModel.userIds || [],
         })).pipe(
           catchError(() => of([])),
           tap(() => this.usersLoading = false),
