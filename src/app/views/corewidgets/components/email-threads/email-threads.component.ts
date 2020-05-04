@@ -44,6 +44,10 @@ query findAllThreads($query: String, $pageToken: String, $id: String, $labels: [
             name
             value
           }
+          from: headers(keys: ["From"]) {
+            name
+            value
+          }
           subject: headers(keys: ["Subject"]) {
             name
             value
@@ -156,6 +160,12 @@ export class EmailThreadsComponent {
           data = res['data']['emailThreads'];
           this.pages.nextPageToken = data.nextPageToken;
           this.entities = data.threads;
+          this.entities.forEach(thread => {
+            (thread.messages || []).forEach(m => {
+              var addr = [].concat(m.payload.to).concat(m.payload.from);
+              m.address = (addr.find(x => x.value.toLowerCase().indexOf('covidtechaid@gmail.com') == -1) || {}).value;
+            });
+          });
         }
     }, err =>  {
       this.loading = false;
