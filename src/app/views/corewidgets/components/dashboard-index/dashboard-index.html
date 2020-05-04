@@ -70,7 +70,7 @@
       <etemplates-index></etemplates-index>
     </div>
     <div class="col-lg-6" *ngIf="user?.authorities['read:kits']">
-      <kit-index></kit-index>
+      <kit-index [pageLength]="5"></kit-index>
     </div>
     <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
       <faq-index></faq-index>

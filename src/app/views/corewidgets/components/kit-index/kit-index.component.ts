@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
 import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -513,6 +513,9 @@ export class KitIndexComponent {
     this.table.ajax.reload();
   }
 
+  @Input()
+  pageLength = 10;
+
   ngOnInit() {
     const queryRef = this.apollo
       .watchQuery({
@@ -534,7 +537,8 @@ export class KitIndexComponent {
         "<'row'<'col-sm-12 col-md-6'l>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-      pageLength: 10,
+      pageLength: this.pageLength,
+      lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [1, 'desc'],
       serverSide: true,
       stateSave: true,
