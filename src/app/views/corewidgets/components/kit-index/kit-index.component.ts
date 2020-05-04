@@ -216,7 +216,7 @@ export class KitIndexComponent {
       filter["archived"] = {_eq: data.archived}
     }
 
-    localStorage.setItem('kitFilters', JSON.stringify(data));
+    localStorage.setItem(`kitFilters-${this.tableId}`, JSON.stringify(data));
     this.filter = filter;
     this.filterCount = count;
     this.table.ajax.reload();
@@ -642,7 +642,7 @@ export class KitIndexComponent {
     this.grid.dtInstance.then(tbl => {
       this.table = tbl;
       try {
-        this.filterModel = JSON.parse(localStorage.getItem('kitFilters'));
+        this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`));
       }catch(_){
       }
 

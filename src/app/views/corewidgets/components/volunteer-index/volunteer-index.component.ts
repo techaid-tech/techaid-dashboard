@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
 import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -226,7 +226,7 @@ export class VolunteersIndexComponent {
     filter["attributes"] = attributes;
     this.filter = filter;
     this.filterCount = count;
-    localStorage.setItem('volunteerFilters', JSON.stringify(data));
+    localStorage.setItem(`volunteerFilters-${this.tableId}`, JSON.stringify(data));
     this.table.ajax.reload();
   }
 
@@ -661,6 +661,11 @@ export class VolunteersIndexComponent {
     }
   ];
 
+  @Input()
+  tableId = "volunteers-index";
+  @Input()
+  pageLength = 10;
+
   constructor(
     private modalService: NgbModal,
     private toastr: ToastrService,
@@ -715,7 +720,7 @@ export class VolunteersIndexComponent {
         "<'row'<'col-sm-12 col-md-6'l>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-      pageLength: 10,
+      pageLength: this.pageLength,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [1, 'desc'],
       serverSide: true,
@@ -803,7 +808,7 @@ export class VolunteersIndexComponent {
     this.grid.dtInstance.then(tbl => {
       this.table = tbl;
       try {
-        this.filterModel = JSON.parse(localStorage.getItem('volunteerFilters'));
+        this.filterModel = JSON.parse(localStorage.getItem(`volunteerFilters-${this.tableId}`));
         this.applyFilter(this.filterModel);
         this.filterForm.patchValue(this.filterModel);
       }catch(_){
