@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
 import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -112,6 +112,12 @@ export class FaqIndexComponent {
 
   }
 
+  @Input()
+  pageLength = 10;
+
+  @Input()
+  tableId = "faq-index";
+
   modal(content) {
     this.modalService.open(content, { centered: true, size: 'lg' });
   }
@@ -158,7 +164,7 @@ export class FaqIndexComponent {
         "<'row'<'col-sm-12 col-md-6'l>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-      pageLength: 10,
+      pageLength: this.pageLength,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [2, 'desc'],
       serverSide: true,

@@ -516,6 +516,9 @@ export class KitIndexComponent {
   @Input()
   pageLength = 10;
 
+  @Input()
+  tableId = "kit-index";
+
   ngOnInit() {
     const queryRef = this.apollo
       .watchQuery({

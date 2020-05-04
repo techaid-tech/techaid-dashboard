@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
 import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -115,6 +115,12 @@ export class EmailTemplatesIndexComponent {
   ) {
 
   }
+
+  @Input()
+  pageLength = 10;
+
+  @Input()
+  tableId = "email-templates";
 
   modal(content) {
     this.modalService.open(content, { centered: true, size: 'lg' });
