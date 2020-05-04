@@ -33,7 +33,7 @@
                                     <th>Updated</th>
                                 </tr>
                             </thead>
-                            <tbody *ngIf="entities?.length != 0;">
+                            <tbody *ngIf="entities?.length;">
                                 <tr *ngFor="let dt of entities" [class.selected]="selections[dt.id]" (click)="select(dt)">
                                     <td>
                                         <a href="#" [routerLink]="['./', dt.id]">
@@ -59,7 +59,7 @@
                                     </td>
                                 </tr>
                             </tbody>
-                            <tbody *ngIf="entities?.length == 0">
+                            <tbody *ngIf="!entities?.length">
                                 <tr>
                                     <td colspan="4" class="no-data-available">No data!</td>
                                 </tr>

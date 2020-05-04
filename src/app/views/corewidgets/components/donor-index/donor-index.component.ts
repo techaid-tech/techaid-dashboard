@@ -176,22 +176,6 @@ export class DonorIndexComponent {
     this.selected = [];
   }
 
-  query(evt?: any, filter?: string) {
-    if (filter === undefined) {
-      filter = this.table.search();
-    }
-
-    if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
-      if (code !== 13) {
-        return;
-      }
-    }
-
-    this.table.search(filter);
-    this.table.ajax.reload();
-  }
-
   ngOnInit() {
     const queryRef = this.apollo
       .watchQuery({
@@ -317,8 +301,7 @@ export class DonorIndexComponent {
     })
   }
 
-
-  select(row?: any) {
+  select(row: any) {
     if (row) {
       if (this.selections[row.id]) {
         delete this.selections[row.id];
