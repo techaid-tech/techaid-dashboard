@@ -32,7 +32,7 @@
                         </td>
                         <td (click)="selected = dt; modal(viewMessage)">{{ dt.messages[0]?.internalDate | timeAgo }}</td>
                         <td>
-                            <a [routerLink]="['/dashboard/email']" [queryParams]="{to: dt.messages[0]?.payload?.to[0]?.value, thread: dt.id, id: dt.messages[dt.messages.length -1].id}"><i class="fas fa-reply"></i></a>
+                            <a [routerLink]="['/dashboard/email']" [queryParams]="{to: dt.messages[0]?.address, thread: dt.id, id: dt.messages[dt.messages.length -1].id}"><i class="fas fa-reply"></i></a>
                         </td>
                     </tr>
                 </tbody>
