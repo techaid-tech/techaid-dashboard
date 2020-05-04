@@ -113,6 +113,22 @@ query findAutocompleteVolunteers($term: String, $subGroup: String) {
 }
 `;
 
+
+const FIND_USERS = gql`
+query findAutocompleteVolunteers($ids: [Long!]) {
+  volunteers(where: {
+    id: {
+      _in: $ids
+    }
+  }){
+     id
+     name
+     email
+     phoneNumber
+  }
+}
+`;
+
 @Component({
   selector: 'kit-index',
   styleUrls: ['kit-index.scss'],
@@ -278,7 +294,6 @@ export class KitIndexComponent {
     if(data.userIds && data.userIds.length){
       count += data.userIds.length;
       filter["volunteer"] = {id: {_in: data.userIds}};
-      data.users = this.userField.templateOptions['items'];
     }
     localStorage.setItem(`kitFilters-${this.tableId}`, JSON.stringify(data));
     this.filter = filter;
@@ -746,10 +761,18 @@ export class KitIndexComponent {
       this.table = tbl;
       try {
         this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`));
-        if(this.filterModel && this.filterModel.users){
-          this.userField.templateOptions['items'] = this.filterModel.users.slice();
+        if(this.filterModel && this.filterModel.userIds){
+          this.apollo.query({
+            query: FIND_USERS,
+            variables: this.filterModel.userIds
+          }).toPromise().then(res => {
+            if(res.data && res.data['volunteers']){
+              this.userField.templateOptions['items'] = res.data['volunteers'].map(v => {
+                return {label: this.volunteerName(v), value: v.id }
+              });
+            }
+          });
         }
-        delete this.filterModel['users'];
       }catch(_){
       }
 
