@@ -35,10 +35,11 @@ const QUERY_VARIABLES = gql`
     }
 
     volunteer(where: {email: {_eq: $to}}){
-        id 
+        id
         name
         email
         phoneNumber
+        address: postCode
     }
 
     user: volunteer(where: {
@@ -52,6 +53,7 @@ const QUERY_VARIABLES = gql`
         name
         email
         phoneNumber
+        address: postCode
     }
 
     organisation(where: {email: {_eq: $to}}){
