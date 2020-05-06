@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form [formGroup]="form">
+                <form *ngIf="user?.authorities['write:emails']" [formGroup]="form">
                     <formly-form [options]="options" (ngSubmit)="form.valid && save(form.value)"
                         [form]="form" [model]="model" [fields]="fields">
                     </formly-form>
