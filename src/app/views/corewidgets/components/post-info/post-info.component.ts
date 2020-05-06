@@ -39,7 +39,7 @@ mutation updatePost($data: UpdatePostInput!) {
      content
      slug
      title
-     secureds
+     secured
      published 
      createdAt
      updatedAt

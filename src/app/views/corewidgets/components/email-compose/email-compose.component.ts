@@ -336,6 +336,7 @@ export class EmailComposeComponent {
                 this.form.setValue({
                     body: "",
                     to: this.model.to,
+                    template: ""
                 });
                 this.router.navigate(['/dashboard/email'], {
                     queryParams: {
@@ -368,6 +369,7 @@ export class EmailComposeComponent {
                 this.form.setValue({
                     subject: "",
                     body: "",
+                    template: "",
                     to: this.model.to,
                 });
                 this.router.navigate(['/dashboard/email'], {

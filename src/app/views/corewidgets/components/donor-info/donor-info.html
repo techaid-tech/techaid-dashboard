@@ -86,13 +86,13 @@
                                 <formly-form [options]="options" (ngSubmit)="form.valid && updateEntity(form.value)"
                                     [form]="form" [model]="model" [fields]="fields">
                                 </formly-form>
-                                <button style="width: 150px" [disabled]="form.invalid" (click)="updateEntity(form.value)"
+                                <button  *ngIf="!options.formState.disabled" style="width: 150px" (click)="updateEntity(form.value)"
                                     type="submit" class="btn btn-primary btn-sm p-2">
                                     <small>Save</small>
                                 </button>
                             </form>
 
-                            <div class="delete-api mt-5 ">
+                            <div class="delete-api mt-5 " *ngIf="user?.authorities['delete:donors']">
                                 <h3>Danger Zone</h3>
                                 <div class="border-bottom-danger card">
                                     <div class="card-body">

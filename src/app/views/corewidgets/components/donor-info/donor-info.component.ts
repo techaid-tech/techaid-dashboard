@@ -77,7 +77,11 @@ mutation deleteDonor($id: ID!) {
 export class DonorInfoComponent {
   sub: Subscription;
   form: FormGroup = new FormGroup({});
-  options: FormlyFormOptions = {};
+  options: FormlyFormOptions = {
+    formState: {
+      disabled: true
+    }
+  };
   model : any = {};
   entityName: string;
   entityId: number;
@@ -103,7 +107,14 @@ export class DonorInfoComponent {
         label: "Name",
         placeholder: "",
         required: false
-      }
+      },
+      validation: {
+        show: false,
+      },
+      expressionProperties: {
+        "validation.show": "model.showErrorState",
+        'templateOptions.disabled': 'formState.disabled',
+      },
     },
     {
       fieldGroupClassName: "row",
@@ -118,10 +129,14 @@ export class DonorInfoComponent {
             type: "email",
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            description: "Required if phone number is not provided"
+            required: true
+          },
+          validation: {
+            show: false,
           },
           expressionProperties: {
-            'templateOptions.required': 'model.phoneNumber.length == 0',
+            "validation.show": "model.showErrorState",
+            'templateOptions.disabled': 'formState.disabled',
           },
         },
         {
@@ -133,10 +148,14 @@ export class DonorInfoComponent {
             label: "Phone Number",
             pattern: /\+?[0-9]+/,
             description: "Required if email is not provided.",
-            required: false
+            required: true
+          },
+          validation: {
+            show: false,
           },
           expressionProperties: {
-            'templateOptions.required': 'model.email.length == 0',
+            "validation.show": "model.showErrorState",
+            'templateOptions.disabled': 'formState.disabled',
           },
         }
       ]
@@ -151,7 +170,14 @@ export class DonorInfoComponent {
         placeholder: "",
         postCode: false,
         required: false
-      }
+      },
+      validation: {
+        show: false,
+      },
+      expressionProperties: {
+        "validation.show": "model.showErrorState",
+        'templateOptions.disabled': 'formState.disabled',
+      },
     },
     {
       key: "referral",
@@ -162,7 +188,14 @@ export class DonorInfoComponent {
         label: "How did you hear about us?",
         placeholder: "",
         required: false
-      }
+      },
+      validation: {
+        show: false,
+      },
+      expressionProperties: {
+        "validation.show": "model.showErrorState",
+        'templateOptions.disabled': 'formState.disabled',
+      },
     },
   ];
 
@@ -226,6 +259,7 @@ export class DonorInfoComponent {
     });
     this.sub.add(this.user$.subscribe(user => {
         this.user = user;
+        this.options.formState.disabled = !(user && user.authorities && user.authorities['write:donors']);
     }));
   }
 
@@ -236,6 +270,10 @@ export class DonorInfoComponent {
   }
 
   updateEntity(data: any) {
+    if (!this.form.valid) {
+      this.model["showErrorState"] = true;
+      return;
+    }
     data.id = this.entityId;
     this.apollo.mutate({
       mutation: UPDATE_ENTITY,

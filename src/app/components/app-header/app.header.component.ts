@@ -48,6 +48,12 @@ export class AppHeader {
         this.store.dispatch(new SearchQuery(text))
     }
 
+    clearCache(){
+        localStorage.clear();
+        window.location.reload();
+        return false;
+    }
+
     ngOnDestroy() {
         if (this.sub) {
             this.sub.unsubscribe();

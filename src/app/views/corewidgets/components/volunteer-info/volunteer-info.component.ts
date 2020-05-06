@@ -86,7 +86,11 @@ const DELETE_ENTITY = gql`
 export class VolunteerInfoComponent {
   sub: Subscription;
   form: FormGroup = new FormGroup({});
-  options: FormlyFormOptions = {};
+  options: FormlyFormOptions = {
+    formState: {
+      disabled: true
+    }
+  };
   model: any = {};
   userName: string;
   userId: number;
@@ -109,6 +113,7 @@ export class VolunteerInfoComponent {
       },
       expressionProperties: {
         "validation.show": "model.showErrorState",
+        'templateOptions.disabled': 'formState.disabled',
       },
     },
     {
@@ -126,6 +131,13 @@ export class VolunteerInfoComponent {
             placeholder: "",
             required: true,
           },
+          validation: {
+            show: false,
+          },
+          expressionProperties: {
+            "validation.show": "model.showErrorState",
+            'templateOptions.disabled': 'formState.disabled',
+          },
         },
         {
           key: "phoneNumber",
@@ -136,6 +148,13 @@ export class VolunteerInfoComponent {
             label: "Phone Number",
             pattern: /\+?[0-9]+/,
             required: true,
+          },
+          validation: {
+            show: false,
+          },
+          expressionProperties: {
+            "validation.show": "model.showErrorState",
+            'templateOptions.disabled': 'formState.disabled',
           },
         },
       ],
@@ -185,6 +204,7 @@ export class VolunteerInfoComponent {
               },
               expressionProperties: {
                 "validation.show": "model.showErrorState",
+                'templateOptions.disabled': 'formState.disabled',
               },
             },
             {
@@ -203,6 +223,7 @@ export class VolunteerInfoComponent {
                 "templateOptions.required":
                   "(model.subGroup || []).indexOf('Other') > -1",
                 "validation.show": "model.showErrorState",
+                'templateOptions.disabled': 'formState.disabled', 
               },
             },
             {
@@ -227,6 +248,7 @@ export class VolunteerInfoComponent {
               },
               expressionProperties: {
                 "validation.show": "model.showErrorState",
+                'templateOptions.disabled': 'formState.disabled',
               },
             },
           ],
@@ -247,6 +269,7 @@ export class VolunteerInfoComponent {
               },
               expressionProperties: {
                 "validation.show": "model.showErrorState",
+                'templateOptions.disabled': 'formState.disabled',
               },
             },
             {
@@ -272,6 +295,7 @@ export class VolunteerInfoComponent {
                   },
                   expressionProperties: {
                     "validation.show": "model.showErrorState",
+                    'templateOptions.disabled': 'formState.disabled',
                   },
                 },
                 {
@@ -295,6 +319,7 @@ export class VolunteerInfoComponent {
                   },
                   expressionProperties: {
                     "validation.show": "model.showErrorState",
+                    'templateOptions.disabled': 'formState.disabled',
                   },
                 },
               ],
@@ -350,6 +375,7 @@ export class VolunteerInfoComponent {
               },
               expressionProperties: {
                 "validation.show": "model.showErrorState",
+                'templateOptions.disabled': 'formState.disabled',
               },
             },
             {
@@ -369,6 +395,7 @@ export class VolunteerInfoComponent {
               },
               expressionProperties: {
                 "validation.show": "model.showErrorState",
+                'templateOptions.disabled': 'formState.disabled',
               },
             },
           ],
@@ -394,6 +421,7 @@ export class VolunteerInfoComponent {
               },
               expressionProperties: {
                 "validation.show": "model.showErrorState",
+                'templateOptions.disabled': 'formState.disabled',
               },
             },
             {
@@ -423,6 +451,13 @@ export class VolunteerInfoComponent {
                     placeholder: "",
                     required: true,
                   },
+                  validation: {
+                    show: false,
+                  },
+                  expressionProperties: {
+                    "validation.show": "model.showErrorState",
+                    'templateOptions.disabled': 'formState.disabled',
+                  },
                 },
                 {
                   key: "attributes.capacity.phones",
@@ -440,6 +475,13 @@ export class VolunteerInfoComponent {
                     type: "number",
                     placeholder: "",
                     required: true,
+                  },
+                  validation: {
+                    show: false,
+                  },
+                  expressionProperties: {
+                    "validation.show": "model.showErrorState",
+                    'templateOptions.disabled': 'formState.disabled',
                   },
                 },
                 {
@@ -459,6 +501,13 @@ export class VolunteerInfoComponent {
                     placeholder: "",
                     required: true,
                   },
+                  validation: {
+                    show: false,
+                  },
+                  expressionProperties: {
+                    "validation.show": "model.showErrorState",
+                    'templateOptions.disabled': 'formState.disabled',
+                  },
                 },
                 {
                   key: "attributes.capacity.allInOnes",
@@ -476,6 +525,13 @@ export class VolunteerInfoComponent {
                     type: "number",
                     placeholder: "",
                     required: true,
+                  },
+                  validation: {
+                    show: false,
+                  },
+                  expressionProperties: {
+                    "validation.show": "model.showErrorState",
+                    'templateOptions.disabled': 'formState.disabled',
                   },
                 },
               ],
@@ -501,6 +557,7 @@ export class VolunteerInfoComponent {
       },
       expressionProperties: {
         "validation.show": "model.showErrorState",
+        'templateOptions.disabled': 'formState.disabled',
       },
     },
   ];
@@ -516,6 +573,7 @@ export class VolunteerInfoComponent {
   modal(content) {
     this.modalService.open(content, { centered: true });
   }
+  
 
   private queryRef = this.apollo.watchQuery({
     query: QUERY_ENTITY,
@@ -579,7 +637,8 @@ export class VolunteerInfoComponent {
     });
     this.sub.add(
       this.user$.subscribe((user) => {
-        this.user = user;
+        this.user = user; 
+        this.options.formState.disabled = !(user && user.authorities && user.authorities['write:volunteers']);
       })
     );
   }
