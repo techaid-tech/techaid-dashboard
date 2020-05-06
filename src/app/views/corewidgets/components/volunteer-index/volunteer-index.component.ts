@@ -226,6 +226,7 @@ export class VolunteersIndexComponent {
     filter["attributes"] = attributes;
     this.filter = filter;
     this.filterCount = count;
+    this.filterModel = data;
     localStorage.setItem(`volunteerFilters-${this.tableId}`, JSON.stringify(data));
     this.table.ajax.reload();
   }

@@ -247,7 +247,7 @@ export class KitIndexComponent {
               {label: "Active Devices", value: false },
               {label: "Archived Devices", value: true },
             ],
-            required: true,
+            required: false,
           }
         }, 
         {
@@ -310,6 +310,7 @@ export class KitIndexComponent {
     localStorage.setItem(`kitFilters-${this.tableId}`, JSON.stringify(data));
     this.filter = filter;
     this.filterCount = count;
+    this.filterModel = data;
     this.table.ajax.reload();
   }
 
