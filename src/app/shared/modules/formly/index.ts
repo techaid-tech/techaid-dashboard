@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from "@angular/router";
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ReactiveFormsModule, FormControl } from "@angular/forms";
-import { FormlyModule } from '@ngx-formly/core';
+import { FormlyModule, ConfigOption } from '@ngx-formly/core';
 import { FormlyBootstrapModule, FormlyFieldInput } from '@ngx-formly/bootstrap';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PicFormlyWrapperFormField } from './wrapper/form-field.wrapper';
@@ -143,7 +143,7 @@ export function numberValidator(c: FormControl, field) {
 }
 
 
-export const FORMLYCONFIG = {
+export const FORMLYCONFIG : ConfigOption = {
     types: [
         { name: 'folder', extends: 'file' },
         {
@@ -368,7 +368,7 @@ export const FORMLYCONFIG = {
         PicSharedModule,
         GooglePlaceModule,
         NgbModule,
-        CKEditorModule
+        CKEditorModule,
     ],
     declarations: [
         PicFormlyWrapperFormField,
@@ -380,7 +380,7 @@ export const FORMLYCONFIG = {
         DateTimeInputWidget,
         PlaceInput,
         GalleryInput,
-        RichTextComponent
+        RichTextComponent,
     ],
     exports: [
         PicFormlyWrapperFormField,

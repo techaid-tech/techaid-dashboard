@@ -121,12 +121,13 @@ export class PostInfoComponent {
     },
     {
       key: "content",
-      type: "richtext",
+      type: "textarea",
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
         label: "Content",
         placeholder: "",
+        rows:  20,
         required: false
       }
     },
