@@ -6,9 +6,12 @@ import { ToastrService } from 'ngx-toastr';
 import { Apollo } from 'apollo-angular';
 import { Location } from '@angular/common';
 import gql from 'graphql-tag';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EmailThreadsComponent } from '../email-threads/email-threads.component';
+import { Select } from '@ngxs/store';
+import { User, UserState } from '@app/state/user/user.state';
+import { HashUtils } from '@app/shared/utils';
 
 const QUERY_TEMPLATES = gql`
   query findTemplates {
@@ -20,6 +23,46 @@ const QUERY_TEMPLATES = gql`
       body
     }
   }
+`;
+
+const QUERY_VARIABLES = gql`
+  query findVariables($to: String!, $user: String){
+    donor(where: {email: {_eq: $to}}){
+        id 
+        name
+        email
+        phoneNumber
+    }
+
+    volunteer(where: {email: {_eq: $to}}){
+        id 
+        name
+        email
+        phoneNumber
+    }
+
+    user: volunteer(where: {
+            email: {_eq: $user}
+            AND: [
+                {email: {_is_null: false}},
+                {email: {_neq: ""}}
+            ]
+        }){
+        id 
+        name
+        email
+        phoneNumber
+    }
+
+    organisation(where: {email: {_eq: $to}}){
+        id 
+        name
+        email
+        website
+        contact
+        phoneNumber
+    }
+}
 `;
 
 const SEND_EMAIL = gql`
@@ -147,12 +190,14 @@ query findEmail($id: ID!) {
 export class EmailComposeComponent {
     @ViewChild('threads') emailThreads: EmailThreadsComponent;
     @ViewChild('quote') quoted: any;
-
+    public user: User;
+    @Select(UserState.user) user$: Observable<User>;
     form: FormGroup = new FormGroup({});
     options: FormlyFormOptions = {};
     model : any = {};
     messageThread: any = {};
     message: any = {};
+    variables: any = {};
     sub: Subscription;
     templatesField: FormlyFieldConfig = {
         key: "template",
@@ -163,7 +208,7 @@ export class EmailComposeComponent {
             onInit: (field)=> {
                 this.sub.add(field.formControl.valueChanges.subscribe(v => {
                     if(v && v.body){
-                        var data  = v.body;
+                        var data  = HashUtils.interpolate(v.body, this.variables);
                         if(this.model.body && this.model.body.trim().length){
                             data = `${this.model.body}<br />${data}`;
                         }
@@ -194,7 +239,13 @@ export class EmailComposeComponent {
             defaultValue: "",
             templateOptions: {
               placeholder: "To",
+              pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
               required: true,
+              change: (field) => {
+                  if(field.formControl.valid){
+                    this.fetchVariables(field.formControl.value);
+                  }
+              },
               addonLeft: {
                   class: 'fa fa-envelope',
               }
@@ -236,6 +287,27 @@ export class EmailComposeComponent {
     
       }
 
+    fetchVariables(email: String){
+        if(!email || !email.length){
+            this.variables = {};
+            return;
+        }
+
+        var user = "";
+        if(this.user && this.user['email']){
+            user = this.user['email'];
+        }
+        this.apollo.query({
+            query: QUERY_VARIABLES,
+            variables: {
+                to: email,
+                user: user
+            }
+        }).toPromise().then(res => {
+           this.variables = Object.assign({}, res.data); 
+        });
+    }
+
     ngOnInit(){
         const queryRef = this.apollo
         .watchQuery({
@@ -260,6 +332,7 @@ export class EmailComposeComponent {
                 this.model.to = params.to;
                 this.model.email = params.to;
                 this.fields[0].templateOptions.readonly = true;
+                this.fetchVariables(params.to);
             }
             this.model.thread = params.thread;
             this.model.messageId = params.id;
@@ -281,6 +354,11 @@ export class EmailComposeComponent {
                });
             }
         });
+
+        this.sub.add(this.user$.subscribe(user => {
+            this.user = user;
+            this.fetchVariables(this.model.email);
+        }));
     }
 
     ngOnDestory() {

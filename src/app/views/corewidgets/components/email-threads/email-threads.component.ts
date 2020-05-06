@@ -13,6 +13,7 @@ import { Select } from '@ngxs/store';
 import 'datatables.net-responsive';
 import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
+import { User, UserState } from '@app/state/user/user.state';
 
 const QUERY_ENTITY = gql`
 query findAllThreads($query: String, $pageToken: String, $id: String, $labels: [String!]) {
@@ -97,6 +98,8 @@ export class EmailThreadsComponent {
     nextPageToken: "",
     stack: []
   };
+  public user: User;
+  @Select(UserState.user) user$: Observable<User>;
 
   queryRef = this.apollo
   .watchQuery({
@@ -186,6 +189,9 @@ export class EmailThreadsComponent {
       };
       this.fetchData({query: query})
     });
+    this.sub.add(this.user$.subscribe(user => {
+      this.user = user;
+    }));
     this.fetchData();
   }
 
