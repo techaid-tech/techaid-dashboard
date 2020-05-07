@@ -18,6 +18,11 @@ import { User, UserState } from '@app/state/user/user.state';
 
 const QUERY_ENTITY = gql`
 query findAllFaqs($term: String) {
+  post(where: {slug: {_eq: "/faqs"}}){
+    id
+    content
+  }
+
   faqs(orderBy: [{key: "position", value: "desc"}], where: {
     published: {_eq: true}
     AND: {
@@ -55,6 +60,8 @@ query findAllFaqs($term: String) {
 export class FaqListComponent {
   sub: Subscription;
   user: User;
+  post: String;
+
   @Select(UserState.user) user$: Observable<User>;
 
   @Select(CoreWidgetState.query) search$: Observable<string>;
@@ -77,6 +84,7 @@ export class FaqListComponent {
       if (res.data) {
         data = res['data']['faqs'];
         this.entities = data;
+        this.post = res['data']['post'];
       }
     });
   }

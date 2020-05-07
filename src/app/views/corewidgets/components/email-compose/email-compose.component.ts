@@ -273,6 +273,12 @@ export class EmailComposeComponent {
             templateOptions: {
               label: "",
               placeholder: "",
+              editorConfig: {
+                height: 300,
+                allowedContent: true,
+                contentsCss: []
+              },
+              type: "divarea",
               required: false,
               htmlEdit: false
             }

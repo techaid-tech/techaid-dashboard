@@ -18,7 +18,7 @@ import { MaskedInput } from './components/input-mask.component';
 import { PicSharedModule } from '@app/shared';
 import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { GalleryInput } from './components/gallery.component';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { CKEditorModule } from 'ckeditor4-angular';
 import { RichTextComponent } from './components/richtext.component';
 
 export function wrongFileValidator(c: FormControl, field) {
@@ -125,7 +125,6 @@ export function emptyFileValidator(c: FormControl, field) {
     return true;
 }
 
-
 export function percentageValidator(c: FormControl, field) {
     if (c.value && c.value.toString().trim()) {
         return /^-?[0-9]+\.?[0-9]+%?$/.test(c.value.toString());
@@ -141,7 +140,6 @@ export function numberValidator(c: FormControl, field) {
 
     return true;
 }
-
 
 export const FORMLYCONFIG : ConfigOption = {
     types: [
@@ -241,7 +239,12 @@ export const FORMLYCONFIG : ConfigOption = {
                     placeholder: "",
                     height: "100%",
                     htmlEdit: true,
-                    editor: "classic",
+                    editorConfig: {
+                        height: 500,
+                        allowedContent: true,
+                        contentsCss: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+                    },
+                    type: "divarea", // classic | divarea | inline
                     html: false,
                 }
             }

@@ -159,7 +159,7 @@ export class VolunteersIndexComponent {
                   {label: "With Capacity", value: true },
                   {label: "No Capacity", value: false }
                 ],
-                required: true,
+                required: false,
               }
             }, 
             {

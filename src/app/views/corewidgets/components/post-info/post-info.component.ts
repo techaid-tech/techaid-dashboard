@@ -121,7 +121,7 @@ export class PostInfoComponent {
     },
     {
       key: "content",
-      type: "textarea",
+      type: "richtext",
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {

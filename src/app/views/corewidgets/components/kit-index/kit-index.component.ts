@@ -194,7 +194,7 @@ export class KitIndexComponent {
 
   filter: any = {};
   filterCount = 0;
-  filterModel: any = {archived: false};
+  filterModel: any = {archived: [false]};
   filterForm: FormGroup = new FormGroup({});
   filterFields: Array<FormlyFieldConfig> = [
     {
@@ -237,9 +237,9 @@ export class KitIndexComponent {
         },
         {
           key: "archived",
-          type: "radio",
+          type: "multicheckbox",
           className: "col-sm-4",
-          defaultValue: false,
+          defaultValue: [false],
           templateOptions: {
             type: 'array',
             label: "Filter by Archived?",
@@ -298,9 +298,9 @@ export class KitIndexComponent {
       filter["age"] = {"_in": data.age };
     }
 
-    if(data.archived != null){
-      count += 1;
-      filter["archived"] = {_eq: data.archived}
+    if(data.archived && data.archived.length){
+      count += data.archived.length;
+      filter["archived"] = {_in: data.archived}
     }
 
     if(data.userIds && data.userIds.length){
@@ -774,7 +774,7 @@ export class KitIndexComponent {
     this.grid.dtInstance.then(tbl => {
       this.table = tbl;
       try {
-        this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`));
+        this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`)) || {archived: [false]};
         if(this.filterModel && this.filterModel.userIds){
           this.apollo.query({
             query: FIND_USERS,
@@ -788,6 +788,7 @@ export class KitIndexComponent {
           });
         }
       }catch(_){
+        this.filterModel = {archived: [false]};
       }
 
       try {

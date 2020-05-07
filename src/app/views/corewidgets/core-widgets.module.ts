@@ -40,12 +40,14 @@ import { EmailTemplatesInfoComponent } from './components/etemplates-info/etempl
 import { OrgIndexComponent } from './components/org-index/org-index.component';
 import { OrgInfoComponent } from './components/org-info/org-info.component';
 import { DashboardIndexComponent } from './components/dashboard-index/dashboard-index.component';
+import { OrgRequestComponent } from './components/org-request/org-request';
 
 const routes: Routes = [
   // { path: '', component: IndexComponent },
-  { path: 'donate', component: DonorRequestComponent },
+  { path: 'donate-device', component: DonorRequestComponent },
   { path: 'volunteer', component: VolunteerComponent },
   { path: 'faqs', component: FaqListComponent },
+  { path: 'organisation-device-request', component: OrgRequestComponent},
   { path: 'dashboard/map', component: MapViewComponent},
   { path: 'dashboard/volunteers', component: VolunteersIndexComponent, canActivate: [AuthGuard] },
   {
@@ -126,7 +128,8 @@ const routes: Routes = [
     EmailTemplatesInfoComponent,
     OrgIndexComponent,
     OrgInfoComponent,
-    DashboardIndexComponent
+    DashboardIndexComponent,
+    OrgRequestComponent
   ],
   imports: [
     LightboxModule,

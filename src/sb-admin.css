@@ -565,10 +565,6 @@
     .container {
       max-width: 720px;
     }
-    
-    .nav-scroller{
-      display: none;
-    }
   }
   
   @media (min-width: 992px) {

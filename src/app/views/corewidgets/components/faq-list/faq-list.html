@@ -14,18 +14,24 @@
     </div>
 </div>
 <div class="row" *ngIf="entities">
-    <div class="col-sm-12">
+    <div *ngIf="post?.content" class="col-sm-12">
       <div class="d-flex justify-content-between">
         <div></div>
-        <a *ngIf="user?.authorities['write:content']" href="#" routerLink="/dashboard/faqs" class="btn btn-sm mb-1 btn-primary">
-                <i class="far fa-edit"></i> Edit
+        <a *ngIf="user?.authorities['write:content']" href="#" [routerLink]="['/dashboard/posts', post.id]" class="btn btn-sm mb-1 btn-secondary">
+            <i class="far fa-edit"></i> Edit
         </a>
       </div>
+      <div [innerHtml]="post.content"></div>
     </div>
     <div class="col-sm-12 pb-1 acc">
         <ngb-accordion [closeOthers]="true">
                 <ngb-panel *ngFor="let e of entities" [title]="e.title">
                     <ng-template ngbPanelContent>
+                      <div class="d-flex justify-content-end">
+                        <a *ngIf="user?.authorities['write:content']" href="#" [routerLink]="['/dashboard/faqs', e.id]" class="btn btn-sm mb-1 btn-secondary">
+                            <i class="far fa-edit"></i> Edit
+                        </a>
+                      </div>
                         <div [innerHtml]="e.content"></div>
                     </ng-template>
                 </ngb-panel>
