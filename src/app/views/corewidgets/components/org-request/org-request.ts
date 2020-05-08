@@ -22,8 +22,8 @@ mutation createOrganisation($data: CreateOrganisationInput!) {
 `;
 
 const QUERY_CONTENT = gql`
-query findContent($term: String) {
-  post(where: {slug: {_eq: "/faqs"}}){
+query findContent {
+  post(where: {slug: {_eq: "/organisation-device-request"}}){
     id
     content
   }
@@ -47,21 +47,6 @@ export class OrgRequestComponent {
   submited: boolean = false;
 
   fields: Array<FormlyFieldConfig> = [
-    {
-      template: `
-      <div class="row">
-        <div class="col-md-12">
-          <div class="border-bottom-warning card mb-3 p-3">
-            <p>
-             We are currently only taking device requests from organisations. If you are part of an 
-             organisation such as a School or Charity, please fill in the form below and someone will 
-             be in touch shortly if your request can be met.
-            </p>
-          </div>
-        </div>
-      </div>
-      `
-    },
     {
       key: "name",
       type: "input",
