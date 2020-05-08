@@ -1,6 +1,6 @@
 import { Select, Store } from '@ngxs/store';
 import { UserStateModel, UserState, User } from '@app/state/user/user.state';
-import { LogoutUser } from '@app/state/user/actions/user.actions';
+import { LogoutUser, LoginUser } from '@app/state/user/actions/user.actions';
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -62,5 +62,10 @@ export class AppHeader {
 
     logout() {
         this.store.dispatch(new LogoutUser());
+    }
+
+    login(){
+        this.store.dispatch(new LoginUser());
+        return false;
     }
 }
