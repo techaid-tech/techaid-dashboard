@@ -96,7 +96,7 @@ export class UserIndexComponent {
         this.table.ajax.reload();
       }
     });
-    const sorted : any = {'name': 'name', 'loginsCount': 'logins_count', 'lastLogin': 'last_login'};
+    const sorted : any = {'name': 'email', 'loginsCount': 'logins_count', 'lastLogin': 'last_login'};
     this.dtOptions = {
       pagingType: 'full_numbers',
       dom:
@@ -105,7 +105,7 @@ export class UserIndexComponent {
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
       pageLength: 5,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
-      order: [1, 'desc'],
+      order: [3, 'desc'],
       serverSide: true,
       stateSave: true,
       processing: true,
@@ -171,8 +171,8 @@ export class UserIndexComponent {
       }, 
       columns: [
         { data: null, width: '15px', orderable: false},
-        { data: 'name'},
-        { data: 'loginsCount'},
+        { data: 'name', orderable: false},
+        { data: 'loginsCount', orderable: false},
         { data: 'lastLogin' }
       ]
     };
