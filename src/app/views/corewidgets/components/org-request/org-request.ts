@@ -364,7 +364,11 @@ export class OrgRequestComponent {
   ngOnInit(){
     this.apollo.query({
       query: QUERY_CONTENT
-    }).toPromise()
+    }).toPromise().then(res => {
+      if(res.data){
+        this.content = res.data['post'];
+      }
+    });
   }
 
   ngOnDestory() {
