@@ -283,7 +283,7 @@ export class RoleUsersComponent {
         });
       },
       columns: [
-        { data: 'name' },
+        { data: 'name', orderable: false },
         { data: null, width: '15px', orderable: false }
       ]
     };
