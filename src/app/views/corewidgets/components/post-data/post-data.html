@@ -25,21 +25,16 @@
   </p>
   <a href="/" class="btn btn-primary btn-sm">Home</a>
 </div>
-<div class="row" *ngIf="model">
-  <div class="col-sm-12">
-    <div class="col-sm-12">
-      <div *ngIf="model?.id?.length" class="d-flex justify-content-between">
-        <div></div>
-        <a
-          *ngIf="(user?.authorities)['write:content']"
-          href="#"
-          [routerLink]="['/dashboard/posts', model.id]"
-          class="btn btn-sm mb-1 btn-primary"
-        >
-          <i class="far fa-edit"></i> Edit
-        </a>
-      </div>
-    </div>
-    <div [innerHtml]="model?.content"></div>
-  </div>
+<div *ngIf="model?.id?.length" class="d-flex justify-content-end">
+  <a
+    *ngIf="(user?.authorities)['write:content']"
+    href="#"
+    [routerLink]="['/dashboard/posts', model.id]"
+    class="btn btn-sm mb-1 btn-primary"
+  >
+    <i class="far fa-edit"></i> Edit
+  </a>
 </div>
+<main role="main" *ngIf="model">
+  <div class="col-12" [innerHtml]="model?.content"></div>
+</main>

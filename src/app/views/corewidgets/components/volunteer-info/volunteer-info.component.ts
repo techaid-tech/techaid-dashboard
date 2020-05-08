@@ -440,7 +440,7 @@ export class VolunteerInfoComponent {
                   className: "col-6",
                   defaultValue: 0,
                   hideExpression:
-                    "model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
+                    "!model.attributes.accepts || model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
                   templateOptions: {
                     min: 0,
                     label: "Laptops",
@@ -464,7 +464,7 @@ export class VolunteerInfoComponent {
                   type: "input",
                   className: "col-6",
                   hideExpression:
-                    "model.attributes.accepts.toString().indexOf('PHONE') < 0",
+                    "!model.attributes.accepts || model.attributes.accepts.toString().indexOf('PHONE') < 0",
                   defaultValue: 0,
                   templateOptions: {
                     min: 0,
@@ -490,7 +490,7 @@ export class VolunteerInfoComponent {
                   className: "col-6",
                   defaultValue: 0,
                   hideExpression:
-                    "model.attributes.accepts.toString().indexOf('TABLET') < 0",
+                    "!model.attributes.accepts || model.attributes.accepts.toString().indexOf('TABLET') < 0",
                   templateOptions: {
                     min: 0,
                     label: "Tablets",
@@ -514,7 +514,7 @@ export class VolunteerInfoComponent {
                   type: "input",
                   className: "col-6",
                   hideExpression:
-                    "model.attributes.accepts.toString().indexOf('ALLINONE') < 0",
+                    "!model.attributes.accepts || model.attributes.accepts.toString().indexOf('ALLINONE') < 0",
                   defaultValue: 0,
                   templateOptions: {
                     min: 0,
@@ -591,6 +591,7 @@ export class VolunteerInfoComponent {
     } else {
       data.subGroup = [];
     }
+    data.attributes = data.attributes || {accepts: []};
     return data;
   }
 
