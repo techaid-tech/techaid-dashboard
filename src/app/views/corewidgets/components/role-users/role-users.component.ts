@@ -215,7 +215,7 @@ export class RoleUsersComponent {
         "<'row'<'col-sm-12 col-md-6'l>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-      pageLength: 10,
+      pageLength: 5,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [0, 'desc'],
       serverSide: true,
@@ -226,7 +226,7 @@ export class RoleUsersComponent {
         let sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
-            value: o.dir
+            value: (o.dir == 'asc') ? 1 : -1
           }
         });
 
