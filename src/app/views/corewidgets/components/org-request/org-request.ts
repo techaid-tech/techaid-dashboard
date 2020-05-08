@@ -20,6 +20,15 @@ mutation createOrganisation($data: CreateOrganisationInput!) {
   }
 }
 `;
+
+const QUERY_CONTENT = gql`
+query findContent {
+  post(where: {slug: {_eq: "/organisation-device-request"}}){
+    id
+    content
+  }
+}`;
+
 @Component({
   selector: 'org-request',
   styleUrls: ['org-request.scss'],
@@ -31,27 +40,13 @@ export class OrgRequestComponent {
   form: FormGroup = new FormGroup({});
   options: FormlyFormOptions = {};
   submiting = false;
+  content: any = {};
   model : any = {
     showErrorState: false
   };
   submited: boolean = false;
 
   fields: Array<FormlyFieldConfig> = [
-    {
-      template: `
-      <div class="row">
-        <div class="col-md-12">
-          <div class="border-bottom-warning card mb-3 p-3">
-            <p>
-             We are currently only taking device requests from organisations. If you are part of an 
-             organisation such as a School or Charity, please fill in the form below and someone will 
-             be in touch shortly if your request can be met.
-            </p>
-          </div>
-        </div>
-      </div>
-      `
-    },
     {
       key: "name",
       type: "input",
@@ -364,6 +359,16 @@ export class OrgRequestComponent {
     private apollo: Apollo
   ) {
 
+  }
+
+  ngOnInit(){
+    this.apollo.query({
+      query: QUERY_CONTENT
+    }).toPromise().then(res => {
+      if(res.data){
+        this.content = res.data['post'] || {};
+      }
+    });
   }
 
   ngOnDestory() {
