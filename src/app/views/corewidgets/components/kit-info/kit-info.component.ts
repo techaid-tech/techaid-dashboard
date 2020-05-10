@@ -766,6 +766,13 @@ export class KitInfoComponent {
       } else {
         this.model = {};
         this.entityName = "Not Found!"
+        this.toastr.error(`
+        <small>Unable to find a device with the id: ${this.entityId}</small>
+        `, 'GraphQL Error', {
+          enableHtml: true,
+          timeOut: 15000,
+          disableTimeOut: true
+        });
       }
     }, err => {
       this.toastr.warning(`
@@ -774,7 +781,7 @@ export class KitInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 

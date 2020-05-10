@@ -111,7 +111,7 @@ export class DonorIndexComponent {
             type: "email",
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            description: "Required if phone number is not provided"
+            required: true
           },
           expressionProperties: {
             'templateOptions.required': 'model.phoneNumber.length == 0',
@@ -125,8 +125,7 @@ export class DonorIndexComponent {
           templateOptions: {
             label: "Phone Number",
             pattern: /\+?[0-9]+/,
-            description: "Required if email is not provided.",
-            required: false
+            required: true
           },
           expressionProperties: {
             'templateOptions.required': 'model.email.length == 0',
