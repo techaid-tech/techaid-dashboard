@@ -248,7 +248,7 @@ export class KitInfoComponent {
   sub: Subscription;
   form: FormGroup = new FormGroup({});
   options: FormlyFormOptions = {};
-  model = {};
+  model : any = {};
   deviceModel = {};
   entityName: string;
   entityId: number;

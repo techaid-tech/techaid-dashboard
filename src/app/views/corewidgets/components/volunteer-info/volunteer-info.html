@@ -3,6 +3,8 @@
 
     <!-- Content Column -->
     <div class="col-lg-12 mb-4">
+        <div *ngIf="!model?.id" class="overlay"></div>
+
         <!-- Project Card Example -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
