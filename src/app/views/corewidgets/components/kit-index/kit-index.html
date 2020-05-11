@@ -40,6 +40,7 @@
                                     <th>Model</th>
                                     <th>Donor</th>
                                     <th>Assigned</th>
+                                    <th>Created</th>
                                     <th>Updated</th>
                                     <th>Age</th>
                                     <th>Type</th>
@@ -77,6 +78,7 @@
                                         </span>
                                         <span *ngIf="!dt.volunteers?.length">--</span>
                                     </td>
+                                    <td>{{ dt.createdAt | timeAgo}}</td>
                                     <td>{{ dt.updatedAt | timeAgo}}</td>
                                     <td>{{ ages[dt.age] }}</td>
                                     <td>{{ dt.type}}</td>

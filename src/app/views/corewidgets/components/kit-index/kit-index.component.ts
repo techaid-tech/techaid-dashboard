@@ -747,6 +747,7 @@ export class KitIndexComponent {
         { data: 'model' },
         { data: 'donor' },
         { data: 'volunteers.volunteer.name', orderable: false },
+        { data: 'createdAt'},
         { data: 'updatedAt'},
         { data: 'age'},
         { data: 'type' },
