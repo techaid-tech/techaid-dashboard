@@ -266,6 +266,7 @@ export class DonorIndexComponent {
         { data: null, width: '15px', orderable: false },
         { data: 'email' },
         { data: 'postCode' },
+        { data: 'createdAt' },
         { data: 'updatedAt' }
       ]
     };

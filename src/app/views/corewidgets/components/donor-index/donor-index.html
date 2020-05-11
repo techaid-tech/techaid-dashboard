@@ -30,6 +30,7 @@
                                     <th></th>
                                     <th>Email</th>
                                     <th>Address</th>
+                                    <th>Created</th>
                                     <th>Updated</th>
                                 </tr>
                             </thead>
@@ -54,6 +55,9 @@
                                         </div>
                                     </td>
                                     <td>{{ dt.postCode }}</td>
+                                    <td>
+                                        {{ dt.createdAt | timeAgo }}
+                                    </td>
                                     <td>
                                     {{ dt.updatedAt | timeAgo }}
                                     </td>
