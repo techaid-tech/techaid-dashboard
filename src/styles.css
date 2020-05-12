@@ -526,3 +526,8 @@ i.input-group-text {
     background-color: #A2C4C9;
     border-radius: 0px 0px 5px 5px;
 }
+
+.cke_contents {
+    padding-top: 15px !important;
+    padding-left: 10px !important;
+}
