@@ -14,6 +14,7 @@ import 'datatables.net-responsive';
 import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
 import { HashUtils } from '@app/shared/utils';
+import { KIT_STATUS } from '../kit-info/kit-info.component';
 
 const QUERY_ENTITY = gql`
 query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) {
@@ -156,6 +157,8 @@ export class KitIndexComponent {
     'TECHNICIAN': 'info',
     'ORGANISER': 'success'
   };
+
+  statusTypes : any = KIT_STATUS;
 
   users$: Observable<any>;
   userInput$ = new Subject<string>();
@@ -413,32 +416,38 @@ export class KitIndexComponent {
               templateOptions: {
                 type: "array",
                 options: [],
-                description: "Please select all options that apply"
+                description: "Please select all options that apply",
+                required: true
               },
               defaultValue: [],
               expressionProperties: {
                 'templateOptions.options': (model, state)=> {
                   const props = {
                     'LAPTOP': [
-                      {label: "Do you have the charger / power cable for the Laptop?", value: "CHARGER"},
+                      {label: "I have the charger / power cable for the Laptop", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Laptop", value: "NO_CHARGER"},
                       {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
                     ],
                     'TABLET': [
-                      {label: "Do you have the charger for the Tablet?", value: "CHARGER"},
+                      {label: "I have the charger for the Tablet", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Tablet", value: "NO_CHARGER"},
                       {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
                     ],
                     'SMARTPHONE': [
-                      {label: "Do you have the charger for the Phone?", value: "CHARGER"},
+                      {label: "I have the charger for the Phone", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Phone", value: "NO_CHARGER"},
                       {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
                     ],
                     'ALLINONE': [
-                      {label: "Do you have the charger for the Computer?", value: "CHARGER"},
+                      {label: "I have the charger for the Computer", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Computer", value: "NO_CHARGER"},
                       {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
                       {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
                       {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
                     ],
                     'OTHER': [
-                      {label: "Do you have the charger or power cable for the device?", value: "CHARGER"}
+                      {label: "I have the charger or power cable for the device", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the device", value: "NO_CHARGER"},
                     ],
                   };
                   return props[model.type] || props['OTHER']

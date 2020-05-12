@@ -129,7 +129,7 @@ export class VolunteerInfoComponent {
             type: "email",
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             placeholder: "",
-            required: true,
+            required: false
           },
           validation: {
             show: false,
@@ -146,8 +146,7 @@ export class VolunteerInfoComponent {
           defaultValue: "",
           templateOptions: {
             label: "Phone Number",
-            pattern: /\+?[0-9]+/,
-            required: true,
+            required: false
           },
           validation: {
             show: false,

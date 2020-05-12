@@ -17,7 +17,7 @@ import { HashUtils } from '@app/shared/utils';
 const CREATE_ENTITY = gql`
 mutation updateDonor($data: DonateItemInput!) {
   donateItem(data: $data){
-    kit {
+    kits {
       id
     }
     donor {
@@ -26,7 +26,14 @@ mutation updateDonor($data: DonateItemInput!) {
   }
 }
 `;
-
+const QUERY_CONTENT = gql`
+query findContent {
+  post(where: {slug: {_eq: "/donate-device"}}){
+    id
+    title
+    content
+  }
+}`;
 
 @Component({
   selector: 'donor-request',
@@ -41,34 +48,9 @@ export class DonorRequestComponent {
   model = {};
   submiting = false;
   submited: boolean = false;
+  content: any;
 
   fields: Array<FormlyFieldConfig> = [
-    {
-      template: `
-      <div class="row">
-        <div class="col-md-12">
-          <div class="border-bottom-info card mb-3 p-3">
-            <p>
-              Thank you for offering to donate your laptop, mobile or tablet to Covid TechAid Lambeth. 
-              We are initially trialling this donation process in Streatham to help students make use of 
-              all the resources available to them online, to enable households to access information & communication tools, and to combat isolation 
-            </p>
-            <p>
-              At the moment, there are hundreds of people stuck at home without a suitable device 
-              to access the internet – to communicate with loved ones, to download educational resources, 
-              or to even get some basic entertainment. It's our aim to collect your unwanted devices 
-              and deliver them to people in need, who will be identified by local schools, refugee 
-              organisations and other local bodies.
-            </p>
-            <p>
-              We will be in touch within 7 days to let you know if we can collect your device. 
-              Thank you again for providing your details. 
-            </p>
-          </div>
-        </div>
-      </div>
-      `
-    },
     {
       key: "donor.name",
       type: "input",
@@ -126,7 +108,7 @@ export class DonorRequestComponent {
       }
     },
     {
-      key: "kit.attributes.pickup",
+      key: "attributes.pickup",
       type: "radio",
       className: "col-md-12",
       defaultValue: "DROPOFF",
@@ -143,8 +125,8 @@ export class DonorRequestComponent {
       }
     },
     {
-      key: "kit.attributes.pickupAvailability",
-      type: "input",
+      key: "attributes.pickupAvailability",
+      type: "textarea",
       className: "col-md-12",
       defaultValue: "",
       templateOptions: {
@@ -157,7 +139,7 @@ export class DonorRequestComponent {
           `,
         required: true
       },
-      hideExpression: "model.kit.attributes.pickup != 'PICKUP'",
+      hideExpression: "model.attributes.pickup != 'PICKUP'",
     },
     {
       template: `
@@ -175,154 +157,206 @@ export class DonorRequestComponent {
       `
     },
     {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          className: "col-md-6",
-          fieldGroup: [
-            {
-              key: "kit.type",
-              type: "radio",
-              className: "",
-              defaultValue: "LAPTOP",
-              templateOptions: {
-                label: "Type of device",
-                options: [
-                  {label: "Laptop", value: "LAPTOP" },
-                  {label: "Tablet", value: "TABLET" },
-                  {label: "Smart Phone", value: "SMARTPHONE" },
-                  {label: "All In One (PC)", value: "ALLINONE" },
-                  {label: "Other", value: "OTHER" }
-                ],
-                required: true
-              } 
-            },
-            {
-              key: "kit.attributes.otherType",
-              type: "input",
-              className: "",
-              defaultValue: "",
-              templateOptions: {
-                label: "Type of device",
-                rows: 2,
-                placeholder: "(Other device type)",
-                required: true
+      key: 'kits',
+      type: 'repeat',
+      defaultValue: [{}],
+      templateOptions: {
+        description: "If you have another device to donate, click the button to add it.",
+        addText: 'Add Device',
+        required: true,
+        min: 1
+      },
+      fieldArray: {
+        fieldGroup: [
+          {
+            fieldGroupClassName: "row",
+            fieldGroup: [
+              {
+                className: "col-md-6",
+                fieldGroup: [
+                  {
+                    key: "type",
+                    type: "radio",
+                    className: "",
+                    templateOptions: {
+                      label: "Type of device",
+                      options: [
+                        {label: "Laptop", value: "LAPTOP" },
+                        {label: "Tablet", value: "TABLET" },
+                        {label: "Smart Phone", value: "SMARTPHONE" },
+                        {label: "All In One (PC)", value: "ALLINONE" },
+                        {label: "Other", value: "OTHER" }
+                      ],
+                      required: true
+                    } 
+                  },
+                  {
+                    key: "attributes.otherType",
+                    type: "input",
+                    className: "",
+                    defaultValue: "",
+                    templateOptions: {
+                      label: "Type of device",
+                      rows: 2,
+                      placeholder: "(Other device type)",
+                      required: true
+                    },
+                    hideExpression: (model, state, field) => {
+                      const data = field.parent.formControl.value || {};
+                      return data['type'] != 'OTHER'
+                    },
+                    expressionProperties: {
+                      'templateOptions.required': (model, state, field) => {
+                        const data = field.parent.formControl.value || {};
+                        return data['type'] == 'OTHER';
+                      },
+                    },
+                  },
+                ]
               },
-              hideExpression: "model.kit.type != 'OTHER'",
-              expressionProperties: {
-                'templateOptions.required': "model.kit.type == 'OTHER'",
+              {
+                className: "col-md-6",
+                fieldGroup: [
+                  {
+                    key: "attributes.status",
+                    type: "multicheckbox",
+                    className: "",
+                    templateOptions: {
+                      type: "array",
+                      options: [],
+                      description: "Please select all options that apply",
+                      required: true,
+                    },
+                    defaultValue: [],
+                    expressionProperties: {
+                      'templateOptions.options': (model, state, field)=> {
+                        const data = field.parent.formControl.value || {};
+                        const props = {
+                          'LAPTOP': [
+                            {label: "I have the charger / power cable for the Laptop", value: "CHARGER"},
+                            {label: "I don't have the charger / power cable for the Laptop", value: "NO_CHARGER"},
+                            {label: "I have a password set for the Laptop", value: "PASSWORD_PROTECTED"},
+                            {label: "I don't have a password set for the Laptop", value: "NO_PASSWORD"}
+                          ],
+                          'TABLET': [
+                            {label: "I have the charger for the Tablet", value: "CHARGER"},
+                            {label: "I don't have the charger / power cable for the Tablet", value: "NO_CHARGER"},
+                            {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
+                          ],
+                          'SMARTPHONE': [
+                            {label: "I have the charger for the Phone", value: "CHARGER"},
+                            {label: "I don't have the charger / power cable for the Phone", value: "NO_CHARGER"},
+                            {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
+                          ],
+                          'ALLINONE': [
+                            {label: "I have the charger for the Computer", value: "CHARGER"},
+                            {label: "I don't have the charger / power cable for the Computer", value: "NO_CHARGER"},
+                            {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
+                            {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
+                            {label: "I have a password set for the Computer", value: "PASSWORD_PROTECTED"},
+                            {label: "I don't have a password set for the Computer", value: "NO_PASSWORD"}
+                          ],
+                          'OTHER': [
+                            {label: "I have the charger or power cable for the device", value: "CHARGER"},
+                            {label: "I don't have the charger / power cable for the device", value: "NO_CHARGER"},
+                          ],
+                        };
+                        var values = props[data['type']] || props['OTHER'];
+                        var delta = {
+                          'CHARGER': 'NO_CHARGER',
+                          'NO_CHARGER': 'CHARGER',
+                          'PASSWORD_PROTECTED': 'NO_PASSWORD',
+                          'NO_PASSWORD': 'PASSWORD_PROTECTED'
+                        };
+                        (field.formControl.value || []).forEach(val => {
+                          if(delta[val]){
+                            values = values.filter(v => v.value != delta[val]);
+                          }
+                        });
+                        return values
+                      },
+                    },
+                  },
+                  {
+                    key: "attributes.credentials",
+                    type: "input",
+                    className: "",
+                    defaultValue: "",
+                    templateOptions: {
+                      label: "Device Password",
+                      description: "If your device requires a password or a PIN to sign in, please provide it here",
+                      rows: 2,
+                      placeholder: "Password",
+                      required: false
+                    },
+                    hideExpression: (model, state, field) => {
+                      const data = field.parent.formControl.value || {};
+                      if(['LAPTOP', 'ALLINONE'].indexOf(data.type) == -1){
+                        return true;
+                      }
+                      const status = data.attributes.status || [];
+                      if(status && status.length) {
+                        return status.indexOf('PASSWORD_PROTECTED') == -1
+                      }
+                      return true;
+                    }
+                  },
+                ]
               },
-            },
-          ]
-        },
-        {
-          className: "col-md-6",
-          fieldGroup: [
-            {
-              key: "kit.attributes.status",
-              type: "multicheckbox",
-              className: "",
-              templateOptions: {
-                type: "array",
-                options: [],
-                description: "Please select all options that apply"
-              },
-              defaultValue: [],
-              expressionProperties: {
-                'templateOptions.options': (model, state)=> {
-                  const props = {
-                    'LAPTOP': [
-                      {label: "Do you have the charger / power cable for the Laptop?", value: "CHARGER"},
-                      {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
-                    ],
-                    'TABLET': [
-                      {label: "Do you have the charger for the Tablet?", value: "CHARGER"},
-                      {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
-                    ],
-                    'SMARTPHONE': [
-                      {label: "Do you have the charger for the Phone?", value: "CHARGER"},
-                      {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
-                    ],
-                    'ALLINONE': [
-                      {label: "Do you have the charger for the Computer?", value: "CHARGER"},
-                      {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
-                      {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
-                      {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
-                    ],
-                    'OTHER': [
-                      {label: "Do you have the charger or power cable for the device?", value: "CHARGER"}
-                    ],
-                  };
-                  return props[model.kit.type] || props['OTHER']
-                },
-              },
-            },
-            {
-              key: "kit.attributes.credentials",
-              type: "input",
-              className: "",
-              defaultValue: "",
-              templateOptions: {
-                label: "Device Password",
-                description: "If your device requires a password or a PIN to sign in, please provide it here",
-                rows: 2,
-                placeholder: "Password",
-                required: false
-              },
-              hideExpression: (model, state) => {
-                if(['LAPTOP', 'ALLINONE'].indexOf(model.kit.type) == -1){
-                  return true;
-                }
-                const status = HashUtils.dotNotation(model, 'kit.attributes.status') || [];
-                if(status && status.length) {
-                  return status.indexOf('PASSWORD_PROTECTED') == -1
-                }
-                return true;
+              {
+                key: "age",
+                type: "radio",
+                className: "col-md-6",
+                templateOptions: {
+                  label: "Roughly how old is your device?",
+                  options: [
+                    {label: "Less than a year", value: 1},
+                    {label: "1 - 2 years", value: 2},
+                    {label: "3 - 4 years", value: 4 },
+                    {label: "5 - 6 years", value: 5},
+                    {label: "More than 6 years old", value: 6 },
+                    {label: "I don't know!", value: 0 }
+                  ],
+                  required: true
+                } 
               }
-            },
-          ]
-        },
-        {
-          key: "kit.age",
-          type: "radio",
-          className: "col-md-6",
-          templateOptions: {
-            label: "Roughly how old is your device?",
-            options: [
-              {label: "Less than a year", value: 1},
-              {label: "1 - 2 years", value: 2},
-              {label: "3 - 4 years", value: 4 },
-              {label: "5 - 6 years", value: 5},
-              {label: "More than 6 years old", value: 6 },
-              {label: "I don't know!", value: 0 }
-            ],
-            required: true
-          } 
-        }
-      ]
-    },
-    {
-      key: "kit.model",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Make or model (if known)",
-        rows: 2,
-        placeholder: "",
-        required: false
-      }
-    },
-    {
-      key: "kit.attributes.state",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "What technical state is the device in? For example, does it turn on OK? Are there keys missing? Is the screen cracked?",
-        rows: 2,
-        placeholder: "",
-        required: false
+            ]
+          },
+          {
+            key: "model",
+            type: "input",
+            className: "col-md-12",
+            defaultValue: "",
+            templateOptions: {
+              label: "Make or model (if known)",
+              rows: 2,
+              placeholder: "",
+              required: false
+            }
+          },
+          {
+            key: "attributes.state",
+            type: "input",
+            className: "col-md-12",
+            defaultValue: "",
+            templateOptions: {
+              label: "What technical state is the device in? For example, does it turn on OK? Are there keys missing? Is the screen cracked?",
+              rows: 2,
+              placeholder: "",
+              required: false
+            }
+          },
+          {
+            key: "attributes.images",
+            type: "gallery",
+            className: "col-md-12",
+            templateOptions: {
+              label: "Upload an image of your device if you can",
+              description: "Hint: Take a picture of the front and back of the device. If you can capture the serial number / model number or any stickers on the device that would be useful", 
+              required: false
+            }
+          },
+        ]
       }
     },
     {
@@ -344,16 +378,7 @@ export class DonorRequestComponent {
       `
     },
     {
-      key: "kit.attributes.images",
-      type: "gallery",
-      className: "col-md-12",
-      templateOptions: {
-        label: "Upload an image of your device if you can",
-        required: false
-      }
-    },
-    {
-      key: "kit.attributes.consent",
+      key: "attributes.consent",
       type: "radio",
       className: "col-md-12",
       templateOptions: {
@@ -383,11 +408,28 @@ export class DonorRequestComponent {
   }
 
   private normalizeData(data: any){
-    return data;
+    const input = {
+      donor: data.donor,
+      kits: []
+    };
+
+    data.kits.forEach(kit => {
+      const kt = Object.assign({location: data.donor.postCode}, kit)
+      Object.assign(kit.attributes, data.attributes);
+      input.kits.push(kt);
+    });
+    return input;
   }
 
 
-  ngOnInit() {
+  ngOnInit(){
+    this.apollo.query({
+      query: QUERY_CONTENT
+    }).toPromise().then(res => {
+      if(res.data){
+        this.content = res.data['post'];
+      }
+    });
   }
 
   ngOnDestory() {
@@ -401,9 +443,9 @@ export class DonorRequestComponent {
       return;
     }
     this.submiting = true;
-    data.kit.status = 'NEW';
-    data.kit.location = data.donor.postCode;
-   
+    data = this.normalizeData(data);
+    console.log('DATA', data);
+
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: {

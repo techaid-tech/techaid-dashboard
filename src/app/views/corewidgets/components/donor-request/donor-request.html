@@ -6,7 +6,9 @@
         <div class="card shadow mb-4 mt-1">
                 <div class="card-header py-3">
                     <div class="d-flex justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Donate your device to Covid TechAid Lambeth</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            {{content?.title || 'Donate your device'}}
+                        </h6>
                     </div>
                 </div>
                 <div class="card-body">
@@ -17,6 +19,9 @@
                                     if we can collect your device. Thank you again for providing your details.</p>
                             </div>
                         </div>
+                    </div>
+                    <div *ngIf="!submited && content?.content" class="row">
+                        <div [innerHtml]="content?.content"></div>
                     </div>
                     <form *ngIf="!submited" [formGroup]="form">
                         <formly-form [options]="options" (ngSubmit)="form.valid && createEntity(form.value)"

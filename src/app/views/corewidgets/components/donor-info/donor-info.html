@@ -59,7 +59,7 @@
                                                 <td>{{ dt.updatedAt | timeAgo}}</td>
                                                 <td>{{ ages[dt.age] }}</td>
                                                 <td>{{ dt.type}}</td>
-                                                <td>{{ dt.status }}</td>
+                                                <td>{{ kitStatus[dt.status] || dt.status }}</td>
                                             </tr>
                                         </tbody>
                                     </table>

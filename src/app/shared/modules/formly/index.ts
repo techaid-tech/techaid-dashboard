@@ -20,6 +20,7 @@ import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { GalleryInput } from './components/gallery.component';
 import { CKEditorModule } from 'ckeditor4-angular';
 import { RichTextComponent } from './components/richtext.component';
+import { RepeatTypeComponent } from './components/repeat.component';
 
 export function wrongFileValidator(c: FormControl, field) {
     let match = field.templateOptions.match;
@@ -230,6 +231,7 @@ export const FORMLYCONFIG : ConfigOption = {
                 }
             }
         },
+        {name: 'repeat', component: RepeatTypeComponent },
         {
             name: 'richtext',
             component: RichTextComponent,
@@ -384,6 +386,7 @@ export const FORMLYCONFIG : ConfigOption = {
         PlaceInput,
         GalleryInput,
         RichTextComponent,
+        RepeatTypeComponent
     ],
     exports: [
         PicFormlyWrapperFormField,

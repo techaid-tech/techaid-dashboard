@@ -483,3 +483,46 @@ i.input-group-text {
 .sidebar-toggled .sidebar {
   display: none;
 }
+
+.kit-status .custom-control {
+    color: black;
+}
+
+.kit-status .custom-control:nth-child(1){
+    border-radius: 5px 5px 0px 0px;
+    background-color: #CC4126;
+    color: white;
+}
+.kit-status .custom-control:nth-child(2),
+.kit-status .custom-control:nth-child(3),
+.kit-status .custom-control:nth-child(4){
+    background-color: #E16666;
+}
+
+.kit-status .custom-control:nth-child(5),
+.kit-status .custom-control:nth-child(6),
+.kit-status .custom-control:nth-child(7){
+    background-color: #E69138;
+}
+
+.kit-status .custom-control:nth-child(8){
+    background-color: #F7B26C;
+}
+
+.kit-status .custom-control:nth-child(9),
+.kit-status .custom-control:nth-child(10){
+    background-color: #F1C233;
+}
+
+.kit-status .custom-control:nth-child(11){
+    background-color: #69A84F;
+}
+
+.kit-status .custom-control:nth-child(12){
+    background-color: #B6D7A7;
+}
+
+.kit-status .custom-control:nth-child(13){
+    background-color: #A2C4C9;
+    border-radius: 0px 0px 5px 5px;
+}

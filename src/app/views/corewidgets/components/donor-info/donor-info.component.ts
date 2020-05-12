@@ -13,6 +13,7 @@ import { UpdateFormDirty } from '@ngxs/form-plugin';
 import { Select } from '@ngxs/store';
 import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 import { User, UserState } from '@app/state/user/user.state';
+import { KIT_STATUS } from '../kit-info/kit-info.component';
 
 const QUERY_ENTITY = gql`
 query findDonor($id: Long) {
@@ -198,6 +199,8 @@ export class DonorInfoComponent {
       },
     },
   ];
+
+  kitStatus: any = KIT_STATUS;
 
 
   constructor(

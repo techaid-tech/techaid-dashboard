@@ -17,6 +17,21 @@ import { isObject } from 'util';
 import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
 import { HashUtils } from '@app/shared/utils';
 
+export const KIT_STATUS = {
+  "NEW": "New - Donation Registered",
+  "DECLINED": "Declined - Not Suitable",
+  "ASSESSMENT_NEEDED": "Accepted - Assesment Needed",
+  "ACCEPTED": "Accepted - No Assesment Required",
+  "PICKUP_SCHEDULED": "Collection from donor scheduled",
+  "DROPOFF_AGGREED": "Donor drop off agreed",
+  "DROPOFF_PENDING": "Donor drop off pending",
+  "WITH_TECHIE": "Donation received by Tech Team",
+  "UPDATE_FAILED": "Donation faulty - collect for recycling",
+  "READY": "Donation updated - arrange collection",
+  "ALLOCATED": "Device allocated to referring organisation",
+  "DELIVERY_ARRANGED": "Collection / drop off to referring organisation agreed",
+  "DELIVERED": "Device received by organisation"
+};
 
 const QUERY_ENTITY = gql`
 query findKit($id: Long) {
@@ -547,31 +562,50 @@ export class KitInfoComponent {
               },
               defaultValue: [],
               expressionProperties: {
-                'templateOptions.options': (model, state)=> {
+                'templateOptions.options': (model, state, field)=> {
                   const props = {
                     'LAPTOP': [
-                      {label: "Do you have the charger / power cable for the Laptop?", value: "CHARGER"},
-                      {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
+                      {label: "I have the charger / power cable for the Laptop", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Laptop", value: "NO_CHARGER"},
+                      {label: "I have a password set for the Laptop", value: "PASSWORD_PROTECTED"},
+                      {label: "I don't have a password set for the Laptop", value: "NO_PASSWORD"}
                     ],
                     'TABLET': [
-                      {label: "Do you have the charger for the Tablet?", value: "CHARGER"},
+                      {label: "I have the charger for the Tablet", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Tablet", value: "NO_CHARGER"},
                       {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
                     ],
                     'SMARTPHONE': [
-                      {label: "Do you have the charger for the Phone?", value: "CHARGER"},
+                      {label: "I have the charger for the Phone", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Phone", value: "NO_CHARGER"},
                       {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
                     ],
                     'ALLINONE': [
-                      {label: "Do you have the charger for the Computer?", value: "CHARGER"},
+                      {label: "I have the charger for the Computer", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the Computer", value: "NO_CHARGER"},
                       {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
                       {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
-                      {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
+                      {label: "I have a password set for the Computer", value: "PASSWORD_PROTECTED"},
+                      {label: "I don't have a password set for the Computer", value: "NO_PASSWORD"}
                     ],
                     'OTHER': [
-                      {label: "Do you have the charger or power cable for the device?", value: "CHARGER"}
+                      {label: "I have the charger or power cable for the device", value: "CHARGER"},
+                      {label: "I don't have the charger / power cable for the device", value: "NO_CHARGER"},
                     ],
                   };
-                  return props[model.type] || props['OTHER']
+                  var values = props[model['type']] || props['OTHER'];
+                  var delta = {
+                    'CHARGER': 'NO_CHARGER',
+                    'NO_CHARGER': 'CHARGER',
+                    'PASSWORD_PROTECTED': 'NO_PASSWORD',
+                    'NO_PASSWORD': 'PASSWORD_PROTECTED'
+                  };
+                  (field.formControl.value || []).forEach(val => {
+                    if(delta[val]){
+                      values = values.filter(v => v.value != delta[val]);
+                    }
+                  });
+                  return values
                 },
               },
             },

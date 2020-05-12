@@ -7,6 +7,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { KIT_STATUS } from '../kit-info/kit-info.component';
 
 const QUERY_ENTITY = gql`
 query find($kitFilter: KitWhereInput!, $volunteerFilter: VolunteerWhereInput!) {
@@ -24,6 +25,7 @@ query find($kitFilter: KitWhereInput!, $volunteerFilter: VolunteerWhereInput!) {
     id
     type
     model
+    status
     donor {
       id
       name
@@ -76,6 +78,30 @@ export class MapViewComponent {
             ],
           } 
         },
+        {
+          key: "status",
+          type: "choice",
+          className: "col-md-6",
+          templateOptions: {
+            label: "Status of the device",
+            items: [
+              {label: "New - Donation Registered", value: "NEW" },
+              {label: "Declined - Not Suitable", value: "DECLINED" },
+              {label: "Accepted - Assesment Needed", value: "ASSESSMENT_NEEDED" },
+              {label: "Accepted - No Assesment Required", value: "ACCEPTED" },
+              {label: "Collection from donor scheduled", value: "PICKUP_SCHEDULED" },
+              {label: "Donor drop off agreed", value: "DROPOFF_AGGREED" },
+              {label: "Donation received by Tech Team", value: "WITH_TECHIE" },
+              {label: "Donation faulty - collect for recycling", value: "UPDATE_FAILED" },
+              {label: "Donation updated - arrange collection", value: "READY" },
+              {label: "Device allocated to referring organisation", value: "ALLOCATED" },
+              {label: "Collection / drop off to referring organisation agreed", value: "DELIVERY_ARRANGED" },
+              {label: "Device received by organisation", value: "DELIVERED" }
+            ],
+            multiple: true,
+            required: false
+          } 
+        },
       ]
     },
     {
@@ -122,6 +148,10 @@ export class MapViewComponent {
 
     if(data.type && data.type) {
       filter["kitFilter"]["type"] = {"_in": data.type };
+    }
+
+    if(data.status && data.status.length) {
+      filter["kitFilter"]["status"] = {"_in": data.status };
     }
 
     if(data.subGroup){
@@ -172,7 +202,11 @@ export class MapViewComponent {
             },
             info: `
             <strong><a href="/dashboard/devices/${k.id}">${k.model}</a></strong>
-            <p><span class="badge badge-secondary mr-1">${k.type}</span></p>
+            <p>
+              <span class="badge badge-secondary mr-1 mb-1">${k.type}</span>
+              <br />
+              <span class="badge badge-primary mr-1 mb-1">${KIT_STATUS[k.status]}</span>
+            </p>
             <p style="max-width: 100px;">${k.coordinates.address}</p>
           `});
         }
