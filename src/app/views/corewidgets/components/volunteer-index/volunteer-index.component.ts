@@ -107,7 +107,7 @@ export class VolunteersIndexComponent {
             options: [
               {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
               {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
-              {value: "Findraising", label: "Fundraising" },
+              {value: "Fundraising", label: "Fundraising" },
               {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
               {value: "MinorOrganizing", label: "Organizing(Might be interested in helping with group administration)" },
               {value: "Other", label: "Other" }

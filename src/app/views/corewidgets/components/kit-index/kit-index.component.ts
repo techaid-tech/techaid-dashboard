@@ -29,22 +29,6 @@ query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) 
             _contains: $term
           }
           AND: [ $where ]
-        },
-        {
-          volunteer: {
-            name: {
-              _contains: $term
-            }
-          }
-          AND: [ $where ]
-        },
-        {
-          donor: {
-            name: {
-              _contains: $term
-            }
-          }
-          AND: [ $where ]
         }
       ]
     }
