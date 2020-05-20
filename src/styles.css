@@ -531,3 +531,7 @@ i.input-group-text {
     padding-top: 15px !important;
     padding-left: 10px !important;
 }
+
+.dataTables_filter input:focus {
+    box-shadow: none;
+}
