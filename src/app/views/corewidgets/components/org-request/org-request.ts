@@ -164,7 +164,7 @@ export class OrgRequestComponent {
         {
           className: 'col-12',
           template: `
-            <p>How many of the following items can you currently take?</p>
+            <p>How many of the following items do you require? (Max 5 per item)</p>
           `
         },
         {
@@ -175,6 +175,7 @@ export class OrgRequestComponent {
           hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
           templateOptions: {
             min: 0,
+            max: 5,
             label: 'Laptops', 
             addonLeft: {
               class: 'fas fa-laptop'
@@ -192,6 +193,7 @@ export class OrgRequestComponent {
           defaultValue: 0,
           templateOptions: {
             min: 0,
+            max: 5,
             label: "Phones",
             addonLeft: {
               class: 'fas fa-mobile-alt'
@@ -209,6 +211,7 @@ export class OrgRequestComponent {
           hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') < 0",
           templateOptions: {
             min: 0,
+            max: 5,
             label: "Tablets",
             addonLeft: {
               class: 'fas fa-tablet-alt'
@@ -226,6 +229,7 @@ export class OrgRequestComponent {
           defaultValue: 0,
           templateOptions: {
             min: 0,
+            max: 5,
             label: "All In Ones",
             addonLeft: {
               class: 'fas fa-desktop'
@@ -279,7 +283,7 @@ export class OrgRequestComponent {
         {
           className: 'col-12',
           template: `
-            <p>How many of the following alternate items are you willing to take?</p>
+            <p>How many of the following alternate items do you require? (Max 5 per item)</p>
           `
         },
         {
@@ -290,6 +294,7 @@ export class OrgRequestComponent {
           hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') > -1 || model.attributes.alternateAccepts.toString().indexOf('LAPTOP') < 0",
           templateOptions: {
             min: 0,
+            max: 5,
             label: 'Laptops', 
             addonLeft: {
               class: 'fas fa-laptop'
@@ -307,6 +312,7 @@ export class OrgRequestComponent {
           defaultValue: 0,
           templateOptions: {
             min: 0,
+            max: 5,
             label: "Phones",
             addonLeft: {
               class: 'fas fa-mobile-alt'
@@ -324,6 +330,7 @@ export class OrgRequestComponent {
           hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') > -1 || model.attributes.alternateAccepts.toString().indexOf('TABLET') < 0",
           templateOptions: {
             min: 0,
+            max: 5,
             label: "Tablets",
             addonLeft: {
               class: 'fas fa-tablet-alt'
@@ -341,6 +348,7 @@ export class OrgRequestComponent {
           defaultValue: 0,
           templateOptions: {
             min: 0,
+            max: 5,
             label: "All In Ones",
             addonLeft: {
               class: 'fas fa-desktop'

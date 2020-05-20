@@ -102,28 +102,120 @@ export class MapViewComponent {
             required: false
           } 
         },
+        {
+          key: "age",
+          type: "multicheckbox",
+          className: "col-md-6",
+          templateOptions: {
+            label: "Roughly how old is your device?",
+            type: 'array',
+            options: [
+              {label: "Less than a year", value: 1},
+              {label: "1 - 2 years", value: 2},
+              {label: "3 - 4 years", value: 4 },
+              {label: "5 - 6 years", value: 5},
+              {label: "More than 6 years old", value: 6 },
+              {label: "I don't know!", value: 0 }
+            ],
+            required: false
+          } 
+        },
       ]
     },
     {
-      key: "subGroup",
-      type: "multicheckbox",
-      className: "col-md-6",
-      defaultValue: ['Technical', 'Distribution'],
-      templateOptions: {
-        label: "Volunteer Type",
-        multiple: true,
-        type: 'array',
-        options: [
-          {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
-          {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
-          {value: "Findraising", label: "Fundraising" },
-          {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
-          {value: "MinorOrganizing", label: "Organizing(Might be interested in helping with group administration)" },
-          {value: "Other", label: "Other" }
-        ],
-        required: false
-      } 
+      template: `<hr />`
     },
+    {
+      fieldGroupClassName: "row",
+      fieldGroup: [
+        {
+          key: "subGroup",
+          type: "multicheckbox",
+          className: "col-md-6",
+          defaultValue: ['Technical', 'Distribution'],
+          templateOptions: {
+            label: "Volunteer Type",
+            multiple: true,
+            type: 'array',
+            options: [
+              {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
+              {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
+              {value: "Findraising", label: "Fundraising" },
+              {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
+              {value: "MinorOrganizing", label: "Organizing(Might be interested in helping with group administration)" },
+              {value: "Other", label: "Other" }
+            ],
+            required: false
+          } 
+        },
+        {
+          key: "hasCapacity",
+          type: "multicheckbox",
+          className: "col-md-6",
+          templateOptions: {
+            type: 'array',
+            label: "Filter by tech volunteers that have capacity",
+            options: [
+              {label: "With Capacity", value: true },
+              {label: "No Capacity", value: false }
+            ],
+            required: false,
+          }
+        }, 
+        {
+          key: "accepts",
+          type: "multicheckbox",
+          className: "col-md-6",
+          defaultValue: [],
+          templateOptions: {
+            type: 'array',
+            label: "Filter by what Tech Volunteer Accepts",
+            multiple: true,
+            options: [
+              {value: "APPLE_PHONES", label: "Apple iPhones"},
+              {value: "ANDROID_PHONES", label: "Android Phones"},
+              {value: "IOS_TABLETS", label: "iPads" },
+              {value: "ANDROID_TABLETS", label: "Android Tablets" },
+              {value: "OTHER_TABLETS", label: "All Other Tablets ( Windows )" },
+              {value: "WINDOWS_LAPTOPS", label: "Windows Laptops" },
+              {value: "WINDOWS_ALLINONES", label: "Windows All In Ones" },
+              {value: "LINUX_LAPTOPS", label: "Capable of Installing Linux on Old Windows Laptops" },
+              {value: "APPLE_LAPTOPS", label: "Apple Macbooks" },
+              {value: "APPLE_ALLINONES", label: "Apple iMacs (All In One)" },
+            ]
+          }
+        },
+        {
+          key: "storage",
+          type: "multicheckbox",
+          className: "col-md-6",
+          templateOptions: {
+            type: 'array',
+            label: "Filter by Storage?",
+            description: "This is for devices that have been picked up from donors",
+            options: [
+              {label: "No", value: "no" },
+              {label: "Limited storage possible", value: "limited" },
+              {label: "Yes", value: "yes" }
+            ],
+          },
+        },
+        {
+          key: "transport",
+          type: "multicheckbox",
+          className: "col-md-6",
+          templateOptions: {
+            type: 'array',
+            label: "Filter by Transport?",
+            options: [
+              {label: "Car", value: "car" },
+              {label: "Bike", value: "bike" },
+              {label: "Neither", value: "none" } 
+            ]
+          }
+        },
+      ]
+    }
   ];
 
   queryRef = this.apollo
@@ -150,16 +242,42 @@ export class MapViewComponent {
       filter["kitFilter"]["type"] = {"_in": data.type };
     }
 
+    if(data.age && data.age.length) {
+      filter["kitFilter"]["age"] = {"_in": data.age };
+    }
+
     if(data.status && data.status.length) {
       filter["kitFilter"]["status"] = {"_in": data.status };
     }
 
-    if(data.subGroup){
-      filter["volunteerFilter"]["OR"] = [];
-      data.subGroup.forEach(g => {
-          filter["volunteerFilter"]["OR"].push({"subGroup": {"_contains": g}})
-      }); 
+    if(data.storage && data.storage.length) {
+      filter["volunteerFilter"]["storage"] = {"_in": data.storage };
     }
+
+    if(data.transport && data.transport.length) {
+      filter["volunteerFilter"]["transport"] = {"_in": data.transport };
+    }
+
+    if(data.subGroup){
+      var filt = [];
+      data.subGroup.forEach(g => {
+          filt.push({"subGroup": {"_contains": g}})
+      }); 
+      filter["volunteerFilter"]["AND"] = [{"OR": filt}];
+    }
+
+    const attributes = {filters: []};
+    if(data.accepts && data.accepts.length){
+      attributes.filters.push({key: "accepts", _in: data.accepts});
+    }
+
+    if(data.hasCapacity && data.hasCapacity.length){
+      attributes['hasCapacity'] = {_in: data.hasCapacity}; 
+    }
+
+    filter["volunteerFilter"]["attributes"] = attributes;
+
+    console.log('Filter', filter);
     this.fetchData(filter);
   }
 
