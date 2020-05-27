@@ -424,7 +424,7 @@ export class OrgIndexComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
@@ -438,7 +438,7 @@ export class OrgIndexComponent {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
 
@@ -520,6 +520,7 @@ export class OrgIndexComponent {
         { data: 'contact' },
         { data: 'email' },
         { data: 'phoneNumber'},
+        { data: 'createdAt'},
         { data: 'updatedAt' },
       ]
     };
@@ -543,7 +544,7 @@ export class OrgIndexComponent {
       variables: { data }
     }).subscribe(data => {
       this.total = null;
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }, err => {
       this.toastr.error(`
       <small>${err.message}</small>

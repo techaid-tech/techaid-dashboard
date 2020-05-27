@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { RouterNavigation } from '@ngxs/router-plugin';
 import { Store, Actions, ofAction } from '@ngxs/store';
 import { Subscription } from "rxjs";
+import { APP_VERSION } from '@env/version';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { Subscription } from "rxjs";
 })
 export class AppComponent {
   private actionSub: Subscription;
-
+  version = APP_VERSION;
   constructor(
     private toastr: ToastrService,
     private store: Store,

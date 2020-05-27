@@ -120,7 +120,7 @@ export class RoleUsersComponent {
   set roleId(str: string) {
     this._roleId = str;
     if (this.table) {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }
   }
 
@@ -129,7 +129,7 @@ export class RoleUsersComponent {
   set roleName(str: string) {
     this._roleName = str;
     if (this.table) {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }
   }
 
@@ -158,14 +158,14 @@ export class RoleUsersComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
 
@@ -311,7 +311,7 @@ export class RoleUsersComponent {
     }).subscribe(data => {
       this.model = {};
       if (this.table) {
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     }, err => {
       this.toastr.error(`
@@ -331,7 +331,7 @@ export class RoleUsersComponent {
         roleIds: [this._roleId]
       }
     }).subscribe(res => {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }, err => {
       this.toastr.error(`
       <small>${err.message}</small>

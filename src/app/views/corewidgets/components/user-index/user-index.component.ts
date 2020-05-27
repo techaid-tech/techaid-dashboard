@@ -80,7 +80,7 @@ export class UserIndexComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
@@ -93,7 +93,7 @@ export class UserIndexComponent {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
     const sorted : any = {'name': 'email', 'loginsCount': 'logins_count', 'lastLogin': 'last_login'};

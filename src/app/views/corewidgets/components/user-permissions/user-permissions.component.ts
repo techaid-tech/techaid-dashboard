@@ -195,7 +195,7 @@ export class UserPermissionsComponent {
   set userId(id: number) {
     this._userId = id;
     if (this.table) {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }
   }
 
@@ -224,14 +224,14 @@ export class UserPermissionsComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
 
@@ -431,7 +431,7 @@ export class UserPermissionsComponent {
 
       this.model = {};
       if (this.table) {
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     }, err => {
       this.toastr.error(`
@@ -455,7 +455,7 @@ export class UserPermissionsComponent {
         }
       }
     }).subscribe(res => {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }, err => {
       this.toastr.error(`
       <small>${err.message}</small>

@@ -74,7 +74,7 @@ export class RoleIndexComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
@@ -87,7 +87,7 @@ export class RoleIndexComponent {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
 

@@ -42,6 +42,7 @@ import { OrgInfoComponent } from './components/org-info/org-info.component';
 import { DashboardIndexComponent } from './components/dashboard-index/dashboard-index.component';
 import { OrgRequestComponent } from './components/org-request/org-request';
 import { NgxCommentoComponent } from './components/comment.component';
+import { KitComponent } from './components/kit-component/kit-component.component';
 const routes: Routes = [
   // { path: '', component: IndexComponent },
   { path: 'donate-device', component: DonorRequestComponent },
@@ -130,7 +131,8 @@ const routes: Routes = [
     OrgInfoComponent,
     DashboardIndexComponent,
     OrgRequestComponent,
-    NgxCommentoComponent
+    NgxCommentoComponent,
+    KitComponent
   ],
   imports: [
     LightboxModule,

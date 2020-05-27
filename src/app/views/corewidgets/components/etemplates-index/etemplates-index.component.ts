@@ -144,7 +144,7 @@ export class EmailTemplatesIndexComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
@@ -158,7 +158,7 @@ export class EmailTemplatesIndexComponent {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
 
@@ -262,7 +262,7 @@ export class EmailTemplatesIndexComponent {
       variables: { data }
     }).subscribe(data => {
       this.total = null;
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }, err => {
       this.toastr.error(`
       <small>${err.message}</small>

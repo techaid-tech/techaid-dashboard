@@ -46,7 +46,7 @@ export class VolunteerComponent {
           <div class="border-bottom-info card mb-3 p-3">
             <strong><p>Covid TechAid Volunteers</p></strong>
             <p>
-            Thank you for offering to help get isolated people connected on line through Covid TechAid Lambeth.  
+            Thank you for offering to help get isolated people connected on line through Lambeth TechAid.  
             At the moment, there are hundreds of people stuck at home without a suitable device to access the 
             internet – to communicate with loved ones, to download educational resources, or to even get some 
             basic entertainment. It's our aim to collect your unwanted devices and deliver them to people who 
@@ -453,8 +453,8 @@ export class VolunteerComponent {
       templateOptions: {
         label: "Data Protection",
         options: [
-          {label: "I consent to my data being processed by Covid TechAid Lambeth", value: "yes" },
-          // {label: "I do not consent to my data being processed by Covid TechAid Lambeth", value: "no" },
+          {label: "I consent to my data being processed by Lambeth TechAid", value: "yes" },
+          // {label: "I do not consent to my data being processed by Lambeth TechAid", value: "no" },
         ],
         required: true
       },

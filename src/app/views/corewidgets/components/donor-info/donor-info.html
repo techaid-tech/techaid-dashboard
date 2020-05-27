@@ -15,58 +15,9 @@
         <ngb-tabset [destroyOnHide]="false">
             <ngb-tab title="Devices">
                 <ng-template ngbTabContent>
-                    <div class="card shadow mb-4 mt-1">
-                        <div class="card-body">
-                            <div class="w-100">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover table-bordered table-md"
-                                         style="width:100%;">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Model</th>
-                                                <th>Updated</th>
-                                                <th>Age</th>
-                                                <th>Type</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngIf="!model?.kits?.length">
-                                                    <td colspan="6">
-                                                        <div class="d-flex justify-content-center">
-                                                            <span>No devices for donor</span>
-                                                        </div>
-                                                    </td>
-                                            </tr>
-                                            <tr *ngFor="let dt of model.kits">
-                                                <td>
-                                                        <a href="#" [routerLink]="['./', dt.id]">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        </a>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex">
-                                                        <div class="d-flex flex-column">
-                                                            <div>
-                                                                <a *ngIf="dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.model }}</a>
-                                                                <a *ngIf="!dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.location }}</a>
-                                                            </div>
-                                                            <div *ngIf="dt.model.length"><small>{{ dt.location }}</small></div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>{{ dt.updatedAt | timeAgo}}</td>
-                                                <td>{{ ages[dt.age] }}</td>
-                                                <td>{{ dt.type}}</td>
-                                                <td>{{ kitStatus[dt.status] || dt.status }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
+                    <div class="mt-2">
+                        <kit-component *ngIf="model?.id" [where]="{donor: {id: {_eq: model.id}}}" [tableId]="'donor-info-' + model.id"></kit-component>
+                    </div>
                 </ng-template>
             </ngb-tab>
             <ngb-tab title="Emails" *ngIf="user?.authorities['read:emails'] && model?.email?.length > 0">

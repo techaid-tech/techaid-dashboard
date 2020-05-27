@@ -32,6 +32,7 @@
                                     <th>Contact</th>
                                     <th>Email</th>
                                     <th>Phone</th>
+                                    <th>Created</th>
                                     <th>Updated</th>
                                 </tr>
                             </thead>
@@ -59,8 +60,11 @@
                                         <a routerLink="/dashboard/email" [queryParams]="{to: dt.email}">{{dt.email}}</a>
                                     </td>
                                     <td>{{dt.phoneNumber}}</td>
-                                    <td>
-                                    {{ dt.updatedAt | timeAgo }}
+                                    <td [title]="dt.createdAt">
+                                    {{ dt.createdAt | timeAgo }}
+                                    </td>
+                                    <td [title]="dt.updatedAt">
+                                        {{ dt.updatedAt | timeAgo }}
                                     </td>
                                 </tr>
                             </tbody>

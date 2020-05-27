@@ -683,7 +683,7 @@ export class KitInfoComponent {
         <div class="col-md-12">
           <div class="border-bottom-warning card mb-3 p-3">
             <p>
-              In order to protect your data, Covid TechAid Lambeth will delete any personal information 
+              In order to protect your data, Lambeth TechAid will delete any personal information 
               submitted via this form as soon as it has been used for collecting and delivering your device. 
               Alternatively, if we don't collect your device, we will delete your information immediately. 
               We promise to process your data in accordance with data protection legislation, and will not 
@@ -712,8 +712,8 @@ export class KitInfoComponent {
       templateOptions: {
         label: "",
         options: [
-          {label: "I consent to my data being processed by Covid TechAid Lambeth", value: "yes" },
-          {label: "I do not consent to my data being processed by Covid TechAid Lambeth", value: "no" },
+          {label: "I consent to my data being processed by Lambeth TechAid", value: "yes" },
+          {label: "I do not consent to my data being processed by Lambeth TechAid", value: "no" },
         ],
         required: true
       }

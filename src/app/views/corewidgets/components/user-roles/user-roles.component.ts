@@ -117,7 +117,7 @@ export class UserRolesComponent {
   set userId(str: number) {
     this._userId = str;
     if (this.table) {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }
   }
 
@@ -146,7 +146,7 @@ export class UserRolesComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
@@ -166,7 +166,7 @@ export class UserRolesComponent {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
 
@@ -308,7 +308,7 @@ export class UserRolesComponent {
       this.form.markAsUntouched();
       this.form.markAsPristine();
       if (this.table) {
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     }, err => {
       this.toastr.error(`
@@ -328,7 +328,7 @@ export class UserRolesComponent {
         roleIds: [role.id] 
       }
     }).subscribe(res => {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }, err => {
       this.toastr.error(`
       <small>${err.message}</small>

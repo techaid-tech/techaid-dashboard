@@ -8,23 +8,14 @@
             <div class="card-header py-3">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h6 class="m-0 font-weight-bold text-primary pr-1">Devices</h6>
+                        <h6 class="m-0 font-weight-bold text-primary pr-1">{{ title || 'Devices'}}</h6>
                     </div>
                     <div>
-                        <a href="#" class="btn btn-secondary btn-sm mr-1 mb-1" routerLink="/dashboard/map">
-                            <i class="fas fa-map-marked-alt"></i> View Map
-                        </a>
                         <a href="#" (click)="modal(filters); false;" class="btn btn-info btn-icon-split btn-sm mr-1 mb-1">
                             <span class="icon text-white-50">
                                 <i class="fas fa-filter"></i>
                             </span>
                             <span class="text">Filter <span *ngIf="filterCount > 0" class="badge badge-danger">{{filterCount}}</span></span>
-                        </a>
-                        <a href="#" (click)="model={}; modal(createApi); false;" class="btn btn-primary btn-icon-split btn-sm mb-1">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-laptop"></i>
-                            </span>
-                            <span class="text">Create Device</span>
                         </a>
                     </div>
                 </div>
@@ -93,7 +84,7 @@
                             </tbody>
                             <tbody *ngIf="entities?.length == 0">
                                 <tr>
-                                   <td colspan="8" class="no-data-available">No data!</td>
+                                   <td colspan="9" class="no-data-available">No data!</td>
                                 </tr>
                             </tbody>
                         </table>

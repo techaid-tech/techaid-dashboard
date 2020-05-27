@@ -81,7 +81,7 @@ export class RolePermissionsComponent {
   set roleId(str: string) {
     this._roleId = str;
     if (this.table) {
-      this.table.ajax.reload();
+      this.table.ajax.reload(null, false);
     }
   }
 
@@ -110,14 +110,14 @@ export class RolePermissionsComponent {
     }
 
     this.table.search(filter);
-    this.table.ajax.reload();
+    this.table.ajax.reload(null, false);
   }
 
   ngOnInit() {
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
         this.table.search(query);
-        this.table.ajax.reload();
+        this.table.ajax.reload(null, false);
       }
     });
 

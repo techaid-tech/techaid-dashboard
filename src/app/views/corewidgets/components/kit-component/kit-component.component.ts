@@ -17,19 +17,19 @@ import { HashUtils } from '@app/shared/utils';
 import { KIT_STATUS } from '../kit-info/kit-info.component';
 
 const QUERY_ENTITY = gql`
-query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) {
+query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!, $filter: KitWhereInput!) {
   kitsConnection(page: $page, where: {
     AND: {
       model: {
         _contains: $term
       }
-      AND: [ $where ]
+      AND: [ $where, $filter ]
       OR: [
         {
           location: {
             _contains: $term
           }
-          AND: [ $where ]
+          AND: [ $where, $filter ]
         }
       ]
     }
@@ -64,51 +64,6 @@ query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) 
         phoneNumber
       }
      }
-    }
-  }
-}
-`;
-
-const CREATE_ENTITY = gql`
-mutation createKits($data: CreateKitInput!) {
-  createKit(data: $data){
-    id
-    type
-    model
-  }
-}
-`;
-
-const AUTOCOMPLETE_USERS = gql`
-query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
-  volunteersConnection(page: {
-    size: 50
-  }, where: {
-    name: {
-      _contains: $term
-    }
-    OR: [ 
-    {
-      id: {
-        _in: $ids
-      }
-    },
-    {
-      phoneNumber: {
-        _contains: $term
-      }
-    },
-    {
-      email: {
-        _contains: $term
-      }
-    }]
-  }){
-    content  {
-     id
-     name
-     email
-     phoneNumber
     }
   }
 }
@@ -159,6 +114,41 @@ query findAutocompleteOrgs($term: String, $ids: [Long!]) {
 }
 `;
 
+const AUTOCOMPLETE_USERS = gql`
+query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
+  volunteersConnection(page: {
+    size: 50
+  }, where: {
+    name: {
+      _contains: $term
+    }
+    OR: [ 
+    {
+      id: {
+        _in: $ids
+      }
+    },
+    {
+      phoneNumber: {
+        _contains: $term
+      }
+    },
+    {
+      email: {
+        _contains: $term
+      }
+    }]
+  }){
+    content  {
+     id
+     name
+     email
+     phoneNumber
+    }
+  }
+}
+`;
+
 const FIND_USERS = gql`
 query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
   volunteers(where: {
@@ -186,12 +176,12 @@ query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
 `;
 
 @Component({
-  selector: 'kit-index',
-  styleUrls: ['kit-index.scss'],
+  selector: 'kit-component',
+  styleUrls: ['kit-component.scss'],
   encapsulation: ViewEncapsulation.None,
-  templateUrl: './kit-index.html'
+  templateUrl: './kit-component.html'
 })
-export class KitIndexComponent {
+export class KitComponent {
   @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
@@ -259,7 +249,7 @@ export class KitIndexComponent {
 
   filter: any = {};
   filterCount = 0;
-  filterModel: any = {archived: [false]};
+  filterModel: any = {};
   filterForm: FormGroup = new FormGroup({});
   filterFields: Array<FormlyFieldConfig> = [
     {
@@ -388,268 +378,6 @@ export class KitIndexComponent {
 
   @Select(CoreWidgetState.query) search$: Observable<string>;
 
-  fields: Array<FormlyFieldConfig> = [
-    {
-      key: "location",
-      type: "place",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Address",
-        description: "The address of the device",
-        placeholder: "",
-        postCode: false,
-        required: true
-      }
-    },
-    {
-      key: "attributes.pickup",
-      type: "radio",
-      className: "col-md-12",
-      defaultValue: "DROPOFF",
-      templateOptions: {
-        label: "Are you able to drop off your device to a location in Streatham Hill or would you need it to be collected?",
-        placeholder: "",
-        required: true,
-        options: [
-          { label: "I am able to drop off my device to a location in Streatham Hill", value: "DROPOFF" },
-          { label: "I would need you to come and collect my device", value: "PICKUP" },
-          { label: "I'm not sure – it depends on the exact location", value: "NOTSURE" }
-        ]
-      }
-    },
-    {
-      key: "attributes.pickupAvailability",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Pickup Availability",
-        rows: 2,
-        description: `
-          Please let us know when you are typically available at home for someone 
-          to arrange to come and pick up your device. Alternatively provide us with times 
-          when you are usually not available. 
-          `,
-        required: true
-      },
-      hideExpression: "model.attributes.pickup != 'PICKUP'",
-    },
-    {
-      template: `
-      <div class="row">
-        <div class="col-md-12">
-          <div class="border-bottom-info card mb-3 p-3">
-            <strong><p>About your device</p></strong>
-            <p>
-              In order to understand what condition your device is in - and how easy it will be for us 
-              to get it ready to deliver - please answer as many of the following questions as you can.
-            </p>
-          </div>
-        </div>
-      </div>
-      `
-    },
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          className: "col-md-6",
-          fieldGroup: [
-            {
-              key: "type",
-              type: "radio",
-              className: "",
-              defaultValue: "LAPTOP",
-              templateOptions: {
-                label: "Type of device",
-                options: [
-                  {label: "Laptop", value: "LAPTOP" },
-                  {label: "Tablet", value: "TABLET" },
-                  {label: "Smart Phone", value: "SMARTPHONE" },
-                  {label: "All In One (PC)", value: "ALLINONE" },
-                  {label: "Other", value: "OTHER" }
-                ],
-                required: true
-              } 
-            },
-            {
-              key: "attributes.otherType",
-              type: "input",
-              className: "",
-              defaultValue: "",
-              templateOptions: {
-                label: "Type of device",
-                rows: 2,
-                placeholder: "(Other device type)",
-                required: true
-              },
-              hideExpression: "model.type != 'OTHER'",
-              expressionProperties: {
-                'templateOptions.required': "model.type == 'OTHER'",
-              },
-            },
-          ]
-        },
-        {
-          className: "col-md-6",
-          fieldGroup: [
-            {
-              key: "attributes.status",
-              type: "multicheckbox",
-              className: "",
-              templateOptions: {
-                type: "array",
-                options: [],
-                description: "Please select all options that apply",
-                required: true
-              },
-              defaultValue: [],
-              expressionProperties: {
-                'templateOptions.options': (model, state)=> {
-                  const props = {
-                    'LAPTOP': [
-                      {label: "I have the charger / power cable for the Laptop", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Laptop", value: "NO_CHARGER"},
-                      {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
-                    ],
-                    'TABLET': [
-                      {label: "I have the charger for the Tablet", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Tablet", value: "NO_CHARGER"},
-                      {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
-                    ],
-                    'SMARTPHONE': [
-                      {label: "I have the charger for the Phone", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Phone", value: "NO_CHARGER"},
-                      {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
-                    ],
-                    'ALLINONE': [
-                      {label: "I have the charger for the Computer", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Computer", value: "NO_CHARGER"},
-                      {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
-                      {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
-                      {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
-                    ],
-                    'OTHER': [
-                      {label: "I have the charger or power cable for the device", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the device", value: "NO_CHARGER"},
-                    ],
-                  };
-                  return props[model.type] || props['OTHER']
-                },
-              },
-            },
-            {
-              key: "attributes.credentials",
-              type: "input",
-              className: "",
-              defaultValue: "",
-              templateOptions: {
-                label: "Device Password",
-                description: "If your device requires a password or a PIN to sign in, please provide it here",
-                rows: 2,
-                placeholder: "Password",
-                required: false
-              },
-              hideExpression: (model, state) => {
-                if(['LAPTOP', 'ALLINONE'].indexOf(model.type) == -1){
-                  return true;
-                }
-                const status = HashUtils.dotNotation(model, 'attributes.status') || [];
-                if(status && status.length) {
-                  return status.indexOf('PASSWORD_PROTECTED') == -1
-                }
-                return true;
-              }
-            },
-          ]
-        },
-        {
-          key: "age",
-          type: "radio",
-          className: "col-md-6",
-          defaultValue: 5,
-          templateOptions: {
-            label: "Roughly how old is your device?",
-            options: [
-              {label: "Less than a year", value: 1},
-              {label: "1 - 2 years", value: 2},
-              {label: "3 - 4 years", value: 4 },
-              {label: "5 - 6 years", value: 5},
-              {label: "More than 6 years old", value: 6 },
-              {label: "I don't know!", value: 0 }
-            ],
-            required: true
-          } 
-        },
-      ]
-    },
-    {
-      key: "model",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Make or model (if known)",
-        rows: 2,
-        placeholder: "",
-        required: true
-      }
-    },
-    {
-      key: "attributes.state",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "What technical state is the device in? For example, does it turn on OK? Are there keys missing? Is the screen cracked?",
-        rows: 2,
-        placeholder: "",
-        required: false
-      }
-    },
-    {
-      template: `
-      <div class="row">
-        <div class="col-md-12">
-          <div class="border-bottom-warning card mb-3 p-3">
-            <p>
-              In order to protect your data, Lambeth TechAid will delete any personal information 
-              submitted via this form as soon as it has been used for collecting and delivering your device. 
-              Alternatively, if we don't collect your device, we will delete your information immediately. 
-              We promise to process your data in accordance with data protection legislation, and will not 
-              share your details with any third parties. You have the right to ask for your information to be 
-              deleted from our records - please contact covidtechaid@gmail.com for more information.
-            </p>
-          </div>
-        </div>
-      </div>
-      `
-    },
-    {
-      key: "attributes.images",
-      type: "gallery",
-      className: "col-md-12",
-      templateOptions: {
-        label: "Upload an image of your device if you can",
-        required: false
-      }
-    },
-    {
-      key: "attributes.consent",
-      type: "radio",
-      className: "col-md-12",
-      templateOptions: {
-        label: "",
-        options: [
-          {label: "I consent to my data being processed by Lambeth TechAid", value: "yes" },
-          // {label: "I do not consent to my data being processed by Lambeth TechAid", value: "no" },
-        ],
-        required: true
-      }
-    }
-  ];
-
   constructor(
     private modalService: NgbModal,
     private toastr: ToastrService,
@@ -684,10 +412,22 @@ export class KitIndexComponent {
   }
 
   @Input()
-  pageLength = 10;
+  pageLength = 5;
 
   @Input()
-  tableId = "kit-index";
+  tableId = "kit-component";
+
+  @Input()
+  title = "Devices";
+
+  _where = {};
+  @Input()
+  set where(where: any){
+    this._where = where;
+    if(this.table){
+      this.applyFilter(this.filterModel); 
+    }
+  }
 
   ngOnInit() {
     const queryRef = this.apollo
@@ -742,6 +482,10 @@ export class KitIndexComponent {
       )
     );
 
+    this.sub.add(this.users$.subscribe(data => {
+      this.userField.templateOptions['items'] = data;
+    }));
+
     this.orgs$ = concat(
       of([]),
       this.orgInput$.pipe(
@@ -770,10 +514,6 @@ export class KitIndexComponent {
       this.orgField.templateOptions['items'] = data;
     }));
 
-    this.sub.add(this.users$.subscribe(data => {
-      this.userField.templateOptions['items'] = data;
-    }));
-
     this.dtOptions = {
       pagingType: 'simple_numbers',
       dom:
@@ -787,6 +527,7 @@ export class KitIndexComponent {
       stateSave: true,
       processing: true,
       searching: true,
+      stateDuration: -1,
       ajax: (params: any, callback) => {
         let sort = params.order.map(o => {
           return {
@@ -802,6 +543,7 @@ export class KitIndexComponent {
             page: 0,
           },
           where: this.filter,
+          filter: this._where || {},
           term: params['search']['value']
         }
 
@@ -888,8 +630,8 @@ export class KitIndexComponent {
     this.grid.dtInstance.then(tbl => {
       this.table = tbl;
       try {
-        this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`)) || {archived: [false]};
-        if(this.filterModel && (this.filterModel.userIds || this.filterModel.orgIds) ){
+        this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`)) || {};
+        if(this.filterModel && (this.filterModel.userIds || this.filterModel.orgIds)){
           this.apollo.query({
             query: FIND_USERS,
             variables: {
@@ -909,10 +651,11 @@ export class KitIndexComponent {
                 });
               }
             }
+           
           });
         }
       }catch(_){
-        this.filterModel = {archived: [false]};
+        this.filterModel = {};
       }
 
       try {
@@ -922,31 +665,6 @@ export class KitIndexComponent {
       }
     });
   }
-
-  createEntity(data: any) {
-    data.status = "NEW";
-    data.attributes.images = (data.attributes.images || []).map(f => {
-      return {
-        image: f.image, 
-        id: f.id
-      }
-    }); 
-    this.apollo.mutate({
-      mutation: CREATE_ENTITY,
-      variables: { data }
-    }).subscribe(data => {
-      this.total = null;
-      this.table.ajax.reload(null, false);
-    }, err => {
-      this.toastr.error(`
-      <small>${err.message}</small>
-      `, 'Create Device Error', {
-          enableHtml: true,
-          timeOut: 15000
-        });
-    })
-  }
-
 
   select(row?: any) {
     if (row) {

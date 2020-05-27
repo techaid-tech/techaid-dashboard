@@ -11,62 +11,15 @@
             </ol>
         </nav>
 
-        <ngb-tabset>
+        <ngb-tabset [destroyOnHide]="false">
             <ngb-tab title="Devices">
                 <ng-template ngbTabContent>
-                    <div class="card shadow mb-4 mt-1">
-                        <div class="card-body">
-                            <div class="w-100">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover table-bordered table-md"
-                                         style="width:100%;">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Model</th>
-                                                <th>Updated</th>
-                                                <th>Type</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngIf="!model?.kits?.length">
-                                                    <td colspan="5">
-                                                        <div class="d-flex justify-content-center">
-                                                            <span>No devices for organisation</span>
-                                                        </div>
-                                                    </td>
-                                            </tr>
-                                            <tr *ngFor="let dt of model.kits">
-                                                <td>
-                                                        <a href="#" [routerLink]="['./', dt.id]">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        </a>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex">
-                                                        <div class="d-flex flex-column">
-                                                            <div>
-                                                                <a *ngIf="dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.model }}</a>
-                                                                <a *ngIf="!dt.model.length" href="#" [routerLink]="['/dashboard/devices', dt.id]">{{ dt.location }}</a>
-                                                            </div>
-                                                            <div *ngIf="dt.model.length"><small>{{ dt.location }}</small></div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>{{ dt.updatedAt | timeAgo}}</td>
-                                                <td>{{ dt.type}}</td>
-                                                <td>{{ dt.status }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
+                    <div class="mt-2">
+                        <kit-component *ngIf="model?.id" [where]="{organisation: {id: {_eq: model.id}}}" [tableId]="'org-index-' + model.id"></kit-component>
+                    </div>
                 </ng-template>
             </ngb-tab>
-            <ngb-tab title="Edit">
+            <ngb-tab title="Details">
                 <ng-template ngbTabContent>
                     <div class="card shadow mb-4 mt-1">
                         <div class="card-header py-3">
@@ -108,13 +61,18 @@
                     </div>
                 </ng-template>
             </ngb-tab>
-            <ngb-tab title="Comments">
+            <ngb-tab title="Emails" *ngIf="model?.email?.length">
+                <ng-template ngbTabContent>
+                    <email-threads [email]="model.email"></email-threads>
+                </ng-template>
+             </ngb-tab> 
+             <ngb-tab title="Comments">
                 <ng-template ngbTabContent>
                     <div class="pt-3">
                         <ngx-commento></ngx-commento>
                     </div>
                 </ng-template>
-            </ngb-tab>
+            </ngb-tab> 
         </ngb-tabset>
     </div>
 </div>
