@@ -14,6 +14,7 @@ import { Select } from '@ngxs/store';
 import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 import { User, UserState } from '@app/state/user/user.state';
 import { Title } from '@angular/platform-browser';
+import { KIT_STATUS } from '../kit-info/kit-info.component';
 
 const QUERY_ENTITY = gql`
 query findAll {
@@ -32,11 +33,15 @@ query findAll {
     type
     count
   }
+  statusCount {
+    status
+    count
+  }
   requestCount {
     LAPTOP: laptops
     TABLET: tablets
     OTHER: other
-    PHONE: phones
+    SMARTPHONE: phones
     ALLINONE: allInOnes
   }
 }
@@ -68,9 +73,18 @@ export class DashboardIndexComponent {
     'LAPTOP': {title: 'Laptops', style: 'primary', progress: 0},
     'TABLET': {title: 'Tablets', style: 'info', progress: 0},
     'OTHER': {title: 'Other', style: 'danger', progress: 0},
-    'PHONE': {title: 'Phones', style: 'warning', progress: 0},
-    'ALLINONE': {title: 'All In ONes', style: 'success', progress: 0}
+    'SMARTPHONE': {title: 'Phones', style: 'warning', progress: 0},
+    'ALLINONE': {title: "All In One's", style: 'success', progress: 0}
   }
+
+  dtOptions = {
+    pageLength: 5,
+    dom: "<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6'f>>" +
+          "<'row'<'col-sm-12'tr>>" + 
+          "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+  }
+
+  kitStatus = KIT_STATUS;
 
   private queryRef = this.apollo
     .watchQuery({
@@ -86,7 +100,6 @@ export class DashboardIndexComponent {
       }
       this.styles[s.type].progress = p;
     });
-    console.log('data', data);
     return data;
   }
 

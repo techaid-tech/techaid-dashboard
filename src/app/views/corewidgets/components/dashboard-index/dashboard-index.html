@@ -74,6 +74,35 @@
         </div>
       </div>
     </div>
+    <div class="col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Status</h6>
+        </div>
+        <div class="card-body">
+          <div class="w-100">
+            <div class="table-responsive">
+                <table id="donor-index" class="table table-striped table-hover table-bordered table-md" datatable
+                  [dtOptions]="dtOptions"
+                >
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let s of model.statusCount">
+                        <td>{{kitStatus[s.status] || s.status}}</td>
+                        <td>{{s.count}}</td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="col-lg-6" *ngIf="user?.authorities['read:kits']">
       <!-- <kit-index [pageLength]="5" tableId="kit-index-dashboard"></kit-index> -->
       <kit-component *ngIf="user?.email" title="My Devices" [where]="{volunteer: {email: {_eq: user.email}}}" [tableId]="'my-devices-dashboard'"></kit-component>

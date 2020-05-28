@@ -211,17 +211,11 @@ export class PostIndexComponent {
           page: {
             sort: sort,
             size: params.length,
-            page: 0,
+            page: Math.round(params.start/params.length),
           },
           term: params['search']['value']
         }
 
-        if (this.table) {
-          vars.page.page = Math.min(
-            Math.max(0, Math.round(params.start / this.table.page.len())),
-            this.table.page.info().pages
-          )
-        }
 
         queryRef.refetch(vars).then(res => {
           var data: any = {};

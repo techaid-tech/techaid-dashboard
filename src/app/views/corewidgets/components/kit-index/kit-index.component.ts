@@ -810,23 +810,17 @@ export class KitIndexComponent {
             value: o.dir
           }
         });
-
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: 0,
+            page: Math.round(params.start/params.length),
           },
           where: this.filter,
           term: params['search']['value']
         }
 
-        if (this.table) {
-          vars.page.page = Math.min(
-            Math.max(0, Math.round(params.start / this.table.page.len())),
-            this.table.page.info().pages
-          )
-        }
+        console.log(vars, params);
 
         queryRef.refetch(vars).then(res => {
           var data: any = {};
