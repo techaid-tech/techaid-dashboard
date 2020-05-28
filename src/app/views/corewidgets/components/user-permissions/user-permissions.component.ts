@@ -119,7 +119,7 @@ query findAutocompletePermissions($appId: ID!, $userId: Int) {
 @Component({
   selector: 'user-permissions',
   styleUrls: ['user-permissions.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './user-permissions.html'
 })
 export class UserPermissionsComponent {

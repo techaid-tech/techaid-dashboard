@@ -61,7 +61,7 @@ mutation createFaq($data: CreateEmailTemplateInput!) {
 @Component({
   selector: 'etemplates-index',
   styleUrls: ['etemplates-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './etemplates-index.html'
 })
 export class EmailTemplatesIndexComponent {

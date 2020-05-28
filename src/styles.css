@@ -535,3 +535,15 @@ i.input-group-text {
 .dataTables_filter input:focus {
     box-shadow: none;
 }
+
+.no-data-available {
+    text-align: center;
+ }
+ 
+ .dataTables_empty {
+     display: none;
+ }
+ 
+ .modal-title{
+     font-size: 0.9em;
+ }

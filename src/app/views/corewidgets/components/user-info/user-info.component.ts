@@ -25,7 +25,7 @@ query findUser($id: ID!) {
 @Component({
   selector: 'user-info',
   styleUrls: ['user-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './user-info.html'
 })
 export class UserInfoComponent {

@@ -40,7 +40,7 @@ query findPost($slug: String) {
 @Component({
   selector: 'post-data',
   styleUrls: ['post-data.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './post-data.html'
 })
 export class PostDataComponent {

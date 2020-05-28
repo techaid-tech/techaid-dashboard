@@ -79,7 +79,6 @@ query findAllThreads($query: String, $pageToken: String, $id: String, $labels: [
 @Component({
   selector: 'email-threads',
   styleUrls: ['email-threads.scss'],
-  encapsulation: ViewEncapsulation.None,
   templateUrl: './email-threads.html'
 })
 export class EmailThreadsComponent {

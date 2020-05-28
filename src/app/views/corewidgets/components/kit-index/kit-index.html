@@ -70,6 +70,10 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="text-muted" *ngIf="dt.attributes?.notes">
+                                            <hr />
+                                            <small>{{dt.attributes?.notes}}</small>
+                                        </div>
                                     </td>
                                     <td>
                                         <a *ngIf="dt.donorName?.length" href="#" [routerLink]="['/dashboard/donors', dt.donor.id]">{{ dt.donorName }}</a>

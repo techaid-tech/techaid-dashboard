@@ -34,7 +34,7 @@ query findAllUsers($page: PaginationInput!, $term: String) {
 @Component({
   selector: 'user-index',
   styleUrls: ['user-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './user-index.html'
 })
 export class UserIndexComponent {

@@ -54,7 +54,7 @@ mutation deleteFaq($id: ID!) {
 @Component({
   selector: 'faq-info',
   styleUrls: ['faq-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './faq-info.html'
 })
 export class FaqInfoComponent {

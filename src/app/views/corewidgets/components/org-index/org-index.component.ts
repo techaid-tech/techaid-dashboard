@@ -1,5 +1,5 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Observable, Subscription, from } from 'rxjs';
+import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
+import { Observable, Subscription, from, Subject, concat, of } from 'rxjs';
 import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -9,9 +9,10 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Select } from '@ngxs/store';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
+import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
 
 const QUERY_ENTITY = gql`
-query findAllOrgs($page: PaginationInput,, $term: String) {
+query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationWhereInput!) {
   organisationsConnection(page: $page, where: {
     AND: {
       OR: [
@@ -19,26 +20,44 @@ query findAllOrgs($page: PaginationInput,, $term: String) {
           website: {
             _contains: $term
           }
+          AND: [$filter]
         },
         {
           phoneNumber: {
             _contains: $term
           }
+          AND: [$filter]
         },
         {
           name: {
             _contains: $term
           }
+          AND: [$filter]
         },
         {
           contact: {
             _contains: $term
           }
+          AND: [$filter]
         },
         {
           email: {
             _contains: $term
           }
+          AND: [$filter]
+        },
+        {
+          attributes: {
+            filters: [
+              {
+                key: "notes",
+                _text: {
+                  _contains: $term
+                }
+              }
+            ]
+          }
+          AND: [$filter]
         }
       ]
     }
@@ -57,7 +76,13 @@ query findAllOrgs($page: PaginationInput,, $term: String) {
      kits {
         type
      }
+     volunteer {
+       id
+       name
+       email
+     }
      attributes {
+        notes
         accepts
         request {
           LAPTOPS: laptops
@@ -86,10 +111,62 @@ mutation createOrganisation($data: CreateOrganisationInput!) {
 }
 `;
 
+const FIND_USERS = gql`
+query findAutocompleteVolunteers($userIds: [Long!]) {
+  volunteers(where: {
+    id: {
+      _in: $userIds
+    }
+  }){
+     id
+     name
+     email
+     phoneNumber
+  }
+}
+`;
+
+
+const AUTOCOMPLETE_USERS = gql`
+query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
+  volunteersConnection(page: {
+    size: 50
+  }, where: {
+    name: {
+      _contains: $term
+    }
+    OR: [ 
+    {
+      id: {
+        _in: $ids
+      }
+    },
+    {
+      phoneNumber: {
+        _contains: $term
+      }
+    },
+    {
+      email: {
+        _contains: $term
+      }
+    }]
+  }){
+    content  {
+     id
+     name
+     email
+     phoneNumber
+    }
+  }
+}
+`;
+
+
 @Component({
   selector: 'org-index',
   styleUrls: ['org-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './org-index.html'
 })
 export class OrgIndexComponent {
@@ -414,6 +491,141 @@ export class OrgIndexComponent {
     }, 
   ];
 
+
+  owner$: Observable<any>;
+  ownerInput$ = new Subject<string>();
+  ownerLoading = false;
+  ownerField: FormlyFieldConfig = {
+    key: "userIds",
+    type: "choice",
+    className: "col-md-12",
+    templateOptions: {
+      label: "Organising Volunteer",
+      description: "The organising volunteer this organisation is currently assigned to.",
+      loading: this.ownerLoading,
+      typeahead: this.ownerInput$,
+      placeholder: "Assign device to Organiser Volunteers",
+      multiple: true,
+      searchable: true,
+      items: [],
+      required: false
+    },
+  };
+  
+  filter: any = {};
+  filterCount = 0;
+  filterModel: any = {archived: [false]};
+  filterForm: FormGroup = new FormGroup({});
+  filterFields: Array<FormlyFieldConfig> = [
+    {
+      fieldGroupClassName: "row",
+      fieldGroup: [
+        {
+          key: "accepts",
+          type: "multicheckbox",
+          className: "col-sm-4",
+          defaultValue: [],
+          templateOptions: {
+            label: "Accepts",
+            type: "array",
+            options: [
+              {label: "Laptop", value: "LAPTOPS" },
+              {label: "Tablet", value: "TABLETS" },
+              {label: "Smart Phone", value: "PHONES" },
+              {label: "All In One (PC)", value: "ALLINONES" }
+            ],
+          }
+        },
+        {
+          key: "alternateAccepts",
+          type: "multicheckbox",
+          className: "col-sm-4",
+          defaultValue: [],
+          templateOptions: {
+            label: "Alternate Accepts",
+            type: "array",
+            options: [
+              {label: "Laptop", value: "LAPTOPS" },
+              {label: "Tablet", value: "TABLETS" },
+              {label: "Smart Phone", value: "PHONES" },
+              {label: "All In One (PC)", value: "ALLINONES" }
+            ],
+          } 
+        },
+        {
+          key: "archived",
+          type: "multicheckbox",
+          className: "col-sm-4",
+          defaultValue: [false],
+          templateOptions: {
+            type: 'array',
+            label: "Filter by Archived?",
+            options: [
+              {label: "Active Requests", value: false },
+              {label: "Archived Requests", value: true },
+            ],
+            required: false,
+          }
+        }, 
+        this.ownerField
+      ]
+    }
+  ];
+
+  applyFilter(data){
+    var filter = {"OR": [], "AND": []};
+    var count = 0;
+
+    if(data.accepts && data.accepts.length) {
+      count = count + data.accepts.length;
+      var filt = {
+        attributes: {
+          filters: [
+            {
+              key: "accepts",
+              _in: data.accepts
+            }
+          ]
+        }
+      }
+      filter["AND"].push(filt);
+    }
+
+    if(data.alternateAccepts && data.alternateAccepts.length) {
+      count = count + data.alternateAccepts.length;
+      var filt = {
+        attributes: {
+          filters: [
+            {
+              key: "alternateAccepts",
+              _in: data.alternateAccepts
+            }
+          ]
+        }
+      }
+      filter["AND"].push(filt);
+    }
+
+    if(data.archived && data.archived.length){
+      count += data.archived.length;
+      filter["archived"] = {_in: data.archived}
+    }
+
+    if(data.userIds && data.userIds.length){
+      count += data.userIds.length;
+      filter["volunteer"] = {id: {_in: data.userIds}};
+    }
+
+    localStorage.setItem(`orgFilters-${this.tableId}`, JSON.stringify(data));
+    this.filter = filter;
+    this.filterCount = count;
+    this.filterModel = data;
+    this.table.ajax.reload(null, false);
+  }
+
+  @Input()
+  tableId = "org-index"
+
   constructor(
     private modalService: NgbModal,
     private toastr: ToastrService,
@@ -454,6 +666,12 @@ export class OrgIndexComponent {
         variables: {}
       });
 
+    const userRef = this.apollo
+    .watchQuery({
+      query: AUTOCOMPLETE_USERS,
+      variables: {
+      }
+    });
 
     this.sub = this.search$.subscribe(query => {
       if (this.table) {
@@ -461,6 +679,34 @@ export class OrgIndexComponent {
         this.table.ajax.reload(null, false);
       }
     });
+
+    this.owner$ = concat(
+      of([]),
+      this.ownerInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.ownerLoading = true),
+        switchMap(term => from(userRef.refetch({
+          term: term,
+          ids: this.filterModel.userIds || []
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.ownerLoading = false),
+          switchMap(res => {
+            const data = res['data']['volunteersConnection']['content'].map(v => {
+              return {
+                label: `${this.volunteerName(v)}`, value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
+    this.sub.add(this.owner$.subscribe(data => {
+      this.ownerField.templateOptions['items'] = data;
+    }));
 
     this.dtOptions = {
       pagingType: 'simple_numbers',
@@ -470,7 +716,7 @@ export class OrgIndexComponent {
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
       pageLength: 10,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
-      order: [2, 'desc'],
+      order: [7, 'desc'],
       serverSide: true,
       stateSave: true,
       processing: true,
@@ -489,7 +735,8 @@ export class OrgIndexComponent {
             size: params.length,
             page: 0,
           },
-          term: params['search']['value']
+          term: params['search']['value'],
+          filter: this.filter
         }
 
         if (this.table) {
@@ -547,6 +794,7 @@ export class OrgIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false },
         { data: 'name' },
+        { data: 'volunteer.name'},
         { data: 'kitCount'},
         { data: 'contact' },
         { data: 'email' },
@@ -555,6 +803,10 @@ export class OrgIndexComponent {
         { data: 'updatedAt' },
       ]
     };
+  }
+
+  volunteerName(data) {
+    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
   }
 
   ngOnDestory() {
@@ -566,8 +818,35 @@ export class OrgIndexComponent {
   ngAfterViewInit() {
     this.grid.dtInstance.then(tbl => {
       this.table = tbl;
+      try {
+        this.filterModel = JSON.parse(localStorage.getItem(`orgFilters-${this.tableId}`)) || {archived: [false]};
+        if(this.filterModel && (this.filterModel.userIds) ){
+          this.apollo.query({
+            query: FIND_USERS,
+            variables: {
+              userIds: this.filterModel.userIds || [],
+            }
+          }).toPromise().then(res => {
+            if(res.data){
+              if(res.data['volunteers']){
+                this.ownerField.templateOptions['items'] = res.data['volunteers'].map(v => {
+                  return {label: this.volunteerName(v), value: v.id }
+                });
+              }
+            }
+          });
+        }
+      }catch(_){
+        this.filterModel = {archived: [false]};
+      }
+
+      try {
+        this.applyFilter(this.filterModel);
+        this.filterForm.patchValue(this.filterModel);
+      }catch(_){
+      }
     });
-  }
+  } 
 
   createEntity(data: any) { 
     this.apollo.mutate({

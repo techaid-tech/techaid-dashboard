@@ -50,7 +50,7 @@ export class FileValidators {
     selector: 'file-widget',
     styleUrls: ['file-widget.scss'],
     templateUrl: 'file-widget.html',
-    encapsulation: ViewEncapsulation.None,
+   
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

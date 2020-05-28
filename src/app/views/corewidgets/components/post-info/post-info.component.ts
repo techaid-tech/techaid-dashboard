@@ -56,7 +56,7 @@ mutation deletePost($id: ID!) {
 @Component({
   selector: 'post-info',
   styleUrls: ['post-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './post-info.html'
 })
 export class PostInfoComponent {

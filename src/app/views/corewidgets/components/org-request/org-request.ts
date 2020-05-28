@@ -32,7 +32,7 @@ query findContent {
 @Component({
   selector: 'org-request',
   styleUrls: ['org-request.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './org-request.html'
 })
 export class OrgRequestComponent {

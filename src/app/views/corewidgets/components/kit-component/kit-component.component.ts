@@ -178,7 +178,7 @@ query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
 @Component({
   selector: 'kit-component',
   styleUrls: ['kit-component.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './kit-component.html'
 })
 export class KitComponent {

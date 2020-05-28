@@ -11,7 +11,13 @@
                         <h6 class="m-0 font-weight-bold text-primary">Organisations</h6>
                     </div>
                     <div>
-                        <a href="#" (click)="model={}; modal(createApi); false;" class="btn btn-primary btn-icon-split btn-sm">
+                        <a href="#" (click)="modal(filters); false;" class="btn btn-info btn-icon-split btn-sm mr-1 mb-1">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-filter"></i>
+                            </span>
+                            <span class="text">Filter <span *ngIf="filterCount > 0" class="badge badge-danger">{{filterCount}}</span></span>
+                        </a>
+                        <a href="#" (click)="model={}; modal(createApi); false;" class="btn btn-primary btn-icon-split btn-sm mr-1 mb-1">
                             <span class="icon text-white-50">
                                 <i class="fas fa-sitemap"></i>
                             </span>
@@ -23,12 +29,13 @@
             <div class="card-body">
                 <div class="w-100">
                     <div class="table-responsive">
-                        <table id="faq-index" class="table table-striped table-hover table-bordered table-md" datatable
+                        <table [id]="tableId" class="table table-striped table-hover table-bordered table-md" datatable
                             [dtOptions]="dtOptions" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th></th>
                                     <th>Name</th>
+                                    <th>Owner</th>
                                     <th>Devices</th>
                                     <th>Contact</th>
                                     <th>Email</th>
@@ -69,8 +76,16 @@
                                                         </span>
                                                     </span>
                                                 </div>
+                                                <div class="text-muted" *ngIf="dt.attributes?.notes">
+                                                    <hr />
+                                                    <small>{{dt.attributes?.notes}}</small>
+                                                </div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <a *ngIf="dt.volunteer?.id" [routerLink]="['/dashboard/volunteers', dt.volunteer.id]">{{dt.volunteer.name}}</a>
+                                        <span *ngIf="!dt.volunteer?.id">--</span>
                                     </td>
                                     <td><span class="badge badge-info">{{dt.kitCount}}</span></td>
                                     <td>{{dt.contact}}</td>
@@ -109,6 +124,25 @@
         <button [disabled]="form.invalid" type="button" class="btn btn-primary btn-sm"
             (click)="createEntity(form.value); c('Close click')">
             CREATE
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #filters let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Organisation Filters</h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="filterForm">
+            <formly-form [model]="filterModel" [form]="filterForm" [fields]="filterFields">
+            </formly-form>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light btn-sm" (click)="c('Close click')">CANCEL</button>
+        <button [disabled]="form.invalid" type="button" class="btn btn-primary btn-sm"
+            (click)="applyFilter(filterForm.value); c('Close click')">
+            Filter
         </button>
     </div>
 </ng-template>

@@ -62,7 +62,7 @@ query findAutocompleteRoles($term: String, $term: String) {
 @Component({
   selector: 'user-roles',
   styleUrls: ['user-roles.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './user-roles.html'
 })
 export class UserRolesComponent {

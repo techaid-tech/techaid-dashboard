@@ -67,7 +67,7 @@ query typeaheadFindAllUsers($page: PaginationInput!, $term: String) {
 @Component({
   selector: 'role-users',
   styleUrls: ['role-users.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './role-users.html'
 })
 export class RoleUsersComponent {

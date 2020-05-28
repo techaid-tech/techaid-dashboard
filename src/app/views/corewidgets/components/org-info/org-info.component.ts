@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, Subject, concat, of, from } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -7,6 +7,7 @@ import { Apollo } from 'apollo-angular';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
 
 const QUERY_ENTITY = gql`
 query findOrganisation($id: Long!) {
@@ -23,6 +24,7 @@ query findOrganisation($id: Long!) {
      email
      createdAt
      updatedAt
+     archived
      kits {
       id
       model
@@ -33,6 +35,12 @@ query findOrganisation($id: Long!) {
       updatedAt
       createdAt
     }
+    volunteer {
+         id
+         name 
+         email 
+         phoneNumber
+     }
      attributes {
        notes
        accepts
@@ -54,6 +62,45 @@ query findOrganisation($id: Long!) {
 }
 `;
 
+const AUTOCOMPLETE_USERS = gql`
+query findAutocompleteVolunteers($term: String, $subGroup: String) {
+  volunteersConnection(page: {
+    size: 50
+  }, where: {
+    name: {
+      _contains: $term
+    }
+    subGroup: {
+      _contains: $subGroup
+    }
+    OR: [ 
+    {
+      subGroup: {
+        _contains: $subGroup
+      }
+      phoneNumber: {
+        _contains: $term
+      }
+    },
+    {
+       subGroup: {
+        _contains: $subGroup
+      }
+      email: {
+        _contains: $term
+      }
+    }]
+  }){
+    content  {
+     id
+     name
+     email
+     phoneNumber
+    }
+  }
+}
+`;
+
 const UPDATE_ENTITY = gql`
 mutation updateOrganisation($data: UpdateOrganisationInput!) {
   updateOrganisation(data: $data){
@@ -65,6 +112,13 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      email
      createdAt
      updatedAt
+     archived
+     volunteer {
+         id
+         name 
+         email 
+         phoneNumber
+     }
      kits {
       id
       model
@@ -105,7 +159,7 @@ mutation deleteOrganisation($id: ID!) {
 @Component({
   selector: 'org-info',
   styleUrls: ['org-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './org-info.html'
 })
 export class OrgInfoComponent {
@@ -116,7 +170,42 @@ export class OrgInfoComponent {
   entityName: string;
   entityId: number;
 
+  owner$: Observable<any>;
+  ownerInput$ = new Subject<string>();
+  ownerLoading = false;
+  ownerField: FormlyFieldConfig = {
+    key: "volunteerId",
+    type: "choice",
+    className: "col-md-12",
+    templateOptions: {
+      label: "Organising Volunteer",
+      description: "The organising volunteer this organisation is currently assigned to.",
+      loading: this.ownerLoading,
+      typeahead: this.ownerInput$,
+      placeholder: "Assign device to Organiser Volunteers",
+      multiple: false,
+      searchable: true,
+      items: [],
+      required: false
+    },
+  };
+
   fields: Array<FormlyFieldConfig> = [
+    {
+      key: "archived",
+      type: "radio",
+      className: "col-md-12",
+      templateOptions: {
+        type: 'array',
+        label: "Archived?",
+        description: "Archived requests are hidden from view",
+        options: [
+          {label: "Request Active and Visible", value: false },
+          {label: "Archive and Hide this Request", value: true },
+        ],
+        required: true,
+      }
+    }, 
     {
       key: "attributes.notes",
       type: "textarea",
@@ -431,6 +520,7 @@ export class OrgInfoComponent {
             required: true
           }
         },
+        this.ownerField
       ]
     }, 
   ];
@@ -456,6 +546,12 @@ export class OrgInfoComponent {
     });
 
   private normalizeData(data: any){
+    if(data.volunteer){
+      this.ownerField.templateOptions['items'] = [
+        {label: this.volunteerName(data.volunteer), value: data.id}
+      ];
+      data.volunteerId = data.volunteer.id;
+    }
     return data;
   }
 
@@ -487,10 +583,49 @@ export class OrgInfoComponent {
   }
 
   ngOnInit() {
+    const userRef = this.apollo
+    .watchQuery({
+      query: AUTOCOMPLETE_USERS,
+      variables: {
+      }
+    });
+
+    this.owner$ = concat(
+      of([]),
+      this.ownerInput$.pipe(
+        debounceTime(200),
+        distinctUntilChanged(),
+        tap(() => this.ownerLoading = true),
+        switchMap(term => from(userRef.refetch({
+          term: term,
+          subGroup: ""
+        })).pipe(
+          catchError(() => of([])),
+          tap(() => this.ownerLoading = false),
+          switchMap(res => {
+            const data = res['data']['volunteersConnection']['content'].map(v => {
+              return {
+                label: `${this.volunteerName(v)}`, value: v.id
+              }
+            });
+            return of(data)
+          })
+        ))
+      )
+    );
+
     this.sub = this.activatedRoute.params.subscribe(params => {
       this.entityId = +params['orgId'];
       this.fetchData();
     });
+
+    this.sub.add(this.owner$.subscribe(data => {
+      this.ownerField.templateOptions['items'] = data;
+    }));
+  }
+
+  volunteerName(data) {
+    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
   }
 
   ngOnDestory() {

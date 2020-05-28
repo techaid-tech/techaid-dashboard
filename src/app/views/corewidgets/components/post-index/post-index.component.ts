@@ -67,7 +67,7 @@ mutation createPost($data: CreatePostInput!) {
 @Component({
   selector: 'post-index',
   styleUrls: ['post-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './post-index.html'
 })
 export class PostIndexComponent {

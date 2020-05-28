@@ -25,7 +25,7 @@ query findRole($id: ID!) {
 @Component({
   selector: 'role-info',
   styleUrls: ['role-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './role-info.html'
 })
 export class RoleInfoComponent {

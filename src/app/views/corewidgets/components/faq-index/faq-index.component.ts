@@ -62,7 +62,7 @@ mutation createFaq($data: CreateFaqInput!) {
 @Component({
   selector: 'faq-index',
   styleUrls: ['faq-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './faq-index.html'
 })
 export class FaqIndexComponent {

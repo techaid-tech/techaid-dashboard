@@ -31,6 +31,19 @@ query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) 
           }
           AND: [ $where ]
         }
+        {
+          attributes: {
+            filters: [
+              {
+                key: "notes",
+                _text: {
+                  _contains: $term
+                }
+              }
+            ]
+          }
+          AND: [ $where ]
+        }
       ]
     }
   }){
@@ -54,6 +67,9 @@ query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) 
      organisation {
        id
        name
+     }
+     attributes {
+       notes
      }
      volunteers {
       type
@@ -188,7 +204,7 @@ query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
 @Component({
   selector: 'kit-index',
   styleUrls: ['kit-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './kit-index.html'
 })
 export class KitIndexComponent {

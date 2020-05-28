@@ -35,7 +35,7 @@ query findAll {
 @Component({
   selector: 'dashboard-index',
   styleUrls: ['dashboard-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './dashboard-index.html'
 })
 export class DashboardIndexComponent {

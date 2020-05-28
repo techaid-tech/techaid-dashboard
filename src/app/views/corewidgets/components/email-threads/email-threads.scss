@@ -2,18 +2,6 @@
     margin-top: 15%;
 }
 
-.no-data-available {
-   text-align: center;
-}
-
-.dataTables_empty {
-    display: none;
-}
-
-.modal-title{
-    font-size: 0.9em;
-}
-
 form {
     font-size: 0.9em;
 }
@@ -42,8 +30,8 @@ form {
     }
 }
 
-tr > td:nth-child(1) {
-    min-width: 280px;
+tr > td:nth-child(2) {
+    min-width: 100px;
 }
 
 tr > td:nth-child(3) {

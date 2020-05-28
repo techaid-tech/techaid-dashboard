@@ -52,7 +52,7 @@ mutation deleteFaq($id: ID!) {
 @Component({
   selector: 'etemplates-info',
   styleUrls: ['etemplates-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './etemplates-info.html'
 })
 export class EmailTemplatesInfoComponent {

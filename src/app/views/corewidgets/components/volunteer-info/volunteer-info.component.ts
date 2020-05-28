@@ -80,7 +80,7 @@ const DELETE_ENTITY = gql`
 @Component({
   selector: "volunteer-info",
   styleUrls: ["volunteer-info.scss"],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: "./volunteer-info.html",
 })
 export class VolunteerInfoComponent {

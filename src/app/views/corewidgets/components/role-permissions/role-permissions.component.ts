@@ -52,7 +52,7 @@ query findAutocompletePermissions($appId: ID!, $roleId: Int) {
 @Component({
   selector: 'role-permissions',
   styleUrls: ['role-permissions.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './role-permissions.html'
 })
 export class RolePermissionsComponent {

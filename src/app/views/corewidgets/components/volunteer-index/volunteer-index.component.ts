@@ -73,7 +73,7 @@ mutation createVolunteer($data: CreateVolunteerInput!) {
 @Component({
   selector: 'volunteer-index',
   styleUrls: ['volunteer-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './volunteer-index.html'
 })
 export class VolunteersIndexComponent {

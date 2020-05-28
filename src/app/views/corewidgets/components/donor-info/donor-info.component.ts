@@ -72,7 +72,7 @@ mutation deleteDonor($id: ID!) {
 @Component({
   selector: 'donor-info',
   styleUrls: ['donor-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './donor-info.html'
 })
 export class DonorInfoComponent {

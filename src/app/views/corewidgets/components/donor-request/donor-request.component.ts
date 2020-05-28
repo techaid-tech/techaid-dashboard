@@ -38,7 +38,7 @@ query findContent {
 @Component({
   selector: 'donor-request',
   styleUrls: ['donor-request.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './donor-request.html'
 })
 export class DonorRequestComponent {

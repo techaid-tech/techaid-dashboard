@@ -256,7 +256,7 @@ query findAutocompleteOrgs($term: String) {
 @Component({
   selector: 'kit-info',
   styleUrls: ['kit-info.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './kit-info.html'
 })
 export class KitInfoComponent {

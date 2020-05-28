@@ -25,7 +25,7 @@ mutation createVolunteer($data: CreateVolunteerInput!) {
 @Component({
   selector: 'volunteer',
   styleUrls: ['volunteer.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './volunteer.html'
 })
 export class VolunteerComponent {

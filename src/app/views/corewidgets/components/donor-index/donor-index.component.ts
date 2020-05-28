@@ -70,7 +70,7 @@ mutation createDonor($data: CreateDonorInput!) {
 @Component({
   selector: 'donor-index',
   styleUrls: ['donor-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './donor-index.html'
 })
 export class DonorIndexComponent {

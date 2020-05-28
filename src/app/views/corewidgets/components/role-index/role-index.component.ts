@@ -29,7 +29,7 @@ query findAllRoles($page: PaginationInput!, $term: String) {
 @Component({
   selector: 'role-index',
   styleUrls: ['role-index.scss'],
-  encapsulation: ViewEncapsulation.None,
+ 
   templateUrl: './role-index.html'
 })
 export class RoleIndexComponent {
