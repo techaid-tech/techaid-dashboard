@@ -287,7 +287,7 @@ export class DonorRequestComponent {
                       description: "If your device requires a password or a PIN to sign in, please provide it here",
                       rows: 2,
                       placeholder: "Password",
-                      required: false
+                      required: true
                     },
                     hideExpression: (model, state, field) => {
                       const data = field.parent.formControl.value || {};
