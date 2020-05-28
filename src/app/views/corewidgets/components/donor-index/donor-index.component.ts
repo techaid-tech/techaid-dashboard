@@ -48,6 +48,7 @@ query findAllDonors($page: PaginationInput,, $term: String) {
      postCode
      phoneNumber
      email
+     kitCount
      createdAt
      updatedAt
     }
@@ -265,6 +266,7 @@ export class DonorIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false },
         { data: 'email' },
+        { data: 'kitCount'},
         { data: 'postCode' },
         { data: 'createdAt' },
         { data: 'updatedAt' }

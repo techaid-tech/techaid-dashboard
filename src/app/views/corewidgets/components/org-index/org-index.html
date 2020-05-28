@@ -29,6 +29,7 @@
                                 <tr>
                                     <th></th>
                                     <th>Name</th>
+                                    <th>Devices</th>
                                     <th>Contact</th>
                                     <th>Email</th>
                                     <th>Phone</th>
@@ -52,9 +53,26 @@
                                                 <div>
                                                     <a *ngIf="dt.website?.length" target="_blank" [href]="dt.website">{{dt.website}}</a>
                                                 </div>
+                                                <div>
+                                                    <span class="mr-1 mb-1" *ngFor="let g of dt.attributes?.accepts">
+                                                        <span class="badge badge-primary">
+                                                            <span class="badge badge-secondary">{{g}}</span>
+                                                            {{dt.types[g] || 0}}  / {{dt.attributes.request[g] || 0}}
+                                                        </span>
+                                                    </span>
+                                                </div> 
+                                                <div>
+                                                    <span class="mr-1 mb-1" *ngFor="let g of dt.attributes?.alternateAccepts">
+                                                        <span class="badge badge-secondary">
+                                                            <span class="badge badge-info">{{g}}</span>
+                                                            {{dt.types[g] || 0}} / {{dt.attributes.alternateRequest[g] || 0}}
+                                                        </span>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
+                                    <td><span class="badge badge-info">{{dt.kitCount}}</span></td>
                                     <td>{{dt.contact}}</td>
                                     <td>
                                         <a routerLink="/dashboard/email" [queryParams]="{to: dt.email}">{{dt.email}}</a>

@@ -55,6 +55,7 @@ query findAllVolunteers($page: PaginationInput,$where: VolunteerWhereInput!, $te
      subGroup
      storage
      transport
+     kitCount
     }
   }
 }
@@ -791,6 +792,7 @@ export class VolunteersIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false },
         { data: 'name' },
+        { data: 'kitCount'},
         { data: 'createdAt' },
         { data: 'updatedAt' },
         { data: 'storage'},

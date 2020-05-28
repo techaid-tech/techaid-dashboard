@@ -37,6 +37,7 @@
                                 <tr>
                                     <th></th>
                                     <th>Name</th>
+                                    <th>Devices</th>
                                     <th>Created</th>
                                     <th>Updated</th>
                                     <th>Storage</th>
@@ -64,6 +65,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-success">{{dt.kitCount}}</span>
                                     </td>
                                     <td>
                                         {{ dt.createdAt | timeAgo }}

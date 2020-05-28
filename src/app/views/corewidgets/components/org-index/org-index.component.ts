@@ -53,6 +53,26 @@ query findAllOrgs($page: PaginationInput,, $term: String) {
      email
      createdAt
      updatedAt
+     kitCount
+     kits {
+        type
+     }
+     attributes {
+        accepts
+        request {
+          LAPTOPS: laptops
+          TABLETS: tablets
+          ALLINONES:allInOnes
+          PHONES: phones
+        }
+        alternateAccepts
+        alternateRequest {
+          LAPTOPS: laptops
+          TABLETS: tablets
+          ALLINONES:allInOnes
+          PHONES: phones
+        }
+     }
     }
   }
 }
@@ -486,6 +506,16 @@ export class OrgIndexComponent {
             if (!this.total) {
               this.total = data['totalElements']
             }
+            data.content.forEach(d => {
+              d.types = {};
+              if(d.kits && d.kits.length){
+                d.kits.forEach(k => {
+                  var t = `${k.type}S`;
+                  d.types[t] = d.types[t] || 0;
+                  d.types[t]++; 
+                });
+              }
+            });
             this.entities = data.content;
           }
 
@@ -517,6 +547,7 @@ export class OrgIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false },
         { data: 'name' },
+        { data: 'kitCount'},
         { data: 'contact' },
         { data: 'email' },
         { data: 'phoneNumber'},
