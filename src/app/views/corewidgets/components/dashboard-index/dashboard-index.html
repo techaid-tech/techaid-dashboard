@@ -56,18 +56,23 @@
   </div>
 
   <div class="row">
-    <div class="col-lg-6" *ngIf="user?.authorities['read:emails']">
-        <div class="card shadow mb-4">
-          <div class="card-header">
-            <h6 class="m-0 font-weight-bold text-primary">Unread Emails</h6>
+    <div class="col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Devices</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-end">
+            <span class="text-muted"><small>Requested / Available</small></span>
           </div>
-          <div class="card-body">
-             <email-threads [labelIds]="['UNREAD']"></email-threads>
+          <div *ngFor="let s of model.typeCount">
+            <h4 class="small font-weight-bold">{{styles[s.type].title}}<span class="float-right">{{model.requestCount[s.type]}} / {{s.count}}</span></h4>
+            <div class="mb-2">
+              <ngb-progressbar [type]="styles[s.type].style" [value]="styles[s.type].progress"></ngb-progressbar>
+            </div>
           </div>
         </div>
-    </div>
-    <div class="col-lg-6" *ngIf="user?.authorities['write:emails']">
-      <etemplates-index [pageLength]="5" tableId="email-templates-dashboard"></etemplates-index>
+      </div>
     </div>
     <div class="col-lg-6" *ngIf="user?.authorities['read:kits']">
       <!-- <kit-index [pageLength]="5" tableId="kit-index-dashboard"></kit-index> -->
@@ -79,6 +84,19 @@
     <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
       <post-index [pageLength]="5" tableId="post-index-dashboard"></post-index>
     </div>
+    <div class="col-lg-6" *ngIf="user?.authorities['read:emails']">
+      <div class="card shadow mb-4">
+        <div class="card-header">
+          <h6 class="m-0 font-weight-bold text-primary">Unread Emails</h6>
+        </div>
+        <div class="card-body">
+           <email-threads [labelIds]="['UNREAD']"></email-threads>
+        </div>
+      </div>
+  </div>
+  <div class="col-lg-6" *ngIf="user?.authorities['write:emails']">
+    <etemplates-index [pageLength]="5" tableId="email-templates-dashboard"></etemplates-index>
+  </div>
   </div>
 </div>
 <div *ngIf="!model" class="ph-item">

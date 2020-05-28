@@ -28,6 +28,17 @@ query findAll {
   volunteers: volunteersConnection(where: {}) {
     totalElements
   }
+  typeCount {
+    type
+    count
+  }
+  requestCount {
+    LAPTOP: laptops
+    TABLET: tablets
+    OTHER: other
+    PHONE: phones
+    ALLINONE: allInOnes
+  }
 }
 `;
 
@@ -53,6 +64,14 @@ export class DashboardIndexComponent {
 
   }
 
+  styles = {
+    'LAPTOP': {title: 'Laptops', style: 'primary', progress: 0},
+    'TABLET': {title: 'Tablets', style: 'info', progress: 0},
+    'OTHER': {title: 'Other', style: 'danger', progress: 0},
+    'PHONE': {title: 'Phones', style: 'warning', progress: 0},
+    'ALLINONE': {title: 'All In ONes', style: 'success', progress: 0}
+  }
+
   private queryRef = this.apollo
     .watchQuery({
       query: QUERY_ENTITY,
@@ -60,6 +79,14 @@ export class DashboardIndexComponent {
     });
 
   private normalizeData(data: any){
+    (data.typeCount || []).forEach(s => {
+      var p = (data.requestCount[s.type]/s.count)*100;
+      if(p > 100) {
+        p = 100;
+      }
+      this.styles[s.type].progress = p;
+    });
+    console.log('data', data);
     return data;
   }
 
