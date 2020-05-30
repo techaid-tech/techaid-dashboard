@@ -147,6 +147,7 @@ export class OrgRequestComponent {
           {value: "PHONES", label: "Phones"},
           {value: "TABLETS", label: "Tablets" },
           {value: "ALLINONES", label: "All In Ones" },
+          {value: "OTHER", label: "Other" },
         ],
         required: true
       },
@@ -239,6 +240,25 @@ export class OrgRequestComponent {
             required: true
           }
         },
+        {
+          key: "attributes.request.other",
+          type: "input",
+          className: "col-6",
+          hideExpression: "model.attributes.accepts.toString().indexOf('OTHER') < 0",
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: "Other",
+            description: "Specify the other types of devies you would like in the additional details field below",
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            type: "number",
+            placeholder: "",
+            required: true
+          }
+        },
       ]
     },
     {
@@ -256,6 +276,7 @@ export class OrgRequestComponent {
           {value: "PHONES", label: "Phones"},
           {value: "TABLETS", label: "Tablets" },
           {value: "ALLINONES", label: "All In Ones" },
+          {value: "OTHER", label: "Other" }
         ],
         required: false
       },
@@ -270,6 +291,7 @@ export class OrgRequestComponent {
             {value: "PHONES", label: "Phones"},
             {value: "TABLETS", label: "Tablets" },
             {value: "ALLINONES", label: "All In Ones" },
+            {value: "OTHER", label: "Other"},
           ];
           var values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
           return values;
@@ -358,8 +380,39 @@ export class OrgRequestComponent {
             required: true
           }
         },
+        {
+          key: "attributes.alternateRequest.other",
+          type: "input",
+          className: "col-6",
+          hideExpression: "model.attributes.accepts.toString().indexOf('OTHER') > -1 || model.attributes.alternateAccepts.toString().indexOf('OTHER') < 0",
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: "Other",
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            description: "Specify the other types of devies you would like in the additional details field below",
+            type: "number",
+            placeholder: "",
+            required: true
+          }
+        },
       ]
     }, 
+    {
+      key: "attributes.details",
+      type: "textarea",
+      className: "col-md-12",
+      defaultValue: "",
+      templateOptions: {
+        label: "Any additional details about your request?",
+        description: "If you have any additional details you would like to specify about your request, enter them here.",
+        rows: 3,
+        required: false
+      } 
+    },
   ];
 
   constructor(

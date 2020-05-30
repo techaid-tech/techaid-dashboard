@@ -50,12 +50,14 @@ query findOrganisation($id: Long!) {
          tablets 
          phones
          allInOnes
+         other
        }
        alternateRequest {
          laptops
          tablets 
          phones
          allInOnes
+         other
        }
      }
   }
@@ -138,12 +140,14 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
          tablets 
          phones
          allInOnes
+         other
        }
        alternateRequest {
          laptops
          tablets 
          phones
          allInOnes
+         other
        }
      }
   }
@@ -217,6 +221,7 @@ export class OrgInfoComponent {
         required: false
       } 
     },
+    this.ownerField,
     {
       key: "name",
       type: "input",
@@ -294,7 +299,6 @@ export class OrgInfoComponent {
           defaultValue: "",
           templateOptions: {
             label: "Primary Contact Phone Number",
-            pattern: /\+?[0-9]+/,
             required: true
           },
           expressionProperties: {
@@ -317,6 +321,7 @@ export class OrgInfoComponent {
           {value: "PHONES", label: "Phones"},
           {value: "TABLETS", label: "Tablets" },
           {value: "ALLINONES", label: "All In Ones" },
+          {value: "OTHER", label: "Other" }
         ],
         required: true
       },
@@ -404,6 +409,25 @@ export class OrgInfoComponent {
             placeholder: "",
             required: true
           }
+        }, 
+        {
+          key: "attributes.request.other",
+          type: "input",
+          className: "col-6",
+          hideExpression: "model.attributes.accepts.toString().indexOf('OTHER') < 0",
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: "Other",
+            description: "Specify the other types of devies you would like in the additional details field below",
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            type: "number",
+            placeholder: "",
+            required: true
+          }
         },
       ]
     },
@@ -422,6 +446,7 @@ export class OrgInfoComponent {
           {value: "PHONES", label: "Phones"},
           {value: "TABLETS", label: "Tablets" },
           {value: "ALLINONES", label: "All In Ones" },
+          {value: "OTHER", label: "Other" }
         ],
         required: false
       },
@@ -436,6 +461,7 @@ export class OrgInfoComponent {
             {value: "PHONES", label: "Phones"},
             {value: "TABLETS", label: "Tablets" },
             {value: "ALLINONES", label: "All In Ones" },
+            {value: "OTHER", label: "Other" }
           ];
           var values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
           return values;
@@ -520,9 +546,39 @@ export class OrgInfoComponent {
             required: true
           }
         },
-        this.ownerField
+        {
+          key: "attributes.alternateRequest.other",
+          type: "input",
+          className: "col-6",
+          hideExpression: "model.attributes.accepts.toString().indexOf('OTHER') > -1 || model.attributes.alternateAccepts.toString().indexOf('OTHER') < 0",
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: "Other",
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            description: "Specify the other types of devies you would like in the additional details field below",
+            type: "number",
+            placeholder: "",
+            required: true
+          }
+        },
       ]
     }, 
+    {
+      key: "attributes.details",
+      type: "textarea",
+      className: "col-md-12",
+      defaultValue: "",
+      templateOptions: {
+        label: "Any additional details about your request?",
+        description: "If you have any additional details you would like to specify about your request, enter them here.",
+        rows: 3,
+        required: false
+      } 
+    },
   ];
 
   constructor(
@@ -548,7 +604,7 @@ export class OrgInfoComponent {
   private normalizeData(data: any){
     if(data.volunteer){
       this.ownerField.templateOptions['items'] = [
-        {label: this.volunteerName(data.volunteer), value: data.id}
+        {label: this.volunteerName(data.volunteer), value: data.volunteer.id}
       ];
       data.volunteerId = data.volunteer.id;
     }
