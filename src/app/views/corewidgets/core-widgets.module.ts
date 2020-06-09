@@ -94,6 +94,7 @@ const routes: Routes = [
     path: 'dashboard/organisations/:orgId', component: OrgInfoComponent, canActivate: [AuthGuard]
   },
   { path: 'dashboard', component: DashboardIndexComponent, canActivate: [AuthGuard]},
+  { path: 'about-us', component: PostDataComponent},
   { path: '**', component: PostDataComponent},
 ];
 
