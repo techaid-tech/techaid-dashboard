@@ -138,11 +138,12 @@ export class MapViewComponent {
             multiple: true,
             type: 'array',
             options: [
-              {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
-              {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
-              {value: "Findraising", label: "Fundraising" },
-              {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
-              {value: "MinorOrganizing", label: "Organizing(Might be interested in helping with group administration)" },
+              {value: "Technical", label: "Technical: remove data and update donated equipment" },
+              {value: "Transport", label: "Transport: collecting and delivering devices"},
+              {value: "Donations", label: "Co-ordinating donations and assigning them to the technical team"},
+              {value: "Distribution", label: "Distribution: respond to and fill requests for devices" },
+              {value: "Publicity", label: "Publicity: manage social media and other publicity to maintain a steady flow of donations and volunteers into TechAid"},
+              {value: "Organizing", label: "Management: leading and coordinating the work of the various groups and the org as a whole" },
               {value: "Other", label: "Other" }
             ],
             required: false

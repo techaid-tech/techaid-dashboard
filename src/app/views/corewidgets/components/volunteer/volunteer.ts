@@ -120,11 +120,12 @@ export class VolunteerComponent {
                 description: "Please let us know what tasks you would like to help with eg organisation, technical support, collection and delivery, training, fundraising etc. If none of these apply, select `Other` and define how you would be able to help.",
                 multiple: true,
                 options: [
-                  {value: "Technical", label: "Technical (Fixing & Updating Equipment)" },
-                  {value: "Distribution", label: "Distribution (Picking up and delivering devices)" },
-                  {value: "Findraising", label: "Fundraising" },
-                  {value: "Organizing", label: "Organizing(Co-ordinating group activities)" },
-                  {value: "MinorOrganizing", label: "Minor Organizing(Might be interested in helping with minor group administration)" },
+                  {value: "Technical", label: "Technical: remove data and update donated equipment" },
+                  {value: "Transport", label: "Transport: collecting and delivering devices"},
+                  {value: "Donations", label: "Co-ordinating donations and assigning them to the technical team"},
+                  {value: "Distribution", label: "Distribution: respond to and fill requests for devices" },
+                  {value: "Publicity", label: "Publicity: manage social media and other publicity to maintain a steady flow of donations and volunteers into TechAid"},
+                  {value: "Organizing", label: "Management: leading and coordinating the work of the various groups and the org as a whole" },
                   {value: "Other", label: "Other" }
                 ],
                 required: true
@@ -162,11 +163,10 @@ export class VolunteerComponent {
                 options: [
                   {label: "Yes", value: "yes" },
                   {label: "No", value: "no" },
-                  {label: "Maybe", value: "maybe" } 
                 ],
                 required: true
               },
-              hideExpression: "(model.subGroup || []).indexOf('Organizing') > -1 || (model.subGroup || []).indexOf('MinorOrganizing') > -1",
+              hideExpression: "(model.subGroup || []).indexOf('Organizing') > -1",
               validation: {
                 show: false
               },
@@ -506,8 +506,6 @@ export class VolunteerComponent {
     if(data.organizing){
       if(data.organizing == 'yes'){
         data.subGroup.push('Organizing');
-      }else if(data.organizing == 'maybe'){
-        data.subGroup.push('MinorOrganizing');
       }
     }
     data.subGroup = (data.subGroup || []).join(',')
