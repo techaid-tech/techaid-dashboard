@@ -42,7 +42,9 @@
                                 <tr *ngFor="let dt of entities" [class.selected]="selections[dt.id]" (click)="select(dt)">
                                     <td>
                                             <a href="#" [routerLink]="['/dashboard/devices', dt.id]">
-                                                <i class="fas fa-info-circle"></i>
+                                                <span class="badge badge-secondary">
+                                                    {{dt.id}}
+                                                </span>>
                                               </a>
                                     </td>
                                     <td>

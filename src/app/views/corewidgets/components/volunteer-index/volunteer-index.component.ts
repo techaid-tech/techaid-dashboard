@@ -108,7 +108,7 @@ export class VolunteersIndexComponent {
             options: [
               {value: "Technical", label: "Technical: remove data and update donated equipment" },
               {value: "Transport", label: "Transport: collecting and delivering devices"},
-              {value: "Donations", label: "Co-ordinating donations and assigning them to the technical team"},
+              {value: "Donations", label: "Donations: Co-ordinating donations and assigning them to the technical team"},
               {value: "Distribution", label: "Distribution: respond to and fill requests for devices" },
               {value: "Publicity", label: "Publicity: manage social media and other publicity to maintain a steady flow of donations and volunteers into TechAid"},
               {value: "Organizing", label: "Management: leading and coordinating the work of the various groups and the org as a whole" },
@@ -319,7 +319,7 @@ export class VolunteersIndexComponent {
                 options: [
                   {value: "Technical", label: "Technical: remove data and update donated equipment" },
                   {value: "Transport", label: "Transport: collecting and delivering devices"},
-                  {value: "Donations", label: "Co-ordinating donations and assigning them to the technical team"},
+                  {value: "Donations", label: "Donations: Co-ordinating donations and assigning them to the technical team"},
                   {value: "Distribution", label: "Distribution: respond to and fill requests for devices" },
                   {value: "Publicity", label: "Publicity: manage social media and other publicity to maintain a steady flow of donations and volunteers into TechAid"},
                   {value: "Organizing", label: "Management: leading and coordinating the work of the various groups and the org as a whole" },
