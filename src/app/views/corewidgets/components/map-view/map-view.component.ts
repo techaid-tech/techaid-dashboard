@@ -65,12 +65,13 @@ export class MapViewComponent {
           key: "type",
           type: "multicheckbox",
           className: "col-md-6",
-          defaultValue: ['LAPTOP', 'TABLET', 'SMARTPHONE', 'ALLINONE', 'OTHER'],
+          defaultValue: ['LAPTOP', 'TABLET', 'SMARTPHONE', 'CHROMEBOOK', 'ALLINONE', 'OTHER'],
           templateOptions: {
             label: "Type of device",
             type: "array",
             options: [
               {label: "Laptop", value: "LAPTOP" },
+              {label: "Chromebook", value: "CHROMEBOOK" },
               {label: "Tablet", value: "TABLET" },
               {label: "Smart Phone", value: "SMARTPHONE" },
               {label: "All In One (PC)", value: "ALLINONE" },
@@ -303,6 +304,7 @@ export class MapViewComponent {
         }
       });
       const types = {
+        'CHROMEBOOK': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
         'LAPTOP': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
         'TABLET': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-tablet&size=50&hoffset=0&voffset=-1&background=D8345F',
         'SMARTPHONE': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-mobile&size=50&hoffset=0&voffset=-1&background=DE7118',

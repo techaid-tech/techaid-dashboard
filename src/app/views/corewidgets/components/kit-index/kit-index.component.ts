@@ -291,6 +291,7 @@ export class KitIndexComponent {
             type: "array",
             options: [
               {label: "Laptop", value: "LAPTOP" },
+              {label: "Chromebook", value: "CHROMEBOOK" },
               {label: "Tablet", value: "TABLET" },
               {label: "Smart Phone", value: "SMARTPHONE" },
               {label: "All In One (PC)", value: "ALLINONE" },
@@ -481,6 +482,7 @@ export class KitIndexComponent {
                 label: "Type of device",
                 options: [
                   {label: "Laptop", value: "LAPTOP" },
+                  {label: "Chromebook", value: "CHROMEBOOK" },
                   {label: "Tablet", value: "TABLET" },
                   {label: "Smart Phone", value: "SMARTPHONE" },
                   {label: "All In One (PC)", value: "ALLINONE" },
@@ -568,7 +570,7 @@ export class KitIndexComponent {
                 required: false
               },
               hideExpression: (model, state) => {
-                if(['LAPTOP', 'ALLINONE'].indexOf(model.type) == -1){
+                if(['LAPTOP', 'ALLINONE', 'CHROMEBOOK'].indexOf(model.type) == -1){
                   return true;
                 }
                 const status = HashUtils.dotNotation(model, 'attributes.status') || [];

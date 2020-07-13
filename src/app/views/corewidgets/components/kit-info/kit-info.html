@@ -18,7 +18,11 @@
                         <div class="card-header py-3">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                   <h6 class="m-0 font-weight-bold text-primary">{{entityName}}</h6>
+                                   <h6 class="m-0 font-weight-bold text-primary">{{entityName}}
+                                    <span class="ml-1 badge badge-primary">
+                                        {{model?.id}}
+                                     </span>
+                                   </h6>
                                 </div>
                                 <div>
                                     <button [disabled]="form.invalid" (click)="updateEntity(form.value)"

@@ -265,6 +265,7 @@ export class KitComponent {
             type: "array",
             options: [
               {label: "Laptop", value: "LAPTOP" },
+              {label: "Chromebook", value: "CHROMEBOOK" },
               {label: "Tablet", value: "TABLET" },
               {label: "Smart Phone", value: "SMARTPHONE" },
               {label: "All In One (PC)", value: "ALLINONE" },

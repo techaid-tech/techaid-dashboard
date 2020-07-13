@@ -522,6 +522,7 @@ export class KitInfoComponent {
                 label: "Type of device",
                 options: [
                   {label: "Laptop", value: "LAPTOP" },
+                  {label: "Chromebook", value: "CHROMEBOOK" },
                   {label: "Tablet", value: "TABLET" },
                   {label: "Smart Phone", value: "SMARTPHONE" },
                   {label: "All In One (PC)", value: "ALLINONE" },
@@ -544,6 +545,58 @@ export class KitInfoComponent {
               hideExpression: "model.type != 'OTHER'",
               expressionProperties: {
                 'templateOptions.required': "model.type == 'OTHER'",
+              },
+            },
+
+            {
+              key: "network",
+              type: "radio",
+              className: "",
+              templateOptions: {
+                label: "Is the phone currently locked to a specific network provider?",
+                description: "",
+                options: [
+                  {label: "Phone is Unlocked", value: "UNLOCKED" },
+                  {label: "I don't know", value: "UNKNOWN" },
+                  {label: "Locked: EE", value: "EE" },
+                  {label: "Locked: O2", value: "O2" },
+                  {label: "Locked: Three", value: "Three" }, 
+                  {label: "Locked: Vodafone", value: "Vodafone" },
+                  {label: "Locked: GiffGaff", value: "GiffGaff" },
+                  {label: "Locked: Sky Mobile", value: "SkyMobile" },
+                  {label: "Locked: Tesco Mobile", value: "TescoMobile" },
+                  {label: "Locked: BT Mobile", value: "BTMobile" },
+                  {label: "Locked: Virgin Mobile", value: "VirginMobile" },
+                  {label: "Locked: Talk Talk", value: "TalkTalk" },
+                  {label: "Locked: Other", value: "OTHER" }
+                ],
+                required: true
+              },
+              hideExpression: (model, state, field) => {
+                const data = field.parent.formControl.value || {};
+                return data['type'] != 'SMARTPHONE'
+              },
+            },
+            {
+              key: "attributes.otherNetwork",
+              type: "input",
+              className: "",
+              defaultValue: "",
+              templateOptions: {
+                label: "The other network the device is locked to",
+                rows: 2,
+                placeholder: "(Other Network)",
+                required: true
+              },
+              hideExpression: (model, state, field) => {
+                const data = field.parent.formControl.value || {};
+                return data['network'] != 'OTHER'
+              },
+              expressionProperties: {
+                'templateOptions.required': (model, state, field) => {
+                  const data = field.parent.formControl.value || {};
+                  return data['network'] == 'OTHER';
+                },
               },
             },
           ]
@@ -622,7 +675,7 @@ export class KitInfoComponent {
                 required: false
               },
               hideExpression: (model, state) => {
-                if(['LAPTOP', 'ALLINONE'].indexOf(model.type) == -1){
+                if(['LAPTOP', 'ALLINONE', 'CHROMEBOOK'].indexOf(model.type) == -1){
                   return true;
                 }
                 const status = HashUtils.dotNotation(model, 'attributes.status') || [];
