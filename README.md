@@ -1,3 +1,15 @@
+# TLDR
+
+This repo is the source for the UI provided at https://lambeth-techaid.ju.ma/
+
+```bash
+# Install Node Version Manager / Install Node Version 10
+nvm install 10
+nvm use 10 
+# You will need to have the api running locally on localhost 
+ng serve 
+```
+
 # Upgrade Angular CLI
 ## Upgrade NPM
     Download updated package from https://registry.npmjs.org/npm/-/npm-${version}.tgz
