@@ -549,7 +549,7 @@ export class KitInfoComponent {
             },
 
             {
-              key: "network",
+              key: "attributes.network",
               type: "radio",
               className: "",
               templateOptions: {
