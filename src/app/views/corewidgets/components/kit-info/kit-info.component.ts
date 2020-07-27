@@ -75,6 +75,7 @@ query findKit($id: Long) {
       status
       pickupAvailability
       notes
+      unlocked
       images {
         id
       }
@@ -125,6 +126,7 @@ mutation updateKit($data: UpdateKitInput!) {
       pickupAvailability
       status
       notes
+      unlocked
       images {
         id
       }
