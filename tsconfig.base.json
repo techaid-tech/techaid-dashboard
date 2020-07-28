@@ -1,0 +1,49 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "module": "es2020",
+    "outDir": "app/out-tsc",
+    "baseUrl": "./src/",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ], 
+    "paths": {
+      "@app/shared": [
+        "app/shared/"
+      ],
+      "@app/shared/*": [
+        "app/shared/*"
+      ],
+      "@app/external": [
+        "app/external/"
+      ],
+      "@app/external/*": [
+        "app/external/*"
+      ],
+      "@app/state/*": [
+        "app/state/*"
+      ],
+      "@env/*": [
+        "environments/*"
+      ],
+      "@views/*": [
+        "app/views/*"
+      ]
+    },
+    "lib": [
+      "es2017",
+      "dom",
+      "esnext.asynciterable"
+    ]
+  },
+  "include": [
+    "main.ts",
+    "src/**/*"
+  ]
+}

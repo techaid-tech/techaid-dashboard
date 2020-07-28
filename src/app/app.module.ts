@@ -35,7 +35,7 @@ import { GraphQLModule } from './graphql.module';
     PicSharedModule.forRoot(),
     FormlyModule.forRoot(),
     FormlyBootstrapModule,
-    NgbModule.forRoot(),
+    NgbModule,
     PicFormModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',

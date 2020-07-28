@@ -34,9 +34,7 @@ import { FieldArrayType } from "@ngx-formly/core";
     `,
   })
   export class RepeatTypeComponent extends FieldArrayType {
-      constructor(){
-          
-      }
+    
 
       state = {
           remove: {}

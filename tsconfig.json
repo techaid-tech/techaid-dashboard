@@ -1,49 +1,17 @@
+/*
+  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
+  It is not intended to be used to perform a compilation.
+
+  To learn more about this file see: https://angular.io/config/solution-tsconfig.
+*/
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "module": "esnext",
-    "outDir": "app/out-tsc",
-    "baseUrl": "./src/",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ], 
-    "paths": {
-      "@app/shared": [
-        "app/shared/"
-      ],
-      "@app/shared/*": [
-        "app/shared/*"
-      ],
-      "@app/external": [
-        "app/external/"
-      ],
-      "@app/external/*": [
-        "app/external/*"
-      ],
-      "@app/state/*": [
-        "app/state/*"
-      ],
-      "@env/*": [
-        "environments/*"
-      ],
-      "@views/*": [
-        "app/views/*"
-      ]
+  "files": [],
+  "references": [
+    {
+      "path": "./src/tsconfig.app.json"
     },
-    "lib": [
-      "es2017",
-      "dom",
-      "esnext.asynciterable"
-    ]
-  },
-  "include": [
-    "main.ts",
-    "src/**/*"
+    {
+      "path": "./src/tsconfig.spec.json"
+    }
   ]
 }

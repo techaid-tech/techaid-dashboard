@@ -1,5 +1,5 @@
 import { State, StateContext, Action, Selector, NgxsOnInit } from '@ngxs/store';
-import { NgZone } from "@angular/core";
+import { NgZone, Injectable } from "@angular/core";
 import { Apollo } from 'apollo-angular';
 import { SearchQuery } from './actions';
 
@@ -14,6 +14,7 @@ export interface CoreWidgetStateModel {
         query: ""
     }
 })
+@Injectable()
 export class CoreWidgetState implements NgxsOnInit {
     constructor(private zone: NgZone, private apollo: Apollo) { }
 

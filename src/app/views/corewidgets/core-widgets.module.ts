@@ -44,7 +44,7 @@ import { OrgRequestComponent } from './components/org-request/org-request';
 import { NgxCommentoComponent } from './components/comment.component';
 import { KitComponent } from './components/kit-component/kit-component.component';
 const routes: Routes = [
-  // { path: '', component: IndexComponent },
+  { path: '', component: DashboardIndexComponent },
   { path: 'donate-device', component: DonorRequestComponent },
   { path: 'volunteer', component: VolunteerComponent },
   { path: 'faqs', component: FaqListComponent },

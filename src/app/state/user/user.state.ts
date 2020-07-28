@@ -1,6 +1,6 @@
 import { State, StateContext, Action, Selector, NgxsOnInit } from '@ngxs/store';
 import { LoginUser, LogoutUser } from './actions/user.actions';
-import { NgZone } from "@angular/core"
+import { NgZone, Injectable } from "@angular/core"
 import { AuthenticationService } from '@app/shared/services/authentication.service';
 import { tap, first } from 'rxjs/operators';
 
@@ -29,10 +29,13 @@ export class User {
         user: new User({
             name: "",
             picture: "",
-            authenticated: false
+            authenticated: false,
+            permissions: [],
+            authorities: {}
         })
     }
 })
+@Injectable()
 export class UserState implements NgxsOnInit {
     constructor(private auth: AuthenticationService, private zone: NgZone) { }
 
