@@ -300,7 +300,7 @@ export class DonorInfoComponent {
   }
 
   deleteEntity() {
-    this.apollo.mutate({
+    this.apollo.mutate<any>({
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {

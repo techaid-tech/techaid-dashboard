@@ -410,7 +410,7 @@ export class EmailComposeComponent {
     replyEmail(data: any){
         data.mimeType = 'html';
         data.subject = data.subject || "";
-        this.apollo.mutate({
+        this.apollo.mutate<any>({
             mutation: REPLY_EMAIL,
             variables: {
                 data: data,
@@ -445,7 +445,7 @@ export class EmailComposeComponent {
     sendEmail(data: any){
         data.mimeType = 'html';
         data.subject = data.subject || "";
-        this.apollo.mutate({
+        this.apollo.mutate<any>({
             mutation: SEND_EMAIL,
             variables: {data} 
          }).subscribe(res => {

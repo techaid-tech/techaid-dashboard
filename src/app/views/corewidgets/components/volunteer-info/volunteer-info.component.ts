@@ -689,7 +689,7 @@ export class VolunteerInfoComponent {
 
   deleteEntity() {
     this.apollo
-      .mutate({
+      .mutate<any>({
         mutation: DELETE_ENTITY,
         variables: { id: this.userId },
       })
