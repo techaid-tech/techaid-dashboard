@@ -11,7 +11,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 import { UpdateFormDirty } from '@ngxs/form-plugin';
 import { Select } from '@ngxs/store';
-import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 import { User, UserState } from '@app/state/user/user.state';
 import { KIT_STATUS } from '../kit-info/kit-info.component';
 

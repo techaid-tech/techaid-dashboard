@@ -1,5 +1,5 @@
 import { Component, ViewChild, Inject, Renderer2, Input } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 function _window(): any {
   return window;
@@ -13,7 +13,7 @@ function _window(): any {
 export class MapComponent {
   lat: number = 51.678418;
   lng: number = 7.809007;
-  @ViewChild('mapRef') mapRef: any;
+  @ViewChild('mapRef', {static: false}) mapRef: any;
   map: google.maps.Map;
   _center : any = {
     lat: 51.4289925,

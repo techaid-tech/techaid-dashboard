@@ -161,7 +161,7 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
   `
 })
 export class DateInput extends FieldType implements OnInit {
-  @ViewChild('dp') dp;
+  @ViewChild('dp', {static: false}) dp;
   minDate: NgbDateStruct;
   maxDate: NgbDateStruct;
   startDate: NgbDateStruct;

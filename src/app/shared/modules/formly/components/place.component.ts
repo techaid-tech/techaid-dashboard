@@ -21,7 +21,7 @@ import { FieldType } from "@ngx-formly/core";
   `
 })
 export class PlaceInput extends FieldType {
-  @ViewChild('placesRef') placesRef: any;
+  @ViewChild('placesRef', {static: false}) placesRef: any;
   ngAfterViewInit() {
     const autocomplete = new google.maps.places.Autocomplete(this.placesRef.nativeElement, this.to.mapOptions || {});
       google.maps.event.addListener(autocomplete, 'place_changed', () => {

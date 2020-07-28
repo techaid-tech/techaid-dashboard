@@ -38,7 +38,7 @@ query findAllUsers($page: PaginationInput!, $term: String) {
   templateUrl: './user-index.html'
 })
 export class UserIndexComponent {
-  @ViewChild(AppGridDirective) grid: AppGridDirective;
+  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

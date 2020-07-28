@@ -20,7 +20,7 @@ import { NgSelectComponent } from "@ng-select/ng-select";
   `
 })
 export class ChoiceInput extends FieldType {
-  @ViewChild(NgSelectComponent)
+  @ViewChild(NgSelectComponent, {static: false})
   select: NgSelectComponent;
 
   ngAfterViewInit() {

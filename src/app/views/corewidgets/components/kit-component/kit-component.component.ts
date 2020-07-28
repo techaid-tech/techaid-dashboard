@@ -182,7 +182,7 @@ query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
   templateUrl: './kit-component.html'
 })
 export class KitComponent {
-  @ViewChild(AppGridDirective) grid: AppGridDirective;
+  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

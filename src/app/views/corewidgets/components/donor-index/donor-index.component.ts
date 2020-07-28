@@ -74,7 +74,7 @@ mutation createDonor($data: CreateDonorInput!) {
   templateUrl: './donor-index.html'
 })
 export class DonorIndexComponent {
-  @ViewChild(AppGridDirective) grid: AppGridDirective;
+  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

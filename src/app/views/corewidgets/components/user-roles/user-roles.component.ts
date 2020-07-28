@@ -66,7 +66,7 @@ query findAutocompleteRoles($term: String, $term: String) {
   templateUrl: './user-roles.html'
 })
 export class UserRolesComponent {
-  @ViewChild(AppGridDirective) grid: AppGridDirective;
+  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

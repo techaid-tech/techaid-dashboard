@@ -3,8 +3,6 @@ import { NgbDateAdapter, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-b
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl  } from '@angular/forms';
 import { FieldType } from "@ngx-formly/core";
 import * as moment from 'moment'
-import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
-
 export interface NgbDateTimeStruct extends NgbDateStruct, NgbTimeStruct {}
 
 @Component({
@@ -85,8 +83,8 @@ export class DateTimeInput extends FieldType {
 </div>
   `
 })
-export class DateTimeInputWidget implements ControlValueAccessor, OnInit {
-  @ViewChild('dp') dp;
+export class DateTimeInputWidget implements ControlValueAccessor {
+  @ViewChild('dp', {static: false}) dp;
   date = new FormControl();
   time = new FormControl();
   model : any;

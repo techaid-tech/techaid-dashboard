@@ -65,7 +65,7 @@ mutation createFaq($data: CreateEmailTemplateInput!) {
   templateUrl: './etemplates-index.html'
 })
 export class EmailTemplatesIndexComponent {
-  @ViewChild(AppGridDirective) grid: AppGridDirective;
+  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

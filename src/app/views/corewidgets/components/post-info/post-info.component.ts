@@ -8,10 +8,6 @@ import { Apollo } from 'apollo-angular';
 import { FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
-import { UpdateFormDirty } from '@ngxs/form-plugin';
-import { Select } from '@ngxs/store';
-import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 
 const QUERY_ENTITY = gql`
 query findPost($id: Long!) {

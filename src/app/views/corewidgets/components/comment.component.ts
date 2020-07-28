@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Renderer2, Inject, Input } from "@angular/core";
-import { DOCUMENT } from "@angular/platform-browser";
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     selector: "ngx-commento",

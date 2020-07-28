@@ -41,7 +41,7 @@ export interface MaskOptions {
     },
 })
 export class InputMaskComponent implements ControlValueAccessor {
-    @ViewChild('instance') instance: ElementRef;
+    @ViewChild('instance', {static: false}) instance: ElementRef;
 
     static readonly ALPHA = 'A'
     static readonly NUMERIC = '0';

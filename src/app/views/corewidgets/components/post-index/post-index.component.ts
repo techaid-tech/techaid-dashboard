@@ -71,7 +71,7 @@ mutation createPost($data: CreatePostInput!) {
   templateUrl: './post-index.html'
 })
 export class PostIndexComponent {
-  @ViewChild(AppGridDirective) grid: AppGridDirective;
+  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;
