@@ -18,6 +18,12 @@ ng serve
 
 ## Upgrade Angular CLI
 View update site to ensure the steps match the ones outlined below https://update.angular.io/
+
+```bash
+  npm install --no-save @angular/cli@^<angular-version>
+  ng update @angular/cli @angular/core --next
+```
+
 ```bash
     npm uninstall -g angular-cli
     npm cache verify
