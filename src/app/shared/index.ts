@@ -22,7 +22,7 @@ import { AuthenticationService } from './services/authentication.service';
     ]
 })
 export class PicSharedModule {
-    static forRoot(): ModuleWithProviders {
+    static forRoot(): ModuleWithProviders<PicSharedModule> {
         return {
             ngModule: PicSharedModule,
             providers: [

@@ -13,7 +13,7 @@ function _window(): any {
 export class MapComponent {
   lat: number = 51.678418;
   lng: number = 7.809007;
-  @ViewChild('mapRef', {static: false}) mapRef: any;
+  @ViewChild('mapRef') mapRef: any;
   map: google.maps.Map;
   _center : any = {
     lat: 51.4289925,

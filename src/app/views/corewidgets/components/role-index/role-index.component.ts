@@ -33,7 +33,7 @@ query findAllRoles($page: PaginationInput!, $term: String) {
   templateUrl: './role-index.html'
 })
 export class RoleIndexComponent {
-  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
+  @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

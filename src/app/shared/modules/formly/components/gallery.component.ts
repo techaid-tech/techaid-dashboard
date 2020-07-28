@@ -60,7 +60,7 @@ import { Subscription } from 'rxjs';
   `
 })
 export class GalleryInput extends FieldType implements OnInit {
-  @ViewChild('fileInput', {static: false}) fileInput: ElementRef
+  @ViewChild('fileInput') fileInput: ElementRef
   files = [];
   sub: Subscription;
 

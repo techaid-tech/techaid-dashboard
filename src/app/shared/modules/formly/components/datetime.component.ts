@@ -84,7 +84,7 @@ export class DateTimeInput extends FieldType {
   `
 })
 export class DateTimeInputWidget implements ControlValueAccessor {
-  @ViewChild('dp', {static: false}) dp;
+  @ViewChild('dp') dp;
   date = new FormControl();
   time = new FormControl();
   model : any;

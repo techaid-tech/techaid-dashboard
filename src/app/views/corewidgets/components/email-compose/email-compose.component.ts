@@ -190,8 +190,8 @@ query findEmail($id: ID!) {
   templateUrl: './email-compose.html'
 })
 export class EmailComposeComponent {
-    @ViewChild('threads', {static: false}) emailThreads: EmailThreadsComponent;
-    @ViewChild('quote', {static: false}) quoted: any;
+    @ViewChild('threads') emailThreads: EmailThreadsComponent;
+    @ViewChild('quote') quoted: any;
     public user: User;
     @Select(UserState.user) user$: Observable<User>;
     form: FormGroup = new FormGroup({});

@@ -66,7 +66,7 @@ mutation createFaq($data: CreateFaqInput!) {
   templateUrl: './faq-index.html'
 })
 export class FaqIndexComponent {
-  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
+  @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

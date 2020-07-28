@@ -71,7 +71,7 @@ export class AppNgProgressInterceptor implements HttpInterceptor {
 @NgModule({
 })
 export class AppNgProgressHttpModule {
-  static forRoot(config?: AppNgProgressHttpConfig): ModuleWithProviders {
+  static forRoot(config?: AppNgProgressHttpConfig): ModuleWithProviders<AppNgProgressHttpModule> {
     return {
       ngModule: AppNgProgressHttpModule,
       providers: [

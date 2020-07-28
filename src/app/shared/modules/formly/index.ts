@@ -267,12 +267,11 @@ export const FORMLYCONFIG : ConfigOption = {
     ]
 })
 export class PicFormModule {
-    static forRoot() {
-        return {
-            ngModule: PicFormModule,
-            providers: [
-            ]
-        }
-    }
+    static forRoot(): ModuleWithProviders<PicFormModule> {
+    return {
+        ngModule: PicFormModule,
+        providers: []
+    };
+}
 }
 

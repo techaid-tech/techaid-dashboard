@@ -123,7 +123,7 @@ query findAutocompletePermissions($appId: ID!, $userId: Int) {
   templateUrl: './user-permissions.html'
 })
 export class UserPermissionsComponent {
-  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
+  @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;

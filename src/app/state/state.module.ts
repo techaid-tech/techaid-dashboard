@@ -23,11 +23,10 @@ const DevToolsOptions: any = {
     ],
 })
 export class PicStateModule {
-    static forRoot() {
-        return {
-            ngModule: PicStateModule,
-            providers: [
-            ]
-        }
-    }
+    static forRoot(): ModuleWithProviders<PicStateModule> {
+    return {
+        ngModule: PicStateModule,
+        providers: []
+    };
+}
 }

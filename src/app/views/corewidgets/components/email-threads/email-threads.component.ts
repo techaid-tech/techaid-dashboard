@@ -82,7 +82,7 @@ query findAllThreads($query: String, $pageToken: String, $id: String, $labels: [
   templateUrl: './email-threads.html'
 })
 export class EmailThreadsComponent {
-  @ViewChild(AppGridDirective, {static: false}) grid: AppGridDirective;
+  @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
   table: any;
