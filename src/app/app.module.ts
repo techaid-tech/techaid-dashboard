@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { FormlyModule } from '@ngx-formly/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PicFormModule } from './shared/modules/formly';
-import { PicUploaderModule } from "@app/shared/modules/uploader/pic-uploader.module";
 import { AppHeader } from './components/app-header/app.header.component';
 import { AppSidebar } from './components/app-sidebar/app.sidebar.component';
 import { App404 } from '@app/shared/components/app-404/app-404.component';
@@ -14,7 +13,7 @@ import { AppAuthModule } from './shared/modules/auth'
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app.routing.module';
 import { NgProgressModule } from '@ngx-progressbar/core';
-import { PicNgProgressHttpModule } from '@app/shared/utils/pic-ngx-progress-http.ts';
+import { AppNgProgressHttpModule } from '@app/shared/utils/app-ngx-progress-http.ts';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfigService } from '@app/shared/services/config.service';
@@ -38,7 +37,6 @@ import { GraphQLModule } from './graphql.module';
     FormlyBootstrapModule,
     NgbModule.forRoot(),
     PicFormModule.forRoot(),
-    PicUploaderModule.forRoot(),
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
       preventDuplicates: true
@@ -47,7 +45,7 @@ import { GraphQLModule } from './graphql.module';
     BrowserModule,
     HttpClientModule,
     NgProgressModule,
-    PicNgProgressHttpModule.forRoot(),
+    AppNgProgressHttpModule.forRoot(),
     AppRoutingModule,
     PicStateModule,
     GraphQLModule

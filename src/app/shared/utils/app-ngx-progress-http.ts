@@ -8,24 +8,24 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InjectionToken } from '@angular/core';
 
-export interface PicNgProgressHttpConfig {
+export interface AppNgProgressHttpConfig {
   id?: string;
   silentApis?: string[];
 }
 
-export const CONFIG = new InjectionToken<PicNgProgressHttpConfig>('config');
+export const CONFIG = new InjectionToken<AppNgProgressHttpConfig>('config');
 
 @Injectable()
-export class PicNgProgressInterceptor implements HttpInterceptor {
+export class AppNgProgressInterceptor implements HttpInterceptor {
 
   private _inProgressCount = 0;
   private _progressRef: NgProgressRef;
-  private _config: PicNgProgressHttpConfig = {
+  private _config: AppNgProgressHttpConfig = {
     id: 'root',
     silentApis: []
   };
 
-  constructor(private ngProgress: NgProgress, private zone: NgZone,  @Optional() @Inject(CONFIG) config?: PicNgProgressHttpConfig) {
+  constructor(private ngProgress: NgProgress, private zone: NgZone,  @Optional() @Inject(CONFIG) config?: AppNgProgressHttpConfig) {
     this._config = {...this._config, ...config};
     this._progressRef = ngProgress.ref(this._config.id);
   }
@@ -70,13 +70,13 @@ export class PicNgProgressInterceptor implements HttpInterceptor {
 
 @NgModule({
 })
-export class PicNgProgressHttpModule {
-  static forRoot(config?: PicNgProgressHttpConfig): ModuleWithProviders {
+export class AppNgProgressHttpModule {
+  static forRoot(config?: AppNgProgressHttpConfig): ModuleWithProviders {
     return {
-      ngModule: PicNgProgressHttpModule,
+      ngModule: AppNgProgressHttpModule,
       providers: [
         { provide: CONFIG, useValue: config },
-        { provide: HTTP_INTERCEPTORS, useClass: PicNgProgressInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: AppNgProgressInterceptor, multi: true }
       ]
     };
   }

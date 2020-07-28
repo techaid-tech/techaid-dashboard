@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef, Output, EventEmitter, OnInit } from '@angular/core';
 import { FieldType } from '@ngx-formly/core';
-import { FileQueueStatus } from '../../uploader';
 import { Subscription } from 'rxjs';
 
 @Component({

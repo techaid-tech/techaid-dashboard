@@ -113,7 +113,7 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
 }
 
 @Component({
-  selector: 'pic-date',
+  selector: 'form-date',
   providers: [
     { provide: NgbDateAdapter, useFactory: getDateAdapter, deps: [DateInput] }
   ],

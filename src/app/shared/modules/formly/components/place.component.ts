@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { FieldType } from "@ngx-formly/core";
 
 @Component({
-  selector: 'pic-place',
+  selector: 'form-place',
   template: `
     <div class="input-group mb-2">
         <input class="form-control"

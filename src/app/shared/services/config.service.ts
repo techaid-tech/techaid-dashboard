@@ -4,14 +4,13 @@ import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { PingService } from '@app/shared/services/ping.service';
 import { ConfigParams } from '@app/state/config-params';
 
 @Injectable()
 export class ConfigService {
     environment: Partial<ConfigParams> = Object.assign({}, environment);
 
-    constructor(private http: HttpClient, private ping: PingService) {
+    constructor(private http: HttpClient ) {
     }
 
     load(): Promise<boolean> {

@@ -8,10 +8,10 @@ import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
 export interface NgbDateTimeStruct extends NgbDateStruct, NgbTimeStruct {}
 
 @Component({
-  selector: 'pic-datetime',
+  selector: 'form-datetime',
   template: `
   <div [class.is-invalid]="showError">
-    <pic-datetime-widget [to]="to" [formlyAttributes]="field" [formControl]="formControl"></pic-datetime-widget>
+    <form-datetime-widget [to]="to" [formlyAttributes]="field" [formControl]="formControl"></form-datetime-widget>
   </div>
   `
 })
@@ -20,7 +20,7 @@ export class DateTimeInput extends FieldType {
 }
 
 @Component({
-  selector: 'pic-datetime-widget',
+  selector: 'form-datetime-widget',
   providers: [
     { 
       provide: NG_VALUE_ACCESSOR,

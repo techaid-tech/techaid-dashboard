@@ -3,7 +3,7 @@ import { FieldWrapper } from '@ngx-formly/core';
 
 
 @Component({
-  selector: 'pic-formly-wrapper-form-field',
+  selector: 'form-formly-wrapper-form-field',
   template: `
     <div class="form-group" [class.has-error]="showError">
       <label *ngIf="to.label && to.hideLabel !== true" [attr.for]="id">

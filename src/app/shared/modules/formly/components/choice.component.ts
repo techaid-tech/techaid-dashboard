@@ -3,7 +3,7 @@ import { FieldType } from "@ngx-formly/core";
 import { NgSelectComponent } from "@ng-select/ng-select";
 
 @Component({
-  selector: 'pic-choice',
+  selector: 'form-choice',
   template: `
     <ng-select
         [formControl]="formControl"
