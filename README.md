@@ -17,6 +17,7 @@ ng serve
     run npm -v to verify its updated
 
 ## Upgrade Angular CLI
+View update site to ensure the steps match the ones outlined below https://update.angular.io/
 ```bash
     npm uninstall -g angular-cli
     npm cache verify
