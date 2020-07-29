@@ -39,7 +39,7 @@ jobs:
             - gcp-gcr/push-image:
                 image: stretech-ui
                 registry-url: eu.gcr.io
-                tag: latest
+                tag: ${CIRCLE_SHA1:0:7}
             - gcp-gcr/tag-image:
                 image: stretech-ui
                 registry-url: eu.gcr.io
