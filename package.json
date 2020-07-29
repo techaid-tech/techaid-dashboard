@@ -3,8 +3,6 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "postinstall": "npm run postinstall:web",
-    "postinstall:web": "node postinstall-web",
     "ng": "ng",
     "start": "ng serve",
     "build": "node ./build/build-pre.js && ng build --prod --aot --base-href /app/ --output-path dist/app --deploy-url /app/",
