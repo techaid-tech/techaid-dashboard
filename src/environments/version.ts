@@ -1,1 +1,1 @@
-export const APP_VERSION = {version: '1.0.0', build: '20.07.28-2015', date: '2020-07-28T19:15:26.805Z'};
+export const APP_VERSION = {version: '1.0.0', build: '20.07.29-1518', date: '2020-07-29T14:18:31.210Z'};

@@ -7,13 +7,13 @@ import { ReactiveFormsModule, FormControl } from "@angular/forms";
 import { FormlyModule, ConfigOption } from '@ngx-formly/core';
 import { FormlyBootstrapModule, FormlyFieldInput } from '@ngx-formly/bootstrap';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { PicFormlyWrapperFormField } from './wrapper/form-field.wrapper';
+import { AppFormlyWrapperFormField } from './wrapper/form-field.wrapper';
 import { ChoiceInput } from './components/choice.component';
 import { PlaceInput } from './components/place.component';
 import { DateInput } from './components/date.component';
 import { DateTimeInput, DateTimeInputWidget } from './components/datetime.component';
 import { MaskedInput } from './components/input-mask.component';
-import { PicSharedModule } from '@app/shared';
+import { AppSharedModule } from '@app/shared';
 import { GooglePlaceModule } from "ngx-google-places-autocomplete";
 import { GalleryInput } from './components/gallery.component';
 import { CKEditorModule } from 'ckeditor4-angular';
@@ -222,7 +222,7 @@ export const FORMLYCONFIG : ConfigOption = {
         },
     ],
     wrappers: [
-        { name: 'form-field', component: PicFormlyWrapperFormField }
+        { name: 'form-field', component: AppFormlyWrapperFormField }
     ],
     validationMessages: [
         { name: 'required', message: 'This field is required' },
@@ -237,13 +237,13 @@ export const FORMLYCONFIG : ConfigOption = {
         NgSelectModule,
         FormlyModule.forChild(FORMLYCONFIG),
         FormlyBootstrapModule,
-        PicSharedModule,
+        AppSharedModule,
         GooglePlaceModule,
         NgbModule,
         CKEditorModule,
     ],
     declarations: [
-        PicFormlyWrapperFormField,
+        AppFormlyWrapperFormField,
         ChoiceInput,
         DateInput,
         DateTimeInput,
@@ -255,7 +255,7 @@ export const FORMLYCONFIG : ConfigOption = {
         RepeatTypeComponent
     ],
     exports: [
-        PicFormlyWrapperFormField,
+        AppFormlyWrapperFormField,
         ChoiceInput,
         DateInput,
         DateTimeInput,
@@ -266,10 +266,10 @@ export const FORMLYCONFIG : ConfigOption = {
         DateTimeInputWidget
     ]
 })
-export class PicFormModule {
-    static forRoot(): ModuleWithProviders<PicFormModule> {
+export class AppFormModule {
+    static forRoot(): ModuleWithProviders<AppFormModule> {
     return {
-        ngModule: PicFormModule,
+        ngModule: AppFormModule,
         providers: []
     };
 }

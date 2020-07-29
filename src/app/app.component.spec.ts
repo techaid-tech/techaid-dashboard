@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { AppHeader } from './components/app-header/app.header.component';
 import { NgProgressModule } from '@ngx-progressbar/core';
-import { PicSharedModule } from '@app/shared'
+import { AppSharedModule } from '@app/shared'
 import { NgModule, APP_INITIALIZER, Component } from '@angular/core';
 import { AppRoutingModule } from './app.routing.module';
 import { App404 } from '@app/shared/components/app-404/app-404.component';

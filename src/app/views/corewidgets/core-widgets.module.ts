@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from "@app/shared/services/auth.guard";
-import { PicFormModule } from '../../shared/modules/formly';
+import { AppFormModule } from '../../shared/modules/formly';
 import { VolunteersIndexComponent } from './components/volunteer-index/volunteer-index.component';
 import { VolunteerInfoComponent } from './components/volunteer-info/volunteer-info.component';
 import { KitIndexComponent} from './components/kit-index/kit-index.component';
@@ -12,7 +12,7 @@ import { RoleInfoComponent } from './components/role-info/role-info.component';
 import { RolePermissionsComponent } from './components/role-permissions/role-permissions.component';
 import { RoleUsersComponent } from './components/role-users/role-users.component';
 import { UserRolesComponent } from './components/user-roles/user-roles.component';
-import { PicSharedModule } from "@app/shared";
+import { AppSharedModule } from "@app/shared";
 import { AppGridModule } from "@app/shared/modules/grid";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsModule } from '@ngxs/store';
@@ -140,8 +140,8 @@ const routes: Routes = [
     NgxsModule.forFeature([CoreWidgetState]),
     AppGridModule,
     CommonModule,
-    PicSharedModule,
-    PicFormModule,
+    AppSharedModule,
+    AppFormModule,
     NgbModule,
     RouterModule.forChild(routes),
   ],

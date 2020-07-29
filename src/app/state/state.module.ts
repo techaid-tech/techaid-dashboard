@@ -22,10 +22,10 @@ const DevToolsOptions: any = {
         NgxsReduxDevtoolsPluginModule.forRoot()
     ],
 })
-export class PicStateModule {
-    static forRoot(): ModuleWithProviders<PicStateModule> {
+export class AppStateModule {
+    static forRoot(): ModuleWithProviders<AppStateModule> {
     return {
-        ngModule: PicStateModule,
+        ngModule: AppStateModule,
         providers: []
     };
 }

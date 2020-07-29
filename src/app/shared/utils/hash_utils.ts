@@ -27,7 +27,7 @@ export function isNull(obj) {
 }
 
 export function isBlank(obj) {
-    return isNull(obj) || (typeof obj === 'string' && !obj.trim().length) || (Array.isArray(obj) && !obj.length) || (isObject(obj) && isBlank(Object.keys(obj)));
+    return isNull(obj) || (typeof obj === 'string' && !obj.trim().length) || (Array.isArray(obj) && !obj.length) || (isObject(obj) && Object.keys(obj).length);
 }
 
 export function escapeRegExp(string) {

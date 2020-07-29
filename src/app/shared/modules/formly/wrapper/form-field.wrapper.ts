@@ -26,6 +26,6 @@ import { FieldWrapper } from '@ngx-formly/core';
     </div>
   `,
 })
-export class PicFormlyWrapperFormField extends FieldWrapper {
+export class AppFormlyWrapperFormField extends FieldWrapper {
   @ViewChild('fieldComponent', { read: ViewContainerRef }) fieldComponent: ViewContainerRef;
 }

@@ -17,6 +17,18 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
+            "allowedCommonJsDependencies": [
+              "ngx-google-places-autocomplete",
+              "graphql-tag",
+              "datatables.net-responsive",
+              "datatables.net-rowreorder",
+              "jquery",
+              "datatables.net",
+              "ngx-lightbox",
+              "datatables.net-bs4",
+              "lodash",
+              "zen-observable"
+            ],
             "assets": [
               "src/assets",
               "src/favicon.ico",

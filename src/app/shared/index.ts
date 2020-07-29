@@ -21,10 +21,10 @@ import { AuthenticationService } from './services/authentication.service';
         AppInitialComponent,
     ]
 })
-export class PicSharedModule {
-    static forRoot(): ModuleWithProviders<PicSharedModule> {
+export class AppSharedModule {
+    static forRoot(): ModuleWithProviders<AppSharedModule> {
         return {
-            ngModule: PicSharedModule,
+            ngModule: AppSharedModule,
             providers: [
                 AuthenticationService,
                 AuthGuard,

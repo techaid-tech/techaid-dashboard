@@ -1,185 +1,154 @@
-import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
-import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
+import { Component, ViewChild, Input } from "@angular/core";
+import {
+  concat,
+  Subject,
+  of,
+  Observable,
+  Subscription,
+  from,
+} from "rxjs";
 import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrService } from 'ngx-toastr';
-import gql from 'graphql-tag';
-import { Apollo } from 'apollo-angular';
-import { query } from '@angular/animations';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
-import { Select } from '@ngxs/store';
-import 'datatables.net-responsive';
-import 'datatables.net-rowreorder';
-import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
-import { HashUtils } from '@app/shared/utils';
-import { KIT_STATUS } from '../kit-info/kit-info.component';
-
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrService } from "ngx-toastr";
+import gql from "graphql-tag";
+import { Apollo } from "apollo-angular";
+import { FormGroup } from "@angular/forms";
+import { FormlyFieldConfig  } from "@ngx-formly/core";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  tap,
+  catchError,
+} from "rxjs/operators";
+import { Select } from "@ngxs/store";
+import "datatables.net-responsive";
+import "datatables.net-rowreorder";
+import { CoreWidgetState } from "@views/corewidgets/state/corewidgets.state";
+import { KIT_STATUS } from "../kit-info/kit-info.component";
 const QUERY_ENTITY = gql`
-query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!, $filter: KitWhereInput!) {
-  kitsConnection(page: $page, where: {
-    AND: {
-      model: {
-        _contains: $term
-      }
-      AND: [ $where, $filter ]
-      OR: [
-        {
-          location: {
-            _contains: $term
-          }
-          AND: [ $where, $filter ]
+  query findAllKits(
+    $page: PaginationInput
+    $term: String
+    $where: KitWhereInput!
+    $filter: KitWhereInput!
+  ) {
+    kitsConnection(
+      page: $page
+      where: {
+        AND: {
+          model: { _contains: $term }
+          AND: [$where, $filter]
+          OR: [{ location: { _contains: $term }, AND: [$where, $filter] }]
         }
-      ]
-    }
-  }){
-    totalElements
-    number
-    content{
-     id
-     model
-     age
-     type
-     status
-     location
-     updatedAt
-     createdAt
-     donor {
-       id
-       name 
-       email
-       phoneNumber
-     }
-     organisation {
-       id
-       name
-     }
-     volunteers {
-      type
-      volunteer {
-        id
-        name 
-        email
-        phoneNumber
       }
-     }
+    ) {
+      totalElements
+      number
+      content {
+        id
+        model
+        age
+        type
+        status
+        location
+        updatedAt
+        createdAt
+        donor {
+          id
+          name
+          email
+          phoneNumber
+        }
+        organisation {
+          id
+          name
+        }
+        volunteers {
+          type
+          volunteer {
+            id
+            name
+            email
+            phoneNumber
+          }
+        }
+      }
     }
   }
-}
 `;
 
 const AUTOCOMPLETE_ORGS = gql`
-query findAutocompleteOrgs($term: String, $ids: [Long!]) {
-  organisationsConnection(page: {
-    size: 50
-  }, where: {
-    name: {
-      _contains: $term
-    }
-    OR: [ 
-    {
-      id: {
-        _in: $ids
+  query findAutocompleteOrgs($term: String, $ids: [Long!]) {
+    organisationsConnection(
+      page: { size: 50 }
+      where: {
+        name: { _contains: $term }
+        OR: [
+          { id: { _in: $ids } }
+          { phoneNumber: { _contains: $term } }
+          { contact: { _contains: $term } }
+          { email: { _contains: $term } }
+          { website: { _contains: $term } }
+        ]
       }
-    },
-    {
-      phoneNumber: {
-        _contains: $term
+    ) {
+      content {
+        id
+        name
+        email
+        phoneNumber
       }
-    },
-    {
-      contact: {
-        _contains: $term
-      }
-    },
-    {
-      email: {
-        _contains: $term
-      }
-    },
-    {
-      website: {
-        _contains: $term
-      }
-    }]
-  }){
-    content  {
-     id
-     name
-     email
-     phoneNumber
     }
   }
-}
 `;
 
 const AUTOCOMPLETE_USERS = gql`
-query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
-  volunteersConnection(page: {
-    size: 50
-  }, where: {
-    name: {
-      _contains: $term
-    }
-    OR: [ 
-    {
-      id: {
-        _in: $ids
+  query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
+    volunteersConnection(
+      page: { size: 50 }
+      where: {
+        name: { _contains: $term }
+        OR: [
+          { id: { _in: $ids } }
+          { phoneNumber: { _contains: $term } }
+          { email: { _contains: $term } }
+        ]
       }
-    },
-    {
-      phoneNumber: {
-        _contains: $term
+    ) {
+      content {
+        id
+        name
+        email
+        phoneNumber
       }
-    },
-    {
-      email: {
-        _contains: $term
-      }
-    }]
-  }){
-    content  {
-     id
-     name
-     email
-     phoneNumber
     }
   }
-}
 `;
 
 const FIND_USERS = gql`
-query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
-  volunteers(where: {
-    id: {
-      _in: $volunteerIds
+  query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
+    volunteers(where: { id: { _in: $volunteerIds } }) {
+      id
+      name
+      email
+      phoneNumber
     }
-  }){
-     id
-     name
-     email
-     phoneNumber
-  }
 
-  organisations(where: {
-    id: {
-      _in: $orgIds
+    organisations(where: { id: { _in: $orgIds } }) {
+      id
+      name
+      email
+      phoneNumber
     }
-  }){
-     id
-     name
-     email
-     phoneNumber
   }
-}
 `;
 
 @Component({
-  selector: 'kit-component',
-  styleUrls: ['kit-component.scss'],
- 
-  templateUrl: './kit-component.html'
+  selector: "kit-component",
+  styleUrls: ["kit-component.scss"],
+
+  templateUrl: "./kit-component.html",
 })
 export class KitComponent {
   @ViewChild(AppGridDirective) grid: AppGridDirective;
@@ -193,21 +162,21 @@ export class KitComponent {
   form: FormGroup = new FormGroup({});
   model = {};
   ages = {
-     0: "I don't know",
-     1: "Less than a year",
-     2: "1 - 2 years",
-     4: '3 - 4 years',
-     5: '5 - 6 years',
-     6: 'more than 6 years old'
+    0: "I don't know",
+    1: "Less than a year",
+    2: "1 - 2 years",
+    4: "3 - 4 years",
+    5: "5 - 6 years",
+    6: "more than 6 years old",
   };
 
   classes = {
-    'LOGISTICS': 'dark',
-    'TECHNICIAN': 'info',
-    'ORGANISER': 'success'
+    LOGISTICS: "dark",
+    TECHNICIAN: "info",
+    ORGANISER: "success",
   };
 
-  statusTypes : any = KIT_STATUS;
+  statusTypes: any = KIT_STATUS;
 
   users$: Observable<any>;
   userInput$ = new Subject<string>();
@@ -224,7 +193,7 @@ export class KitComponent {
       multiple: true,
       searchable: true,
       items: [],
-      required: false
+      required: false,
     },
   };
 
@@ -243,7 +212,7 @@ export class KitComponent {
       multiple: true,
       searchable: true,
       items: [],
-      required: false
+      required: false,
     },
   };
 
@@ -264,14 +233,14 @@ export class KitComponent {
             label: "Type of device",
             type: "array",
             options: [
-              {label: "Laptop", value: "LAPTOP" },
-              {label: "Chromebook", value: "CHROMEBOOK" },
-              {label: "Tablet", value: "TABLET" },
-              {label: "Smart Phone", value: "SMARTPHONE" },
-              {label: "All In One (PC)", value: "ALLINONE" },
-              {label: "Other", value: "OTHER" }
+              { label: "Laptop", value: "LAPTOP" },
+              { label: "Chromebook", value: "CHROMEBOOK" },
+              { label: "Tablet", value: "TABLET" },
+              { label: "Smart Phone", value: "SMARTPHONE" },
+              { label: "All In One (PC)", value: "ALLINONE" },
+              { label: "Other", value: "OTHER" },
             ],
-          } 
+          },
         },
         {
           key: "age",
@@ -279,17 +248,17 @@ export class KitComponent {
           className: "col-sm-4",
           templateOptions: {
             label: "Roughly how old is your device?",
-            type: 'array',
+            type: "array",
             options: [
-              {label: "Less than a year", value: 1},
-              {label: "1 - 2 years", value: 2},
-              {label: "3 - 4 years", value: 4 },
-              {label: "5 - 6 years", value: 5},
-              {label: "More than 6 years old", value: 6 },
-              {label: "I don't know!", value: 0 }
+              { label: "Less than a year", value: 1 },
+              { label: "1 - 2 years", value: 2 },
+              { label: "3 - 4 years", value: 4 },
+              { label: "5 - 6 years", value: 5 },
+              { label: "More than 6 years old", value: 6 },
+              { label: "I don't know!", value: 0 },
             ],
-            required: false
-          } 
+            required: false,
+          },
         },
         {
           key: "archived",
@@ -297,15 +266,15 @@ export class KitComponent {
           className: "col-sm-4",
           defaultValue: [false],
           templateOptions: {
-            type: 'array',
+            type: "array",
             label: "Filter by Archived?",
             options: [
-              {label: "Active Devices", value: false },
-              {label: "Archived Devices", value: true },
+              { label: "Active Devices", value: false },
+              { label: "Archived Devices", value: true },
             ],
             required: false,
-          }
-        }, 
+          },
+        },
         {
           key: "status",
           type: "choice",
@@ -313,61 +282,79 @@ export class KitComponent {
           templateOptions: {
             label: "Status of the device",
             items: [
-              {label: "New - Donation Registered", value: "NEW" },
-              {label: "Declined - Not Suitable", value: "DECLINED" },
-              {label: "Accepted - Assesment Needed", value: "ASSESSMENT_NEEDED" },
-              {label: "Accepted - No Assesment Required", value: "ACCEPTED" },
-              {label: "Collection from donor scheduled", value: "PICKUP_SCHEDULED" },
-              {label: "Donor drop off agreed", value: "DROPOFF_AGGREED" },
-              {label: "Donation received by Tech Team", value: "WITH_TECHIE" },
-              {label: "Donation faulty - collect for recycling", value: "UPDATE_FAILED" },
-              {label: "Donation updated - arrange collection", value: "READY" },
-              {label: "Device allocated to referring organisation", value: "ALLOCATED" },
-              {label: "Collection / drop off to referring organisation agreed", value: "DELIVERY_ARRANGED" },
-              {label: "Device received by organisation", value: "DELIVERED" }
+              { label: "New - Donation Registered", value: "NEW" },
+              { label: "Declined - Not Suitable", value: "DECLINED" },
+              {
+                label: "Accepted - Assesment Needed",
+                value: "ASSESSMENT_NEEDED",
+              },
+              { label: "Accepted - No Assesment Required", value: "ACCEPTED" },
+              {
+                label: "Collection from donor scheduled",
+                value: "PICKUP_SCHEDULED",
+              },
+              { label: "Donor drop off agreed", value: "DROPOFF_AGGREED" },
+              { label: "Donation received by Tech Team", value: "WITH_TECHIE" },
+              {
+                label: "Donation faulty - collect for recycling",
+                value: "UPDATE_FAILED",
+              },
+              {
+                label: "Donation updated - arrange collection",
+                value: "READY",
+              },
+              {
+                label: "Device allocated to referring organisation",
+                value: "ALLOCATED",
+              },
+              {
+                label: "Collection / drop off to referring organisation agreed",
+                value: "DELIVERY_ARRANGED",
+              },
+              { label: "Device received by organisation", value: "DELIVERED" },
             ],
             multiple: true,
-            required: false
-          } 
+            required: false,
+          },
         },
         this.userField,
-        this.orgField
-      ]
-    }
+        this.orgField,
+      ],
+    },
   ];
 
-  applyFilter(data){
+  applyFilter(data) {
     var filter = {};
     var count = 0;
 
-    if(data.type && data.type.length) {
+    if (data.type && data.type.length) {
       count = count + data.type.length;
-      filter["type"] = {"_in": data.type };
+      filter["type"] = { _in: data.type };
     }
 
-    if(data.status && data.status.length) {
+    if (data.status && data.status.length) {
       count = count + data.status.length;
-      filter["status"] = {"_in": data.status };
+      filter["status"] = { _in: data.status };
     }
 
-    if(data.age && data.age.length) {
+    if (data.age && data.age.length) {
       count = count + data.age.length;
-      filter["age"] = {"_in": data.age };
+      filter["age"] = { _in: data.age };
     }
 
-    if(data.archived && data.archived.length){
+    if (data.archived && data.archived.length) {
       count += data.archived.length;
-      filter["archived"] = {_in: data.archived}
+      filter["archived"] = { _in: data.archived };
     }
 
-    if(data.userIds && data.userIds.length){
+    if (data.userIds && data.userIds.length) {
       count += data.userIds.length;
-      filter["volunteer"] = {id: {_in: data.userIds}};
+      filter["volunteer"] = { id: { _in: data.userIds } };
     }
 
-    if(data.orgIds && data.orgIds.length){
+    if (data.orgIds && data.orgIds.length) {
       count += data.orgIds.length;
-      filter["organisation"] = {id: {_in: data.orgIds}};
+      filter["organisation"] = { id: { _in: data.orgIds } };
     }
 
     localStorage.setItem(`kitFilters-${this.tableId}`, JSON.stringify(data));
@@ -383,12 +370,10 @@ export class KitComponent {
     private modalService: NgbModal,
     private toastr: ToastrService,
     private apollo: Apollo
-  ) {
-
-  }
+  ) {}
 
   modal(content) {
-    this.modalService.open(content, { centered: true, size: 'lg' });
+    this.modalService.open(content, { centered: true, size: "lg" });
   }
 
   clearSelection() {
@@ -402,7 +387,7 @@ export class KitComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      let code = evt.keyCode ? evt.keyCode : evt.which;
       if (code !== 13) {
         return;
       }
@@ -423,196 +408,220 @@ export class KitComponent {
 
   _where = {};
   @Input()
-  set where(where: any){
+  set where(where: any) {
     this._where = where;
-    if(this.table){
-      this.applyFilter(this.filterModel); 
+    if (this.table) {
+      this.applyFilter(this.filterModel);
     }
   }
 
   ngOnInit() {
-    const queryRef = this.apollo
-      .watchQuery({
-        query: QUERY_ENTITY,
-        variables: {}
-      });
+    const queryRef = this.apollo.watchQuery({
+      query: QUERY_ENTITY,
+      variables: {},
+    });
 
-      const userRef = this.apollo
-      .watchQuery({
-        query: AUTOCOMPLETE_USERS,
-        variables: {
-        }
-      });
+    const userRef = this.apollo.watchQuery({
+      query: AUTOCOMPLETE_USERS,
+      variables: {},
+    });
 
-      const orgRef = this.apollo
-      .watchQuery({
-        query: AUTOCOMPLETE_ORGS,
-        variables: {
-        }
-      });
+    const orgRef = this.apollo.watchQuery({
+      query: AUTOCOMPLETE_ORGS,
+      variables: {},
+    });
 
-    this.sub = this.search$.subscribe(query => {
+    this.sub = this.search$.subscribe((query) => {
       if (this.table) {
         this.table.search(query);
         this.table.ajax.reload(null, false);
       }
     });
 
-     
     this.users$ = concat(
       of([]),
       this.userInput$.pipe(
         debounceTime(200),
         distinctUntilChanged(),
-        tap(() => this.usersLoading = true),
-        switchMap(term => from(userRef.refetch({
-          term: term,
-          ids: this.filterModel.userIds || [],
-        })).pipe(
-          catchError(() => of([])),
-          tap(() => this.usersLoading = false),
-          switchMap(res => {
-            const data = res['data']['volunteersConnection']['content'].map(v => {
-              return {
-                label: this.volunteerName(v), value: v.id
-              }
-            });
-            return of(data)
-          })
-        ))
+        tap(() => (this.usersLoading = true)),
+        switchMap((term) =>
+          from(
+            userRef.refetch({
+              term: term,
+              ids: this.filterModel.userIds || [],
+            })
+          ).pipe(
+            catchError(() => of([])),
+            tap(() => (this.usersLoading = false)),
+            switchMap((res) => {
+              const data = res["data"]["volunteersConnection"]["content"].map(
+                (v) => {
+                  return {
+                    label: this.volunteerName(v),
+                    value: v.id,
+                  };
+                }
+              );
+              return of(data);
+            })
+          )
+        )
       )
     );
 
-    this.sub.add(this.users$.subscribe(data => {
-      this.userField.templateOptions['items'] = data;
-    }));
+    this.sub.add(
+      this.users$.subscribe((data) => {
+        this.userField.templateOptions["items"] = data;
+      })
+    );
 
     this.orgs$ = concat(
       of([]),
       this.orgInput$.pipe(
         debounceTime(200),
         distinctUntilChanged(),
-        tap(() => this.orgLoading = true),
-        switchMap(term => from(orgRef.refetch({
-          term: term,
-          ids: this.filterModel.orgIds || [],
-        })).pipe(
-          catchError(() => of([])),
-          tap(() => this.orgLoading = false),
-          switchMap(res => {
-            const data = res['data']['organisationsConnection']['content'].map(v => {
-              return {
-                label: this.volunteerName(v), value: v.id
-              }
-            });
-            return of(data)
-          })
-        ))
+        tap(() => (this.orgLoading = true)),
+        switchMap((term) =>
+          from(
+            orgRef.refetch({
+              term: term,
+              ids: this.filterModel.orgIds || [],
+            })
+          ).pipe(
+            catchError(() => of([])),
+            tap(() => (this.orgLoading = false)),
+            switchMap((res) => {
+              const data = res["data"]["organisationsConnection"][
+                "content"
+              ].map((v) => {
+                return {
+                  label: this.volunteerName(v),
+                  value: v.id,
+                };
+              });
+              return of(data);
+            })
+          )
+        )
       )
     );
 
-    this.sub.add(this.orgs$.subscribe(data => {
-      this.orgField.templateOptions['items'] = data;
-    }));
+    this.sub.add(
+      this.orgs$.subscribe((data) => {
+        this.orgField.templateOptions["items"] = data;
+      })
+    );
 
     this.dtOptions = {
-      pagingType: 'simple_numbers',
+      pagingType: "simple_numbers",
       dom:
         "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
       pageLength: this.pageLength,
-      lengthMenu: [ 5, 10, 25, 50, 100 ],
-      order: [1, 'desc'],
+      lengthMenu: [5, 10, 25, 50, 100],
+      order: [1, "desc"],
       serverSide: true,
       stateSave: true,
       processing: true,
       searching: true,
       stateDuration: -1,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        let sort = params.order.map((o) => {
           return {
             key: this.dtOptions.columns[o.column].data,
-            value: o.dir
-          }
+            value: o.dir,
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           where: this.filter,
           filter: this._where || {},
-          term: params['search']['value']
-        }
+          term: params["search"]["value"],
+        };
 
-        queryRef.refetch(vars).then(res => {
-          var data: any = {};
-          if (res.data) {
-            data = res['data']['kitsConnection'];
-            if (!this.total) {
-              this.total = data['totalElements']
+        queryRef.refetch(vars).then(
+          (res) => {
+            var data: any = {};
+            if (res.data) {
+              data = res["data"]["kitsConnection"];
+              if (!this.total) {
+                this.total = data["totalElements"];
+              }
+              data.content.forEach((d) => {
+                if (d.donor) {
+                  d.donorName = this.userName(d.donor);
+                }
+                if (d.volunteer) {
+                  d.volunteerName = this.userName(d.volunteer);
+                }
+              });
+              this.entities = data.content;
             }
-            data.content.forEach(d => {
-              if(d.donor){
-                d.donorName = this.userName(d.donor);
-              }
-              if(d.volunteer){
-                d.volunteerName = this.userName(d.volunteer);
-              }
+
+            callback({
+              draw: params.draw,
+              recordsTotal: this.total,
+              recordsFiltered: data["totalElements"],
+              error: "",
+              data: [],
             });
-            this.entities = data.content;
-          }
+          },
+          (err) => {
+            callback({
+              draw: params.draw,
+              recordsTotal: this.total || 0,
+              recordsFiltered: 0,
+              error: err.message,
+              data: [],
+            });
 
-          callback({
-            draw: params.draw,
-            recordsTotal: this.total,
-            recordsFiltered: data['totalElements'],
-            error: "",
-            data: []
-          });
-        }, err => {
-          callback({
-            draw: params.draw,
-            recordsTotal: this.total || 0,
-            recordsFiltered: 0,
-            error: err.message,
-            data: []
-          });
-
-          this.toastr.warning(`
+            this.toastr.warning(
+              `
             <small>${err.message}</small>
-          `, 'GraphQL Error', {
-              enableHtml: true,
-              timeOut: 15000,
-              disableTimeOut: true
-            })
-        });
+          `,
+              "GraphQL Error",
+              {
+                enableHtml: true,
+                timeOut: 15000,
+                disableTimeOut: true,
+              }
+            );
+          }
+        );
       },
       columns: [
-        { data: null, width: '15px', orderable: false  },
-        { data: 'model' },
-        { data: 'donor' },
-        { data: 'volunteers.volunteer.name', orderable: false },
-        { data: 'createdAt'},
-        { data: 'updatedAt'},
-        { data: 'age'},
-        { data: 'type' },
-        { data: 'status' },
-      ]
+        { data: null, width: "15px", orderable: false },
+        { data: "model" },
+        { data: "donor" },
+        { data: "volunteers.volunteer.name", orderable: false },
+        { data: "createdAt" },
+        { data: "updatedAt" },
+        { data: "age" },
+        { data: "type" },
+        { data: "status" },
+      ],
     };
   }
 
   userName(data) {
-    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length)[0];
+    return `${data.name || ""}||${data.email || ""}||${data.phoneNumber || ""}`
+      .split("||")
+      .filter((f) => f.trim().length)[0];
   }
 
   volunteerName(data) {
-    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
+    return `${data.name || ""}||${data.email || ""}||${data.phoneNumber || ""}`
+      .split("||")
+      .filter((f) => f.trim().length)
+      .join(" / ")
+      .trim();
   }
-
 
   ngOnDestory() {
     if (this.sub) {
@@ -621,42 +630,51 @@ export class KitComponent {
   }
 
   ngAfterViewInit() {
-    this.grid.dtInstance.then(tbl => {
+    this.grid.dtInstance.then((tbl) => {
       this.table = tbl;
       try {
-        this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`)) || {};
-        if(this.filterModel && (this.filterModel.userIds || this.filterModel.orgIds)){
-          this.apollo.query({
-            query: FIND_USERS,
-            variables: {
-              volunteerIds: this.filterModel.userIds || [],
-              orgIds: this.filterModel.orgIds || []
-            }
-          }).toPromise().then(res => {
-            if(res.data){
-              if(res.data['volunteers']){
-                this.userField.templateOptions['items'] = res.data['volunteers'].map(v => {
-                  return {label: this.volunteerName(v), value: v.id }
-                });
+        this.filterModel =
+          JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`)) || {};
+        if (
+          this.filterModel &&
+          (this.filterModel.userIds || this.filterModel.orgIds)
+        ) {
+          this.apollo
+            .query({
+              query: FIND_USERS,
+              variables: {
+                volunteerIds: this.filterModel.userIds || [],
+                orgIds: this.filterModel.orgIds || [],
+              },
+            })
+            .toPromise()
+            .then((res) => {
+              if (res.data) {
+                if (res.data["volunteers"]) {
+                  this.userField.templateOptions["items"] = res.data[
+                    "volunteers"
+                  ].map((v) => {
+                    return { label: this.volunteerName(v), value: v.id };
+                  });
+                }
+                if (res.data["organisations"]) {
+                  this.orgField.templateOptions["items"] = res.data[
+                    "organisations"
+                  ].map((v) => {
+                    return { label: this.volunteerName(v), value: v.id };
+                  });
+                }
               }
-              if(res.data['organisations']){
-                this.orgField.templateOptions['items'] = res.data['organisations'].map(v => {
-                  return {label: this.volunteerName(v), value: v.id }
-                });
-              }
-            }
-           
-          });
+            });
         }
-      }catch(_){
+      } catch (_) {
         this.filterModel = {};
       }
 
       try {
         this.applyFilter(this.filterModel);
         this.filterForm.patchValue(this.filterModel);
-      }catch(_){
-      }
+      } catch (_) {}
     });
   }
 

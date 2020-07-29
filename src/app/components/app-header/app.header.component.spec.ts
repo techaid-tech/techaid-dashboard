@@ -1,10 +1,10 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppHeader } from './app.header.component';
-import { PicSharedModule } from '@app/shared'
+import { AppSharedModule } from '@app/shared'
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { PicStateModule } from '@app/state/state.module';
+import { AppStateModule } from '@app/state/state.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
@@ -25,7 +25,7 @@ describe('AppHeader', () => {
         AppHeader
       ],
       imports: [
-        PicStateModule,
+        AppStateModule,
         RouterTestingModule,
         NoopAnimationsModule
       ],
