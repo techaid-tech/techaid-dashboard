@@ -3,9 +3,12 @@
 This repo is the source for the UI provided at https://lambeth-techaid.ju.ma/
 
 ```bash
-# Install Node Version Manager / Install Node Version 10
-nvm install 10
-nvm use 10 
+# Ensure you have installed nodejs and NPM locally
+# Install Node Version Manager / Install Node Version >= 12
+# Install angular-cli
+npm install -g @angular/cli
+nvm install 14
+nvm use 14
 # You will need to have the api running locally on localhost 
 ng serve 
 ```
@@ -18,11 +21,6 @@ ng serve
 
 ## Upgrade Angular CLI
 View update site to ensure the steps match the ones outlined below https://update.angular.io/
-
-```bash
-  npm install --no-save @angular/cli@^<angular-version>
-  ng update @angular/cli @angular/core --next
-```
 
 ```bash
     npm uninstall -g angular-cli
@@ -39,10 +37,6 @@ View update site to ensure the steps match the ones outlined below https://updat
     ng update
     # Update this readme
 ```
-# TplUpdate
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version  7.2.1
-
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
