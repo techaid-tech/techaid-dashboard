@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -61,7 +61,7 @@ mutation createDonor($data: CreateDonorInput!) {
   createDonor(data: $data){
     id
     name
-    email 
+    email
     phoneNumber
   }
 }
@@ -70,7 +70,7 @@ mutation createDonor($data: CreateDonorInput!) {
 @Component({
   selector: 'donor-index',
   styleUrls: ['donor-index.scss'],
- 
+
   templateUrl: './donor-index.html'
 })
 export class DonorIndexComponent {
@@ -89,29 +89,29 @@ export class DonorIndexComponent {
 
   fields: Array<FormlyFieldConfig> = [
     {
-      key: "name",
-      type: "input",
-      className: "col-md-12 border-left-info card pt-3 mb-3",
-      defaultValue: "",
+      key: 'name',
+      type: 'input',
+      className: 'col-md-12 border-left-info card pt-3 mb-3',
+      defaultValue: '',
       templateOptions: {
-        label: "Name",
-        placeholder: "",
+        label: 'Name',
+        placeholder: '',
         required: true
       }
     },
     {
-      fieldGroupClassName: "row",
+      fieldGroupClassName: 'row',
       fieldGroup: [
         {
-          key: "email",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
+          key: 'email',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
           templateOptions: {
-            label: "Email",
-            type: "email",
+            label: 'Email',
+            type: 'email',
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            placeholder: "",
+            placeholder: '',
             required: true
           },
           expressionProperties: {
@@ -119,12 +119,12 @@ export class DonorIndexComponent {
           },
         },
         {
-          key: "phoneNumber",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
+          key: 'phoneNumber',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
           templateOptions: {
-            label: "Phone Number",
+            label: 'Phone Number',
             pattern: /\+?[0-9]+/,
             required: true
           },
@@ -135,25 +135,25 @@ export class DonorIndexComponent {
       ]
     },
     {
-      key: "postCode",
-      type: "place",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'postCode',
+      type: 'place',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Address",
-        placeholder: "",
+        label: 'Address',
+        placeholder: '',
         postCode: false,
         required: false
       }
     },
     {
-      key: "referral",
-      type: "input",
-      className: "col-md-12 border-bottom-info card pt-3",
-      defaultValue: "",
+      key: 'referral',
+      type: 'input',
+      className: 'col-md-12 border-bottom-info card pt-3',
+      defaultValue: '',
       templateOptions: {
-        label: "How did you hear about us?",
-        placeholder: "",
+        label: 'How did you hear about us?',
+        placeholder: '',
         required: false
       }
     },
@@ -194,9 +194,9 @@ export class DonorIndexComponent {
     this.dtOptions = {
       pagingType: 'simple_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: 10,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [3, 'desc'],
@@ -205,28 +205,28 @@ export class DonorIndexComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           term: params['search']['value']
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['donorsConnection'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -235,7 +235,7 @@ export class DonorIndexComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -253,7 +253,7 @@ export class DonorIndexComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -279,7 +279,7 @@ export class DonorIndexComponent {
     });
   }
 
-  createEntity(data: any) { 
+  createEntity(data: any) {
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: { data }
@@ -293,7 +293,7 @@ export class DonorIndexComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
   select(row: any) {
@@ -306,7 +306,7 @@ export class DonorIndexComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

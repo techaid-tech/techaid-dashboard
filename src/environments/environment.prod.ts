@@ -12,7 +12,7 @@ export const environment: ConfigParams = {
   environment: 'production',
   graphql_endpoint: '/api/graphql',
   version: APP_VERSION,
-  auth_endpoint: "/api/auth/user",
+  auth_endpoint: '/api/auth/user',
   auth_enabled: true,
   remote_config: false,
 };

@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -21,7 +21,7 @@ query findPost($id: Long!) {
      slug
      secured
      content
-     published 
+     published
      createdAt
      updatedAt
   }
@@ -36,7 +36,7 @@ mutation updatePost($data: UpdatePostInput!) {
      slug
      title
      secured
-     published 
+     published
      createdAt
      updatedAt
   }
@@ -52,82 +52,10 @@ mutation deletePost($id: ID!) {
 @Component({
   selector: 'post-info',
   styleUrls: ['post-info.scss'],
- 
+
   templateUrl: './post-info.html'
 })
 export class PostInfoComponent {
-  sub: Subscription;
-  form: FormGroup = new FormGroup({});
-  options: FormlyFormOptions = {};
-  model = {};
-  entityName: string;
-  entityId: number;
-  fields: Array<FormlyFieldConfig> = [
-    {
-      key: "title",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Title",
-        placeholder: "",
-        required: false
-      }
-    },
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "slug",
-          type: "input",
-          className: "col-md-12",
-          defaultValue: "",
-          templateOptions: {
-            label: "Slug",
-            description: "The url to the post",
-            placeholder: "",
-            required: false
-          }
-        },
-        {
-          key: "published",
-          type: "checkbox",
-          className: "col-md-6",
-          defaultValue: true,
-          templateOptions: {
-            label: "Published?",
-            description: "Unpublished Posts will not be available",
-            placeholder: "",
-            required: false
-          }
-        },
-        {
-          key: "secured",
-          type: "checkbox",
-          className: "col-md-6",
-          defaultValue: false,
-          templateOptions: {
-            label: "Secured?",
-            description: "Secured pages are only visible to logged in users",
-            placeholder: "",
-            required: false
-          }
-        },
-      ]
-    },
-    {
-      key: "content",
-      type: "richtext",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Content",
-        placeholder: "",
-        rows:  20,
-        required: false
-      }
-    },
-  ];
 
   constructor(
     private modalService: NgbModal,
@@ -138,10 +66,78 @@ export class PostInfoComponent {
   ) {
 
   }
-
-  modal(content) {
-    this.modalService.open(content, { centered: true });
-  }
+  sub: Subscription;
+  form: FormGroup = new FormGroup({});
+  options: FormlyFormOptions = {};
+  model = {};
+  entityName: string;
+  entityId: number;
+  fields: Array<FormlyFieldConfig> = [
+    {
+      key: 'title',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Title',
+        placeholder: '',
+        required: false
+      }
+    },
+    {
+      fieldGroupClassName: 'row',
+      fieldGroup: [
+        {
+          key: 'slug',
+          type: 'input',
+          className: 'col-md-12',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Slug',
+            description: 'The url to the post',
+            placeholder: '',
+            required: false
+          }
+        },
+        {
+          key: 'published',
+          type: 'checkbox',
+          className: 'col-md-6',
+          defaultValue: true,
+          templateOptions: {
+            label: 'Published?',
+            description: 'Unpublished Posts will not be available',
+            placeholder: '',
+            required: false
+          }
+        },
+        {
+          key: 'secured',
+          type: 'checkbox',
+          className: 'col-md-6',
+          defaultValue: false,
+          templateOptions: {
+            label: 'Secured?',
+            description: 'Secured pages are only visible to logged in users',
+            placeholder: '',
+            required: false
+          }
+        },
+      ]
+    },
+    {
+      key: 'content',
+      type: 'richtext',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Content',
+        placeholder: '',
+        rows:  20,
+        required: false
+      }
+    },
+  ];
 
   private queryRef = this.apollo
     .watchQuery({
@@ -149,7 +145,11 @@ export class PostInfoComponent {
       variables: {}
     });
 
-  private normalizeData(data: any){
+  modal(content) {
+    this.modalService.open(content, { centered: true });
+  }
+
+  private normalizeData(data: any) {
     return data;
   }
 
@@ -162,12 +162,12 @@ export class PostInfoComponent {
       id: this.entityId
     }).then(res => {
       if (res.data && res.data['post']) {
-        var data = res.data['post'];
+        const data = res.data['post'];
         this.model = this.normalizeData(data);
-        this.entityName = this.model['title']
+        this.entityName = this.model['title'];
       } else {
         this.model = {};
-        this.entityName = "Not Found!"
+        this.entityName = 'Not Found!';
       }
     }, err => {
       this.toastr.warning(`
@@ -176,7 +176,7 @@ export class PostInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 
@@ -214,7 +214,7 @@ export class PostInfoComponent {
       `, 'Update Error', {
           enableHtml: true
         });
-    })
+    });
   }
 
   deleteEntity() {
@@ -222,13 +222,13 @@ export class PostInfoComponent {
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {
-      if(res.data.deletePost){
+      if (res.data.deletePost) {
         this.toastr.info(`
         <small>Successfully deleted Post ${this.entityName}</small>
         `, 'Post Deleted', {
             enableHtml: true
           });
-        this.router.navigate(['/dashboard/posts'])
+        this.router.navigate(['/dashboard/posts']);
       }
     }, err => {
       this.toastr.error(`
@@ -236,6 +236,6 @@ export class PostInfoComponent {
       `, 'Error Deleting Post', {
           enableHtml: true
         });
-    })
+    });
   }
 }

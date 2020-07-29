@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -25,70 +25,10 @@ query findRole($id: ID!) {
 @Component({
   selector: 'role-info',
   styleUrls: ['role-info.scss'],
- 
+
   templateUrl: './role-info.html'
 })
 export class RoleInfoComponent {
-  sub: Subscription;
-  form: FormGroup = new FormGroup({});
-  model = {};
-  roleName: string;
-  roleId: string;
-
-  fields: Array<FormlyFieldConfig> = [
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "name",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Name",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "description",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Description",
-            placeholder: "",
-            required: true
-          }
-        },
-      ]
-    },
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "startsAt",
-          type: "date",
-          className: "col-md-6",
-          templateOptions: {
-            label: "Starts At",
-            description: "The date this role should become active",
-            required: true,
-          }
-        },
-        {
-          key: "expiresAt",
-          type: "date",
-          className: "col-md-6",
-          templateOptions: {
-            label: "Expires At",
-            description: "The date this role should expire",
-            required: false
-          }
-        }
-      ]
-    }
-  ];
 
 
   constructor(
@@ -100,18 +40,78 @@ export class RoleInfoComponent {
   ) {
 
   }
+  sub: Subscription;
+  form: FormGroup = new FormGroup({});
+  model = {};
+  roleName: string;
+  roleId: string;
 
-  modal(content) {
-    this.modalService.open(content, {
-      centered: true
-    });
-  }
+  fields: Array<FormlyFieldConfig> = [
+    {
+      fieldGroupClassName: 'row',
+      fieldGroup: [
+        {
+          key: 'name',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Name',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'description',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Description',
+            placeholder: '',
+            required: true
+          }
+        },
+      ]
+    },
+    {
+      fieldGroupClassName: 'row',
+      fieldGroup: [
+        {
+          key: 'startsAt',
+          type: 'date',
+          className: 'col-md-6',
+          templateOptions: {
+            label: 'Starts At',
+            description: 'The date this role should become active',
+            required: true,
+          }
+        },
+        {
+          key: 'expiresAt',
+          type: 'date',
+          className: 'col-md-6',
+          templateOptions: {
+            label: 'Expires At',
+            description: 'The date this role should expire',
+            required: false
+          }
+        }
+      ]
+    }
+  ];
 
   private queryRef = this.apollo
     .watchQuery({
       query: QUERY_ROLE,
       variables: {}
     });
+
+  modal(content) {
+    this.modalService.open(content, {
+      centered: true
+    });
+  }
 
   private fetchData() {
     if (!this.roleId) {
@@ -126,7 +126,7 @@ export class RoleInfoComponent {
         this.roleName = this.model['description'] || this.model['name'];
       } else {
         this.model = {};
-        this.roleName = "Not Found!"
+        this.roleName = 'Not Found!';
       }
     }, err => {
       this.toastr.warning(`
@@ -135,7 +135,7 @@ export class RoleInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 

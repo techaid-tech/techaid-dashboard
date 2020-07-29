@@ -11,24 +11,24 @@ function _window(): any {
   templateUrl: './map-index.html'
 })
 export class MapComponent {
-  lat: number = 51.678418;
-  lng: number = 7.809007;
+  lat = 51.678418;
+  lng = 7.809007;
   @ViewChild('mapRef') mapRef: any;
   map: google.maps.Map;
-  _center : any = {
+  _center: any = {
     lat: 51.4289925,
-    lng: -0.144655 
+    lng: -0.144655
   };
 
   _activeMarkers: Array<any> = [];
 
   @Input()
-  set markers(markers: any){
+  set markers(markers: any) {
     this._activeMarkers.forEach(m => {
       m.setMap(null);
     });
     this._activeMarkers = [];
-    
+
     markers.forEach(m => {
         const infowindow = new google.maps.InfoWindow({
             content: m.info
@@ -47,9 +47,9 @@ export class MapComponent {
   }
 
   @Input()
-  set center(val: any){
+  set center(val: any) {
     this._center = val;
-    if(this.map){
+    if (this.map) {
         this.map.setCenter(this._center);
     }
   }
@@ -63,7 +63,7 @@ export class MapComponent {
       zoom: 12,
       mapTypeControl: false,
       streetViewControl: false,
-      center: this._center 
+      center: this._center
     });
   }
 

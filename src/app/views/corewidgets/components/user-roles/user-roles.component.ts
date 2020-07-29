@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -62,7 +62,7 @@ query findAutocompleteRoles($term: String, $term: String) {
 @Component({
   selector: 'user-roles',
   styleUrls: ['user-roles.scss'],
- 
+
   templateUrl: './user-roles.html'
 })
 export class UserRolesComponent {
@@ -83,16 +83,16 @@ export class UserRolesComponent {
   apis$: Observable<any>;
   apis: any[] = [];
   apiInput$ = new Subject<string>();
-  apiLoading = false
+  apiLoading = false;
   appField: FormlyFieldConfig = {
-    key: "roleId",
-    type: "choice",
-    className: "col-md-12",
+    key: 'roleId',
+    type: 'choice',
+    className: 'col-md-12',
     templateOptions: {
-      label: "",
+      label: '',
       loading: this.apiLoading,
       typeahead: this.apiInput$,
-      placeholder: "Select a Role",
+      placeholder: 'Select a Role',
       multiple: false,
       searchable: true,
       items: this.apis,
@@ -139,7 +139,7 @@ export class UserRolesComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -186,9 +186,9 @@ export class UserRolesComponent {
             const data = res['data']['roles']['content'].map(v => {
               return {
                 label: `${v.name} (${v.description})`, value: v.id
-              }
+              };
             });
-            return of(data)
+            return of(data);
           })
         ))
       )
@@ -202,9 +202,9 @@ export class UserRolesComponent {
     this.dtOptions = {
       pagingType: 'full_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: 10,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [1, 'desc'],
@@ -213,29 +213,29 @@ export class UserRolesComponent {
       stateSave: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           userId: this._userId,
           term: params['search']['value']
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['user']['roles'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -244,7 +244,7 @@ export class UserRolesComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -262,7 +262,7 @@ export class UserRolesComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -310,7 +310,7 @@ export class UserRolesComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
   deleteRole(role: any) {
@@ -318,7 +318,7 @@ export class UserRolesComponent {
       mutation: DELETE_ROLES,
       variables: {
         userId: this._userId,
-        roleIds: [role.id] 
+        roleIds: [role.id]
       }
     }).subscribe(res => {
       this.table.ajax.reload(null, false);
@@ -328,7 +328,7 @@ export class UserRolesComponent {
       `, 'Error Deleting Role', {
           enableHtml: true
         });
-    })
+    });
   }
 
   select(row?: any) {
@@ -341,7 +341,7 @@ export class UserRolesComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

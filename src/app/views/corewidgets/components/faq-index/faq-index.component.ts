@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -39,7 +39,7 @@ query findAllFaqs($page: PaginationInput,, $term: String) {
      title
      content
      position
-     published 
+     published
      createdAt
      updatedAt
     }
@@ -52,7 +52,7 @@ mutation createFaq($data: CreateFaqInput!) {
   createFaq(data: $data){
      id
      title
-     published 
+     published
      createdAt
      updatedAt
   }
@@ -62,7 +62,7 @@ mutation createFaq($data: CreateFaqInput!) {
 @Component({
   selector: 'faq-index',
   styleUrls: ['faq-index.scss'],
- 
+
   templateUrl: './faq-index.html'
 })
 export class FaqIndexComponent {
@@ -81,24 +81,24 @@ export class FaqIndexComponent {
 
   fields: Array<FormlyFieldConfig> = [
     {
-      key: "title",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'title',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Name",
-        placeholder: "",
+        label: 'Name',
+        placeholder: '',
         required: true
       }
     },
     {
-      key: "published",
-      type: "checkbox",
-      className: "col-md-12",
+      key: 'published',
+      type: 'checkbox',
+      className: 'col-md-12',
       defaultValue: true,
       templateOptions: {
-        label: "Published?",
-        placeholder: "",
+        label: 'Published?',
+        placeholder: '',
         required: false
       }
     },
@@ -116,7 +116,7 @@ export class FaqIndexComponent {
   pageLength = 10;
 
   @Input()
-  tableId = "faq-index";
+  tableId = 'faq-index';
 
   modal(content) {
     this.modalService.open(content, { centered: true, size: 'lg' });
@@ -133,7 +133,7 @@ export class FaqIndexComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -161,9 +161,9 @@ export class FaqIndexComponent {
     this.dtOptions = {
       pagingType: 'simple_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: this.pageLength,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [2, 'desc'],
@@ -172,28 +172,28 @@ export class FaqIndexComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           term: params['search']['value']
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['faqsConnection'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -202,7 +202,7 @@ export class FaqIndexComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -220,7 +220,7 @@ export class FaqIndexComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -245,9 +245,9 @@ export class FaqIndexComponent {
     });
   }
 
-  createEntity(data: any) { 
+  createEntity(data: any) {
     data.position = 0;
-    data.content = "";
+    data.content = '';
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: { data }
@@ -261,7 +261,7 @@ export class FaqIndexComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
 
@@ -275,7 +275,7 @@ export class FaqIndexComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

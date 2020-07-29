@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -52,7 +52,7 @@ query findAutocompletePermissions($appId: ID!, $roleId: Int) {
 @Component({
   selector: 'role-permissions',
   styleUrls: ['role-permissions.scss'],
- 
+
   templateUrl: './role-permissions.html'
 })
 export class RolePermissionsComponent {
@@ -76,7 +76,7 @@ export class RolePermissionsComponent {
   ) {
   }
 
-  private _roleId: string = "";
+  private _roleId = '';
   @Input()
   set roleId(str: string) {
     this._roleId = str;
@@ -103,7 +103,7 @@ export class RolePermissionsComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -130,9 +130,9 @@ export class RolePermissionsComponent {
     this.dtOptions = {
       pagingType: 'full_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: 10,
       order: [1, 'desc'],
       serverSide: true,
@@ -140,29 +140,29 @@ export class RolePermissionsComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           roleId: this._roleId,
           term: params['search']['value']
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res && res.data) {
             data = res['data']['role']['permissions'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -172,7 +172,7 @@ export class RolePermissionsComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -190,7 +190,7 @@ export class RolePermissionsComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -208,7 +208,7 @@ export class RolePermissionsComponent {
 
   updatePermissions(appId: string) {
     if (!appId) {
-      return
+      return;
     }
 
     const apiRef = this.apollo
@@ -227,7 +227,7 @@ export class RolePermissionsComponent {
             name: v.name,
             description: v.description
           }
-        }
+        };
       });
     }, err => {
       this.toastr.warning(`
@@ -236,7 +236,7 @@ export class RolePermissionsComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 
@@ -256,7 +256,7 @@ export class RolePermissionsComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

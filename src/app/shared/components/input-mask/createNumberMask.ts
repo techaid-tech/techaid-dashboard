@@ -21,96 +21,96 @@ export function createNumberMask({
     allowLeadingZeroes = false,
     integerLimit = null
 } = {}) {
-    const prefixLength = prefix && prefix.length || 0
-    const suffixLength = suffix && suffix.length || 0
-    const thousandsSeparatorSymbolLength = thousandsSeparatorSymbol && thousandsSeparatorSymbol.length || 0
+    const prefixLength = prefix && prefix.length || 0;
+    const suffixLength = suffix && suffix.length || 0;
+    const thousandsSeparatorSymbolLength = thousandsSeparatorSymbol && thousandsSeparatorSymbol.length || 0;
 
     function numberMask(rawValue = emptyString) {
-        const rawValueLength = rawValue.length
+        const rawValueLength = rawValue.length;
 
         if (
             rawValue === emptyString ||
             (rawValue[0] === prefix[0] && rawValueLength === 1)
         ) {
-            let parts : any[] = prefix.split(emptyString).map(v => new String(v));
+            const parts: any[] = prefix.split(emptyString).map(v => new String(v));
             return parts.concat([digitRegExp]).concat(suffix.split(emptyString));
         } else if (
             rawValue === decimalSymbol &&
             allowDecimal
         ) {
-            let parts : any[] = prefix.split(emptyString).map(v => new String(v));
-            return parts.concat(['0', decimalSymbol, digitRegExp]).concat(suffix.split(emptyString))
+            const parts: any[] = prefix.split(emptyString).map(v => new String(v));
+            return parts.concat(['0', decimalSymbol, digitRegExp]).concat(suffix.split(emptyString));
         }
 
-        const isNegative = (rawValue[0] === minus) && allowNegative
-        //If negative remove "-" sign
+        const isNegative = (rawValue[0] === minus) && allowNegative;
+        // If negative remove "-" sign
         if (isNegative) {
-            rawValue = rawValue.toString().substr(1)
+            rawValue = rawValue.toString().substr(1);
         }
 
-        let indexOfLastDecimal = rawValue.lastIndexOf(decimalSymbol.toString())
-        const hasDecimal = indexOfLastDecimal !== -1
+        const indexOfLastDecimal = rawValue.lastIndexOf(decimalSymbol.toString());
+        const hasDecimal = indexOfLastDecimal !== -1;
 
-        let integer
-        let fraction
-        let mask
+        let integer;
+        let fraction;
+        let mask;
 
         // remove the suffix
         if (rawValue.slice(suffixLength * -1) === suffix) {
-            rawValue = rawValue.slice(0, suffixLength * -1)
+            rawValue = rawValue.slice(0, suffixLength * -1);
         }
 
         if (hasDecimal && (allowDecimal || requireDecimal)) {
-            integer = rawValue.slice(rawValue.slice(0, prefixLength) === prefix ? prefixLength : 0, indexOfLastDecimal)
+            integer = rawValue.slice(rawValue.slice(0, prefixLength) === prefix ? prefixLength : 0, indexOfLastDecimal);
 
             fraction = rawValue.slice(indexOfLastDecimal + 1, rawValueLength);
             let fc = fraction.replace(nonDigitsRegExp, emptyString);
-            if(!fc) {
+            if (!fc) {
                 fc = '0';
-            }   
+            }
             fraction = convertToMask(fc);
         } else {
             if (rawValue.slice(0, prefixLength) === prefix) {
-                integer = rawValue.slice(prefixLength)
+                integer = rawValue.slice(prefixLength);
             } else {
-                integer = rawValue
+                integer = rawValue;
             }
         }
 
         if (integerLimit && typeof integerLimit === number) {
-            const thousandsSeparatorRegex = thousandsSeparatorSymbol === '.' ? '[.]' : `${thousandsSeparatorSymbol}`
-            const numberOfThousandSeparators = (integer.match(new RegExp(thousandsSeparatorRegex, 'g')) || []).length
+            const thousandsSeparatorRegex = thousandsSeparatorSymbol === '.' ? '[.]' : `${thousandsSeparatorSymbol}`;
+            const numberOfThousandSeparators = (integer.match(new RegExp(thousandsSeparatorRegex, 'g')) || []).length;
 
-            integer = integer.slice(0, integerLimit + (numberOfThousandSeparators * thousandsSeparatorSymbolLength))
+            integer = integer.slice(0, integerLimit + (numberOfThousandSeparators * thousandsSeparatorSymbolLength));
         }
 
-        integer = integer.replace(nonDigitsRegExp, emptyString)
+        integer = integer.replace(nonDigitsRegExp, emptyString);
 
         if (!allowLeadingZeroes) {
-            integer = integer.replace(/^0+(0$|[^0])/, '$1')
+            integer = integer.replace(/^0+(0$|[^0])/, '$1');
         }
 
-        integer = (includeThousandsSeparator) ? addThousandsSeparator(integer, thousandsSeparatorSymbol) : integer
+        integer = (includeThousandsSeparator) ? addThousandsSeparator(integer, thousandsSeparatorSymbol) : integer;
 
-        mask = convertToMask(integer)
+        mask = convertToMask(integer);
 
         if ((hasDecimal && allowDecimal) || requireDecimal === true) {
             if (rawValue[indexOfLastDecimal - 1] !== decimalSymbol) {
-                mask.push(caretTrap)
+                mask.push(caretTrap);
             }
 
-            mask.push(decimalSymbol, caretTrap)
+            mask.push(decimalSymbol, caretTrap);
 
             if (fraction) {
                 if (typeof decimalLimit === number) {
-                    fraction = fraction.slice(0, decimalLimit)
+                    fraction = fraction.slice(0, decimalLimit);
                 }
 
-                mask = mask.concat(fraction)
+                mask = mask.concat(fraction);
             }
 
             if (requireDecimal === true && rawValue[indexOfLastDecimal - 1] === decimalSymbol) {
-                mask.push(digitRegExp)
+                mask.push(digitRegExp);
             }
         }
 
@@ -121,7 +121,7 @@ export function createNumberMask({
         if (isNegative) {
             // If user is entering a negative number, add a mask placeholder spot to attract the caret to it.
             if (mask.length === prefixLength) {
-                mask.push(digitRegExp)
+                mask.push(digitRegExp);
             }
 
             mask = [minusRegExp].concat(mask);
@@ -131,19 +131,19 @@ export function createNumberMask({
             mask = mask.concat(suffix.split(emptyString).map(v => new String(v)));
         }
 
-        return mask
+        return mask;
     }
 
-    return numberMask
+    return numberMask;
 }
 
 function convertToMask(strNumber) {
     return strNumber
         .split(emptyString)
-        .map((char) => digitRegExp.test(char) ? digitRegExp : char)
+        .map((char) => digitRegExp.test(char) ? digitRegExp : char);
 }
 
 // http://stackoverflow.com/a/10899795/604296
 function addThousandsSeparator(n, thousandsSeparatorSymbol) {
-    return n.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSeparatorSymbol)
+    return n.replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSeparatorSymbol);
 }

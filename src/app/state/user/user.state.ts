@@ -1,17 +1,17 @@
 import { State, StateContext, Action, Selector, NgxsOnInit } from '@ngxs/store';
 import { LoginUser, LogoutUser } from './actions/user.actions';
-import { NgZone, Injectable } from "@angular/core"
+import { NgZone, Injectable } from '@angular/core';
 import { AuthenticationService } from '@app/shared/services/authentication.service';
 import { tap, first } from 'rxjs/operators';
 
 export interface UserStateModel {
-   user: User 
+   user: User;
 }
 
 export class User {
-    name: String
-    picture: String
-    authenticated: Boolean
+    name: String;
+    picture: String;
+    authenticated: Boolean;
     permissions: Array<string> = [];
     authorities: {[key: string]: boolean} = {};
 
@@ -27,8 +27,8 @@ export class User {
     name: 'user',
     defaults: {
         user: new User({
-            name: "",
-            picture: "",
+            name: '',
+            picture: '',
             authenticated: false,
             permissions: [],
             authorities: {}
@@ -39,19 +39,23 @@ export class User {
 export class UserState implements NgxsOnInit {
     constructor(private auth: AuthenticationService, private zone: NgZone) { }
 
+    @Selector() static user(state: UserStateModel) {
+        return state.user;
+    }
+
     ngxsOnInit(ctx: StateContext<UserStateModel>) {
         this.auth.isAuthenticated$.pipe(first()).subscribe(loggedIn => {
-            if(loggedIn){
+            if (loggedIn) {
                 this.handleLoggedIn(ctx);
             }
         });
     }
 
-    handleLoggedIn(ctx: StateContext<UserStateModel>){
+    handleLoggedIn(ctx: StateContext<UserStateModel>) {
         ctx.patchState({
             user: new User({
-                name: "Me",
-                picture: "",
+                name: 'Me',
+                picture: '',
                 authenticated: true,
             })
         });
@@ -59,28 +63,24 @@ export class UserState implements NgxsOnInit {
             u.authenticated = true;
             ctx.patchState({user: new User(u)});
             this.auth.getTokenSilently$().pipe(first()).subscribe(data => {
-                var parts = data.split(".")
-                var token = JSON.parse(atob(parts[1]));
+                const parts = data.split('.');
+                const token = JSON.parse(atob(parts[1]));
                 u.permissions = token.permissions || [];
                 ctx.patchState({user: new User(u)});
             });
         });
     }
 
-    @Selector() static user(state: UserStateModel) {
-        return state.user;
-    }
-
 
     @Action(LoginUser)
     loginUser(ctx: StateContext<UserStateModel>, action: LoginUser) {
         this.auth.isAuthenticated$.pipe(first()).subscribe(loggedIn => {
-            if(loggedIn){
+            if (loggedIn) {
                 this.handleLoggedIn(ctx);
-            }else {
+            } else {
                 this.auth.login();
             }
-        }); 
+        });
     }
 
     @Action(LogoutUser)
@@ -89,8 +89,8 @@ export class UserState implements NgxsOnInit {
         ctx.patchState({
             user: new User({
                 authenticated: false,
-                name: "",
-                picture: "",
+                name: '',
+                picture: '',
             })
         });
 

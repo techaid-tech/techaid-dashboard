@@ -1,19 +1,19 @@
-import { Component, Injectable, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { Component, Injectable, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgbDateAdapter, NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
-import { FieldType } from "@ngx-formly/core";
-import * as moment from 'moment'
+import { FieldType } from '@ngx-formly/core';
+import * as moment from 'moment';
 import { DateUtils } from '@app/shared/utils/date_utils';
 
 
 class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
-  private input_formats: string[]
-  private output_format: string
+  private input_formats: string[];
+  private output_format: string;
 
   constructor(input_formats: string[], output_format: string) {
     super();
     this.input_formats = input_formats;
     this.output_format = output_format;
-    if (this.output_format && this.output_format != "struct" && this.output_format != "default") {
+    if (this.output_format && this.output_format != 'struct' && this.output_format != 'default') {
       this.input_formats.unshift(this.output_format);
     }
   }
@@ -24,7 +24,7 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
     }
 
     if (dt && dt.year && dt.month && dt.day) {
-      let date = new Date(dt.year, dt.month - 1, dt.day);
+      const date = new Date(dt.year, dt.month - 1, dt.day);
       if (moment(date).isValid()) {
         return date;
       }
@@ -41,8 +41,8 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
     }
 
     if (this.input_formats && this.input_formats.length > 0 && typeof dt == 'string') {
-      for (let format of this.input_formats) {
-        var m = moment(dt.substring(0, format.length), format, true);
+      for (const format of this.input_formats) {
+        let m = moment(dt.substring(0, format.length), format, true);
         if (m.isValid()) {
           return m.toDate();
         } else {
@@ -59,18 +59,18 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
       }
 
       if (this.output_format == 'default') {
-        var m = moment(dt);
+        const m = moment(dt);
         if (m.isValid()) {
           return m.toDate();
         }
       } else if (typeof dt == 'string') {
-        var m = moment(dt);
+        const m = moment(dt);
         if (m.isValid()) {
           return m.toDate();
         }
       }
     } else {
-      var m = moment(dt);
+      const m = moment(dt);
       if (m.isValid()) {
         return m.toDate();
       }
@@ -82,7 +82,7 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
   fromModel(dt: Object): NgbDateStruct {
     let model = null;
     try {
-      let date: Date = this.parseDate(dt);
+      const date: Date = this.parseDate(dt);
       model = (date && date.getFullYear && date.getFullYear()) ? { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() } : null;
     } catch (e) {
       console.error(e);
@@ -92,7 +92,7 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
   }
 
   toModel(date: NgbDateStruct): Object {
-    let dt: any = "";
+    let dt: any = '';
     if (date) {
       dt = new Date(date.year, date.month - 1, date.day);
       if (moment(dt).isValid()) {
@@ -100,7 +100,7 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
           if (this.output_format == 'struct') {
             return date;
           } else if (this.output_format == 'default') {
-            return moment(dt).toDate()
+            return moment(dt).toDate();
           }
           return moment(dt).format(this.output_format);
         }
@@ -120,12 +120,12 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
   template: `
 <div>
   <div class="input-group"  *ngIf="to.inline; else nonInline">
-    <input (click)="to.openOnClick && dp.open()" class="form-control" 
+    <input (click)="to.openOnClick && dp.open()" class="form-control"
       [displayMonths]="to.displayMonths"
       [navigation]="to.navigation"
-      [showWeekNumbers]="to.showWeekNumbers" 
-      placeholder="{{to.placeholder}}" 
-      [formControl]="formControl" 
+      [showWeekNumbers]="to.showWeekNumbers"
+      placeholder="{{to.placeholder}}"
+      [formControl]="formControl"
       [minDate]="minDate"
       [maxDate]="maxDate"
       [startDate]="startDate"
@@ -137,7 +137,7 @@ class NgbDateNativeAdapter extends NgbDateAdapter<Object> {
       <button type="button" [class.is-invalid]="showError" class="form-control btn {{to.buttonClass}}" (click)="dp.toggle()" >
         <i class="fa fa-calendar"></i>
       </button>
-    </div>    
+    </div>
   </div>
 
   <ng-template #nonInline>
@@ -175,8 +175,8 @@ export class DateInput extends FieldType implements OnInit {
 
   ngOnInit() {
     const adapter = new NgbDateNativeAdapter(this.to.input_formats, this.to.output_format);
-    var value = this.formControl.value;
-    var from = adapter.fromModel(value);
+    const value = this.formControl.value;
+    const from = adapter.fromModel(value);
     this.startDate = adapter.fromModel(this.to.startDate);
     if (this.displayValue == undefined) {
       this.displayValue = {
@@ -185,33 +185,33 @@ export class DateInput extends FieldType implements OnInit {
       };
     }
 
-    var dt = adapter.parseDate(from) || moment().toDate();
+    const dt = adapter.parseDate(from) || moment().toDate();
     this.minDate = adapter.fromModel(this.to.minDate) || adapter.fromModel(moment(dt).subtract(10, 'years'));
     this.maxDate = adapter.fromModel(this.to.maxDate);
 
-    let that = this;
+    const that = this;
 
     this.isDisabled = (date: NgbDate, current) => {
-      const restrict = that.to.restrict || []
+      const restrict = that.to.restrict || [];
       if (that.to.isDisabled) {
-        let val = that.to.isDisabled(date, current);
-        if (val) return true;
+        const val = that.to.isDisabled(date, current);
+        if (val) { return true; }
       }
 
-      let dt = adapter.parseDate(date);
+      const dt = adapter.parseDate(date);
 
       if (!DateUtils.dateIs(restrict, dt)) {
         return true;
       }
 
       return false;
-    }
+    };
   }
 }
 
 
 export function getDateAdapter(dateInput: DateInput): NgbDateAdapter<any> {
-  var output = dateInput.to.output_format;
-  var inputs = dateInput.to.input_formats;
+  const output = dateInput.to.output_format;
+  const inputs = dateInput.to.input_formats;
   return new NgbDateNativeAdapter(inputs, output);
 }

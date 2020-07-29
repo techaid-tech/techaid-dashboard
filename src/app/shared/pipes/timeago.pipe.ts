@@ -10,16 +10,16 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
   constructor(private changeDetectorRef: ChangeDetectorRef, private ngZone: NgZone) { }
 
   transform(value: string) {
-    if(!value) {
-      return "";
+    if (!value) {
+      return '';
     }
-    
-    let dt = moment(value);
-    if(dt.isValid()){
+
+    const dt = moment(value);
+    if (dt.isValid()) {
       return dt.fromNow();
     }
 
-    return "";
+    return '';
   }
 
   ngOnDestroy(): void {

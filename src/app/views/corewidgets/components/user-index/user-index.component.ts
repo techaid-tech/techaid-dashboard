@@ -34,7 +34,7 @@ query findAllUsers($page: PaginationInput!, $term: String) {
 @Component({
   selector: 'user-index',
   styleUrls: ['user-index.scss'],
- 
+
   templateUrl: './user-index.html'
 })
 export class UserIndexComponent {
@@ -73,7 +73,7 @@ export class UserIndexComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -96,13 +96,13 @@ export class UserIndexComponent {
         this.table.ajax.reload(null, false);
       }
     });
-    const sorted : any = {'name': 'email', 'loginsCount': 'logins_count', 'lastLogin': 'last_login'};
+    const sorted: any = {'name': 'email', 'loginsCount': 'logins_count', 'lastLogin': 'last_login'};
     this.dtOptions = {
       pagingType: 'full_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: 5,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [3, 'desc'],
@@ -111,28 +111,28 @@ export class UserIndexComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: sorted[`${this.dtOptions.columns[o.column].data}`],
             value: (o.dir == 'asc') ? 1 : -1
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           term: params['search']['value']
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['users'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -141,7 +141,7 @@ export class UserIndexComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -159,9 +159,9 @@ export class UserIndexComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
-      }, 
+      },
       columns: [
         { data: null, width: '15px', orderable: false},
         { data: 'name', orderable: false},
@@ -194,7 +194,7 @@ export class UserIndexComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

@@ -25,15 +25,10 @@ query findUser($id: ID!) {
 @Component({
   selector: 'user-info',
   styleUrls: ['user-info.scss'],
- 
+
   templateUrl: './user-info.html'
 })
 export class UserInfoComponent {
-  sub: Subscription;
-  form: FormGroup = new FormGroup({});
-  model = {};
-  userName: string;
-  userId: string;
 
   constructor(
     private modalService: NgbModal,
@@ -44,16 +39,21 @@ export class UserInfoComponent {
   ) {
 
   }
-
-  modal(content) {
-    this.modalService.open(content, { centered: true });
-  }
+  sub: Subscription;
+  form: FormGroup = new FormGroup({});
+  model = {};
+  userName: string;
+  userId: string;
 
   private queryRef = this.apollo
     .watchQuery({
       query: QUERY_USER,
       variables: {}
     });
+
+  modal(content) {
+    this.modalService.open(content, { centered: true });
+  }
 
   private fetchData() {
     if (!this.userId) {
@@ -68,7 +68,7 @@ export class UserInfoComponent {
         this.userName = this.model['name'];
       } else {
         this.model = {};
-        this.userName = "Not Found!"
+        this.userName = 'Not Found!';
       }
     }, err => {
       this.toastr.warning(`
@@ -77,7 +77,7 @@ export class UserInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 

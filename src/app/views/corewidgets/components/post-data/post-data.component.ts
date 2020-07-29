@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -28,7 +28,7 @@ query findPost($slug: String) {
      title
      slug
      content
-     published 
+     published
      createdAt
      updatedAt
   }
@@ -39,7 +39,7 @@ query findPost($slug: String) {
 @Component({
   selector: 'post-data',
   styleUrls: ['post-data.scss'],
- 
+
   templateUrl: './post-data.html'
 })
 export class PostDataComponent {
@@ -63,17 +63,17 @@ export class PostDataComponent {
       variables: {}
     });
 
-  private normalizeData(data: any){
+  private normalizeData(data: any) {
     return data;
   }
 
   private fetchData(vars) {
     this.queryRef.refetch(vars).then(res => {
       if (res.data && res.data['post']) {
-        var data = res.data['post'];
+        const data = res.data['post'];
         this.model = this.normalizeData(data);
         this.titleService.setTitle(data.title);
-      }else {
+      } else {
         this.model = {};
       }
     });
@@ -83,11 +83,11 @@ export class PostDataComponent {
     this.sub = this.user$.subscribe(user => {
         this.user = user;
     });
-    const url = (this.router.url||'').split('?', 2)[0].replace(/^\//, '');
-    if(url.trim().length > 0){
-      this.fetchData({slug: url})
-    }else{
-      this.fetchData({slug: '/'}) 
+    const url = (this.router.url || '').split('?', 2)[0].replace(/^\//, '');
+    if (url.trim().length > 0) {
+      this.fetchData({slug: url});
+    } else {
+      this.fetchData({slug: '/'});
     }
   }
 

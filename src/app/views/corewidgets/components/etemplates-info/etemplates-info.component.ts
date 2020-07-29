@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -51,58 +51,10 @@ mutation deleteFaq($id: ID!) {
 @Component({
   selector: 'etemplates-info',
   styleUrls: ['etemplates-info.scss'],
- 
+
   templateUrl: './etemplates-info.html'
 })
 export class EmailTemplatesInfoComponent {
-  sub: Subscription;
-  form: FormGroup = new FormGroup({});
-  options: FormlyFormOptions = {};
-  model = {};
-  entityName: string;
-  entityId: number;
-
-  fields: Array<FormlyFieldConfig> = [
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "subject",
-          type: "input",
-          className: "col-md-12 border-left-info card pt-3 mb-3",
-          defaultValue: "",
-          templateOptions: {
-            label: "Title",
-            placeholder: "",
-            required: false
-          }
-        },
-        {
-          key: "active",
-          type: "checkbox",
-          className: "col-md-6",
-          templateOptions: {
-            label: "Active?",
-            description: "Inactive templates will not appear in the selection list",
-            placeholder: "",
-            required: false
-          }
-        }
-      ]
-    },
-    {
-      key: "body",
-      type: "richtext",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Content",
-        placeholder: "",
-        required: false,
-        htmlEdit: false,
-      }
-    },
-  ];
 
 
   constructor(
@@ -114,10 +66,54 @@ export class EmailTemplatesInfoComponent {
   ) {
 
   }
+  sub: Subscription;
+  form: FormGroup = new FormGroup({});
+  options: FormlyFormOptions = {};
+  model = {};
+  entityName: string;
+  entityId: number;
 
-  modal(content) {
-    this.modalService.open(content, { centered: true });
-  }
+  fields: Array<FormlyFieldConfig> = [
+    {
+      fieldGroupClassName: 'row',
+      fieldGroup: [
+        {
+          key: 'subject',
+          type: 'input',
+          className: 'col-md-12 border-left-info card pt-3 mb-3',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Title',
+            placeholder: '',
+            required: false
+          }
+        },
+        {
+          key: 'active',
+          type: 'checkbox',
+          className: 'col-md-6',
+          templateOptions: {
+            label: 'Active?',
+            description: 'Inactive templates will not appear in the selection list',
+            placeholder: '',
+            required: false
+          }
+        }
+      ]
+    },
+    {
+      key: 'body',
+      type: 'richtext',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Content',
+        placeholder: '',
+        required: false,
+        htmlEdit: false,
+      }
+    },
+  ];
 
   private queryRef = this.apollo
     .watchQuery({
@@ -125,7 +121,11 @@ export class EmailTemplatesInfoComponent {
       variables: {}
     });
 
-  private normalizeData(data: any){
+  modal(content) {
+    this.modalService.open(content, { centered: true });
+  }
+
+  private normalizeData(data: any) {
     return data;
   }
 
@@ -138,12 +138,12 @@ export class EmailTemplatesInfoComponent {
       id: this.entityId
     }).then(res => {
       if (res.data && res.data['emailTemplate']) {
-        var data = res.data['emailTemplate'];
+        const data = res.data['emailTemplate'];
         this.model = this.normalizeData(data);
-        this.entityName = this.model['subject']
+        this.entityName = this.model['subject'];
       } else {
         this.model = {};
-        this.entityName = "Not Found!"
+        this.entityName = 'Not Found!';
       }
     }, err => {
       this.toastr.warning(`
@@ -152,7 +152,7 @@ export class EmailTemplatesInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 
@@ -190,7 +190,7 @@ export class EmailTemplatesInfoComponent {
       `, 'Update Error', {
           enableHtml: true
         });
-    })
+    });
   }
 
   deleteEntity() {
@@ -198,13 +198,13 @@ export class EmailTemplatesInfoComponent {
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {
-      if(res.data.deleteEmailTemplate){
+      if (res.data.deleteEmailTemplate) {
         this.toastr.info(`
         <small>Successfully deleted Template ${this.entityName}</small>
         `, 'Template Deleted', {
             enableHtml: true
           });
-        this.router.navigate(['/dashboard/email/templates'])
+        this.router.navigate(['/dashboard/email/templates']);
       }
     }, err => {
       this.toastr.error(`
@@ -212,6 +212,6 @@ export class EmailTemplatesInfoComponent {
       `, 'Error Deleting Template', {
           enableHtml: true
         });
-    })
+    });
   }
 }

@@ -18,10 +18,10 @@ export interface InputMaskGenerator {
 }
 
 export interface MaskOptions {
-    keepMask?: boolean,
-    prefix?: string,
-    suffix?: string,
-    generator?: InputMaskGenerator
+    keepMask?: boolean;
+    prefix?: string;
+    suffix?: string;
+    generator?: InputMaskGenerator;
 }
 
 @Component({
@@ -41,9 +41,31 @@ export interface MaskOptions {
     },
 })
 export class InputMaskComponent implements ControlValueAccessor {
-    @ViewChild('instance') instance: ElementRef;
+    @Input()
+    public set mask(value: any) {
+        if (Array.isArray(value)) {
+            this._mask = value;
+            this.config.placeholder = convertMaskToPlaceholder(value, this.config.placeholderChar);
+        } else if (typeof value === 'object') {
+            if (InputMaskComponent.DEFAULT_MASKS.has(value.type)) {
+                const fn = InputMaskComponent.DEFAULT_MASKS.get(value.type);
+                this._mask = fn(value.options);
+            }
+        }
+    }
 
-    static readonly ALPHA = 'A'
+    public get mask() {
+        return this._mask;
+    }
+    @Input()
+    set options(options: Partial<InputMaskOptions>) {
+        this.config.update(options);
+    }
+
+    constructor(private _renderer: Renderer2) {
+    }
+
+    static readonly ALPHA = 'A';
     static readonly NUMERIC = '0';
     static readonly ALPHANUMERIC = 'S';
     private static readonly REGEX_MAP = new Map([
@@ -55,38 +77,41 @@ export class InputMaskComponent implements ControlValueAccessor {
     public static DEFAULT_MASKS = new Map([
         ['number', createNumberMask]
     ]);
+    @ViewChild('instance') instance: ElementRef;
 
     private value: string = null;
     private rawValue: string;
     private config: InputMaskOptions = new InputMaskOptions({});
 
-    disabled: boolean = false;
+    disabled = false;
 
     private state = {
         previousConformedValue: '',
         previousPlaceholder: ''
-    }
+    };
 
 
     @Input()
     placeholder =  '';
 
     private _mask: any = [];
-    @Input()
-    public set mask(value: any) {
-        if (Array.isArray(value)) {
-            this._mask = value;
-            this.config.placeholder = convertMaskToPlaceholder(value, this.config.placeholderChar);
-        } else if (typeof value === 'object') {
-            if (InputMaskComponent.DEFAULT_MASKS.has(value.type)) {
-                let fn = InputMaskComponent.DEFAULT_MASKS.get(value.type);
-                this._mask = fn(value.options);
-            }
-        }
-    }
 
-    public get mask() {
-        return this._mask;
+    private _options = {};
+
+    private static unmask(maskedValue: string, mask: any, config: InputMaskOptions): string {
+        if (typeof mask == 'function') {
+            mask = mask(maskedValue, config);
+            const { maskWithoutCaretTraps, indexes } = processCaretTraps(mask);
+            mask = maskWithoutCaretTraps;
+        }
+
+        const maskLen = (mask && mask.length) || 0;
+        return maskedValue.split('').filter(
+            (currChar, idx) => {
+                // console.log(`${currChar} : ${mask[idx] instanceof RegExp} ${ currChar !== placeholder}`);
+                return (idx < maskLen) && (mask[idx] instanceof RegExp || mask[idx] instanceof String) && (currChar !== config.placeholderChar);
+            }
+        ).join('');
     }
 
 
@@ -94,21 +119,12 @@ export class InputMaskComponent implements ControlValueAccessor {
         this.update(this.instance.nativeElement.value);
     }
 
-    private _options = {};
-    @Input()
-    set options(options: Partial<InputMaskOptions>) {
-        this.config.update(options);
-    }
-
-    constructor(private _renderer: Renderer2) {
-    }
-
     onChange = (_: any) => { };
     registerOnChange(fn) {
         this.onChange = fn;
     }
 
-    onTouch = () => { }
+    onTouch = () => { };
     registerOnTouched(fn) {
         this.onTouch = fn;
     }
@@ -196,7 +212,7 @@ export class InputMaskComponent implements ControlValueAccessor {
 
 
 
-        const inputValueShouldBeEmpty = finalConformedValue === this.config.placeholder && adjustedCaretPosition === 0
+        const inputValueShouldBeEmpty = finalConformedValue === this.config.placeholder && adjustedCaretPosition === 0;
         const emptyValue = this.config.showMask ? this.config.placeholder : '';
         const inputElementValue = (inputValueShouldBeEmpty) ? emptyValue : finalConformedValue;
 
@@ -209,21 +225,5 @@ export class InputMaskComponent implements ControlValueAccessor {
 
         this.instance.nativeElement.value = inputElementValue;
         safeSetSelection(this.instance.nativeElement, adjustedCaretPosition);
-    }
-
-    private static unmask(maskedValue: string, mask: any, config: InputMaskOptions): string {
-        if (typeof mask == 'function') {
-            mask = mask(maskedValue, config);
-            const { maskWithoutCaretTraps, indexes } = processCaretTraps(mask);
-            mask = maskWithoutCaretTraps;
-        }
-
-        let maskLen = (mask && mask.length) || 0;
-        return maskedValue.split('').filter(
-            (currChar, idx) => {
-                //console.log(`${currChar} : ${mask[idx] instanceof RegExp} ${ currChar !== placeholder}`);
-                return (idx < maskLen) && (mask[idx] instanceof RegExp || mask[idx] instanceof String) && (currChar !== config.placeholderChar);
-            }
-        ).join('');
     }
 }

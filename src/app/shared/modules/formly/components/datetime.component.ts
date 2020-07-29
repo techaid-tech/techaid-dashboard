@@ -1,8 +1,8 @@
-import { Component, Injectable,  Input, forwardRef, ViewChild } from "@angular/core";
+import { Component, Injectable,  Input, forwardRef, ViewChild } from '@angular/core';
 import { NgbDateAdapter, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl  } from '@angular/forms';
-import { FieldType } from "@ngx-formly/core";
-import * as moment from 'moment'
+import { FieldType } from '@ngx-formly/core';
+import * as moment from 'moment';
 export interface NgbDateTimeStruct extends NgbDateStruct, NgbTimeStruct {}
 
 @Component({
@@ -20,7 +20,7 @@ export class DateTimeInput extends FieldType {
 @Component({
   selector: 'form-datetime-widget',
   providers: [
-    { 
+    {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DateTimeInputWidget),
       multi: true
@@ -29,12 +29,12 @@ export class DateTimeInput extends FieldType {
   template: `
 <div>
     <div class="input-group" *ngIf="to.inline; else nonInline">
-      <input class="form-control" 
+      <input class="form-control"
         (blur)="onTouch()"
         (ngModelChange)="onDateChange($event)"
         [displayMonths]="to.displayMonths"
         [navigation]="to.navigation"
-        [showWeekNumbers]="to.showWeekNumbers" 
+        [showWeekNumbers]="to.showWeekNumbers"
         placeholder="{{to.placeholder}}"
         [formControl]="date"
         [minDate]="minDate"
@@ -65,7 +65,7 @@ export class DateTimeInput extends FieldType {
       </ngb-datepicker>
     </div>
   </ng-template>
-  
+
 
     <div class="input-group">
       <ngb-timepicker [ngStyle]="{'margin-top': to.time.spinners ? 'auto' : '5px'}"
@@ -79,7 +79,7 @@ export class DateTimeInput extends FieldType {
          [secondStep]="to.time.secondStep"
          name="timepicker" (ngModelChange)="onTimeChange($event)" #timepicker>
       </ngb-timepicker>
-    </div>    
+    </div>
 </div>
   `
 })
@@ -87,149 +87,149 @@ export class DateTimeInputWidget implements ControlValueAccessor {
   @ViewChild('dp') dp;
   date = new FormControl();
   time = new FormControl();
-  model : any;
-  minDate : NgbDateStruct;
+  model: any;
+  minDate: NgbDateStruct;
   maxDate: NgbDateStruct;
   startDate: NgbDateStruct;
-  displayValue : any;
+  displayValue: any;
 
   @Input()
-  to : any  = {};
+  to: any  = {};
 
   get value() {
     return this.getTime(this.model);
   }
 
-  writeValue(model: any) {  
+  writeValue(model: any) {
     this.model = this.parseModel(model);
   }
 
-  fetchModel(model : any) : NgbDateTimeStruct{
-    if(model) {
-      if(typeof model == 'string' || !model.year || !model.hour) {
-        var date = this.parseTime(model);
-        if(date) {
+  fetchModel(model: any): NgbDateTimeStruct {
+    if (model) {
+      if (typeof model == 'string' || !model.year || !model.hour) {
+        const date = this.parseTime(model);
+        if (date) {
             model = {
-              year: date.getFullYear(), 
-              month: date.getMonth() + 1, 
+              year: date.getFullYear(),
+              month: date.getMonth() + 1,
               day: date.getDate(),
-              hour: date.getHours(), 
-              minute: date.getMinutes(), 
+              hour: date.getHours(),
+              minute: date.getMinutes(),
               second: date.getSeconds()
-            }
+            };
 
             return model;
-        }else{
+        } else {
           return null;
         }
-      }else{
+      } else {
         return model;
       }
-    }else{
+    } else {
       return null;
     }
   }
 
-  fetchDate(model : any) : NgbDateStruct {
+  fetchDate(model: any): NgbDateStruct {
     model = this.fetchModel(model);
-    if(model) {
+    if (model) {
       return {month: model.month, year: model.year, day: model.day};
-    }else{
+    } else {
       return null;
     }
   }
 
-  parseModel(model : any) : NgbDateTimeStruct {
+  parseModel(model: any): NgbDateTimeStruct {
     model = this.fetchModel(model);
-    if(model) {
+    if (model) {
       this.date.setValue({month: model.month, year: model.year, day: model.day});
       this.time.setValue({hour: model.hour, minute: model.minute, second: model.second});
       return model;
-    }else{
+    } else {
         this.date.setValue(null);
         return null;
-    }  
+    }
   }
 
   ngOnInit() {
-    var self = this;
-    if(this.to.output_format && this.to.output_format != "struct" && this.to.output_format != "default") {
+    const self = this;
+    if (this.to.output_format && this.to.output_format != 'struct' && this.to.output_format != 'default') {
       this.to.input_formats.unshift(this.to.output_format);
     }
 
-    this.model = this.parseModel(this.value); 
+    this.model = this.parseModel(this.value);
     this.startDate = this.fetchDate(this.model);
-    
-    if(this.displayValue == undefined){
+
+    if (this.displayValue == undefined) {
       this.displayValue = {
         value: this.getTime(this.model),
         original: this.value
       };
     }
 
-    var dt = this.parseTime(this.model) || moment().toDate();
+    const dt = this.parseTime(this.model) || moment().toDate();
     this.minDate = this.fetchDate(this.to.minDate) || this.fetchDate(moment(dt).subtract(10, 'years'));
     this.maxDate = this.fetchDate(this.to.maxDate);
   }
 
   ngAfterViewChecked_() {
-    var value = this.getTime(this.model);
-    if(this.displayValue && this.displayValue.original == value && value != this.displayValue.value) {
+    const value = this.getTime(this.model);
+    if (this.displayValue && this.displayValue.original == value && value != this.displayValue.value) {
       setTimeout(() => {
         this.writeValue(this.displayValue.value);
       });
     }
   }
 
-  parseTime( dt : any) : Date {
-    if(!dt) {
+  parseTime( dt: any): Date {
+    if (!dt) {
       return null;
     }
 
-    if(dt && dt.year && dt.month && dt.day) {
-        var date = new Date(dt.year, dt.month - 1, dt.day);
-        if( dt.hour ) date.setHours(dt.hour);
-        if( dt.minute ) date.setMinutes(dt.minute);
-        if( dt.second ) date.setSeconds(dt.second);
+    if (dt && dt.year && dt.month && dt.day) {
+        const date = new Date(dt.year, dt.month - 1, dt.day);
+        if ( dt.hour ) { date.setHours(dt.hour); }
+        if ( dt.minute ) { date.setMinutes(dt.minute); }
+        if ( dt.second ) { date.setSeconds(dt.second); }
         return date;
     }
 
-    if((dt instanceof Date) || (dt && dt.getFullYear)) {
+    if ((dt instanceof Date) || (dt && dt.getFullYear)) {
       return dt;
     }
 
-    if(this.to.input_formats && this.to.input_formats.length > 0  && typeof dt == 'string'){
-      for(let format of this.to.input_formats) {          
-          var m = moment(dt, format, true);
-          if(m.isValid()){
+    if (this.to.input_formats && this.to.input_formats.length > 0  && typeof dt == 'string') {
+      for (const format of this.to.input_formats) {
+          let m = moment(dt, format, true);
+          if (m.isValid()) {
             return m.toDate();
-          }else{
+          } else {
             m = moment(dt.substring(0, format.length), format, true);
-            if(m.isValid()){
+            if (m.isValid()) {
               return m.toDate();
-            }else{
+            } else {
               m = moment(dt, format.substring(0, dt.length), true);
-              if(m.isValid()){
+              if (m.isValid()) {
                 return m.toDate();
               }
             }
           }
       }
 
-      if(this.to.output_format == 'default') {
-        var m = moment(dt);
-        if(m.isValid()){
+      if (this.to.output_format == 'default') {
+        const m = moment(dt);
+        if (m.isValid()) {
           return m.toDate();
         }
-      }else if(typeof dt == 'string'){
-        var m = moment(dt);
-        if(m.isValid()){
+      } else if (typeof dt == 'string') {
+        const m = moment(dt);
+        if (m.isValid()) {
           return m.toDate();
         }
       }
-    }else{
-      var m = moment(dt);
-      if(m.isValid()){
+    } else {
+      const m = moment(dt);
+      if (m.isValid()) {
         return m.toDate();
       }
     }
@@ -256,7 +256,7 @@ export class DateTimeInputWidget implements ControlValueAccessor {
           time = {hour: 0, minute: 0, second: 0};
           this.time.setValue(time);
       }
-      if (date == null || typeof date != "object") {
+      if (date == null || typeof date != 'object') {
           date = {month: null, year: null, day: null};
       }
 
@@ -270,7 +270,7 @@ export class DateTimeInputWidget implements ControlValueAccessor {
       } else {
           date = {month: null, year: null, day: null};
       }
-      
+
       if (time == null) {
           time = {hour: null, minute: null, second: null};
       }
@@ -278,14 +278,14 @@ export class DateTimeInputWidget implements ControlValueAccessor {
       this.setModel(<NgbDateTimeStruct>{...date, hour: time.hour, minute: time.minute, second: time.second});
   }
 
-  private getTime(model: NgbDateTimeStruct) : any {
-    var dt : any = this.parseTime(model);
-    if(dt && this.to.output_format) {
-      if(this.to.output_format == 'struct') {
-          dt = {...model, time: dt}; 
-      }else if(this.to.output_format == 'default'){
-        dt = moment(dt).format()                  
-      }else{
+  private getTime(model: NgbDateTimeStruct): any {
+    let dt: any = this.parseTime(model);
+    if (dt && this.to.output_format) {
+      if (this.to.output_format == 'struct') {
+          dt = {...model, time: dt};
+      } else if (this.to.output_format == 'default') {
+        dt = moment(dt).format();
+      } else {
         dt = moment(dt).format(this.to.output_format);
       }
     }
@@ -295,7 +295,7 @@ export class DateTimeInputWidget implements ControlValueAccessor {
 
   private setModel(model: NgbDateTimeStruct) {
       this.model = model;
-      this.onChange(this.value);    
+      this.onChange(this.value);
   }
 }
 

@@ -15,11 +15,11 @@ import { CKEditor4 } from 'ckeditor4-angular';
   }
 })
 export class RichTextComponent extends FieldType {
-  switchMode(){
+  switchMode() {
     this.to.html = !(this.to.html);
   }
 
-  onChange(editor: CKEditor4.EventInfo){
-    
+  onChange(editor: CKEditor4.EventInfo) {
+
   }
 }

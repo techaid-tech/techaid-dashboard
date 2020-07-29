@@ -1,0 +1,61 @@
+jobs:
+    build:
+        working_directory: ~/app
+        docker:
+            - image: circleci/node:12.16.3
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "package.json" }}
+                - v1-dependencies-
+            - run:
+                name: Install local dependencies
+                command: npm install
+            - save_cache:
+                key: v1-dependencies-{{ checksum "package.json" }}
+                paths:
+                    - node_modules
+            - run:
+                name: Building
+                command: npm run build
+            - save_cache:
+                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+                paths:
+                    - dist
+    deploy:
+        working_directory: ~/app
+        docker:
+            - image: google/cloud-sdk
+        steps:
+            - restore_cache:
+                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+            - gcp-gcr/gcr-auth
+            - gcp-gcr/build-image:
+                context: global
+                image: retinue-io/stretech-ui:${CIRCLE_SHA1:0:7}
+                registry-url: eu.gcr.io
+            - gcp-gcr/push-image:
+                image: retinue-io/stretech-ui:${CIRCLE_SHA1:0:7}
+                registry-url: eu.gcr.io
+            - gcp-gcr/add-image-tag:
+                context: global
+                image: retinue-io/stretech-ui
+                registry-url: eu.gcr.io
+                source-tag: ${CIRCLE_SHA1:0:7}
+                target-tag: latest 
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.8.0
+version: 2.1
+workflows:
+    version: 2
+    build_and_deploy:
+        jobs:
+            - build
+            - deploy:
+                requires:
+                    - build
+                filters:
+                    branches:
+                        only:
+                            - master

@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule } from '@angular/router';
 import { InputMaskComponent } from './components/input-mask/input-mask.component';
 import { AuthGuard } from './services/auth.guard';
 import { ConfigService } from './services/config.service';
@@ -30,6 +30,6 @@ export class AppSharedModule {
                 AuthGuard,
                 ConfigService,
             ]
-        }
+        };
     }
 }

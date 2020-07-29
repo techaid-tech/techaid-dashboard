@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -44,7 +44,7 @@ query findAllFaqs($term: String) {
      title
      content
      position
-     published 
+     published
      createdAt
      updatedAt
   }
@@ -78,9 +78,9 @@ export class FaqListComponent {
 
   }
 
-  fetchData(vars = {}){
+  fetchData(vars = {}) {
     this.queryRef.refetch(vars).then(res => {
-      var data: any = {};
+      let data: any = {};
       if (res.data) {
         data = res['data']['faqs'];
         this.entities = data;

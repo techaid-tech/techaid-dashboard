@@ -14,7 +14,7 @@ export class DateUtils {
     };
 
     static easterSunday(year: number): Date {
-        var f = Math.floor,
+        const f = Math.floor,
             // Golden Number - 1
             G = year % 19,
             C = f(year / 100),
@@ -40,9 +40,9 @@ export class DateUtils {
     }
 
     static isBankHoliday(date: moment.MomentInput, ...countries): boolean {
-        let dt = moment(date);
-        let holidays = DateUtils.bankHolidays(dt.year(), ...countries);
-        for (let key in holidays) {
+        const dt = moment(date);
+        const holidays = DateUtils.bankHolidays(dt.year(), ...countries);
+        for (const key in holidays) {
             if (dt.isSame(holidays[key], 'day')) {
                 return true;
             }
@@ -52,7 +52,7 @@ export class DateUtils {
     }
 
     static skipWeekends(date: moment.MomentInput, inc: number): moment.Moment {
-        let dt = moment(date).add(inc, 'days');
+        const dt = moment(date).add(inc, 'days');
         if (Math.abs(inc) > 0) {
             while (!DateUtils.isWeekDay(dt)) {
                 dt.add(inc, 'days');
@@ -63,7 +63,7 @@ export class DateUtils {
     }
 
     static nextDay(date: moment.MomentInput, isoWeekday: number): moment.Moment {
-        let dt = moment(date);
+        const dt = moment(date);
         if (dt.isoWeekday() <= isoWeekday) {
             return dt.isoWeekday(isoWeekday);
         } else {
@@ -72,7 +72,7 @@ export class DateUtils {
     }
 
     static previousDay(date: moment.MomentInput, isoWeekday: number): moment.Moment {
-        let dt = moment(date);
+        const dt = moment(date);
         if (dt.isoWeekday() >= isoWeekday) {
             return dt.isoWeekday(isoWeekday);
         } else {
@@ -122,11 +122,11 @@ export class DateUtils {
         }
 
         countries = countries.sort().map(c => c.trim().toLowerCase());
-        let key = `${year}_${countries.join('_')}`;
-        if (DateUtils.options.cache[key]) return DateUtils.options.cache[key];
+        const key = `${year}_${countries.join('_')}`;
+        if (DateUtils.options.cache[key]) { return DateUtils.options.cache[key]; }
 
-        let holidays = {};
-        let easterSunday = DateUtils.easterSunday(year);
+        const holidays = {};
+        const easterSunday = DateUtils.easterSunday(year);
         holidays['New Year'] = DateUtils.nextWeekDay(new Date(year, 0, 1));
         holidays['Good Friday'] = moment(easterSunday).subtract(2, 'days');
         holidays['Easter Monday'] = moment(easterSunday).add(1, 'days');
@@ -134,17 +134,17 @@ export class DateUtils {
         holidays['Spring bank holiday'] = DateUtils.previousDay(new Date(year, 4, 31), 1);
 
         if (countries.indexOf('northern_ireland') > -1) {
-            holidays["St Patrick's Day"] = DateUtils.nextWeekDay(new Date(year, 2, 17));
+            holidays['St Patrick\'s Day'] = DateUtils.nextWeekDay(new Date(year, 2, 17));
         }
 
         if (countries.indexOf('scotland') > -1) {
             holidays['Summer bank holiday'] = DateUtils.previousDay(new Date(year, 7, 1), 1);
-            holidays["St Andrew's Day"] = DateUtils.nextWeekDay(new Date(year, 10, 30));
+            holidays['St Andrew\'s Day'] = DateUtils.nextWeekDay(new Date(year, 10, 30));
         } else {
             holidays['Summer bank holiday'] = DateUtils.previousDay(new Date(year, 7, 31), 1);
         }
 
-        let date = moment(new Date(year, 11, 25));
+        const date = moment(new Date(year, 11, 25));
         if (date.isoWeekday() == 6) {
             holidays['Christmas Day (substitute day)'] = moment(date).add(3, 'days');
             holidays['Boxing Day (substitute day)'] = moment(date).add(2, 'days');
@@ -161,16 +161,16 @@ export class DateUtils {
     }
 
     static math(expr: string, options: any = {}): moment.Moment | string {
-        let defaultOptions = {
+        const defaultOptions = {
             now: moment(),
             formats: DateUtils.options.formats
-        }
+        };
 
         const now = moment(options.now);
         options = { ...defaultOptions, options };
 
 
-        let [__, dateFormat] = expr.match(/\|\|?\s*(.*)\s*$/) || [null, null];
+        const [__, dateFormat] = expr.match(/\|\|?\s*(.*)\s*$/) || [null, null];
         let date = null;
         let tokens = expr.replace(/\|\|?\s*(.*)\s*$/, '').split(/([\+-]\s*[0-9]+\s*[yMwdhHms])|(\/\^?[yMwdhHmsb<>]+)/).filter(t => t && t.trim());
         expr = tokens.shift();
@@ -196,8 +196,8 @@ export class DateUtils {
                 break;
             default:
                 if (options.formats.length) {
-                    for (let fmt of options.formats) {
-                        let m = moment(expr.substring(0, fmt.length), fmt, true);
+                    for (const fmt of options.formats) {
+                        const m = moment(expr.substring(0, fmt.length), fmt, true);
                         if (m.isValid()) {
                             date = m;
                             break;
@@ -206,7 +206,7 @@ export class DateUtils {
                 }
 
                 if (!date) {
-                    let m = moment(expr);
+                    const m = moment(expr);
                     if (m.isValid()) {
                         date = m;
                     }
@@ -218,7 +218,7 @@ export class DateUtils {
             return null;
         }
 
-        let types = {
+        const types = {
             y: 'year', M: 'month', w: 'week', d: 'day', h: 'hour', H: 'hour', 'm': 'month', s: 'second'
         };
 
@@ -244,7 +244,7 @@ export class DateUtils {
                             break;
 
                         default:
-                            let mod = modifier.replace('^', '');
+                            const mod = modifier.replace('^', '');
                             if (!types[mod]) {
                                 throw new Error(`Unknown date modifier ${mod}`);
                             }
@@ -258,7 +258,7 @@ export class DateUtils {
                     }
                 });
             } else if (token.match(/^([+-])([0-9]+)([yMwdhHms])$/)) {
-                let [__, method, value, duration] = token.match(/^([+-])([0-9]+)([yMwdhHms])$/);
+                const [__, method, value, duration] = token.match(/^([+-])([0-9]+)([yMwdhHms])$/);
                 if (method == '+') {
                     date = date.add(+value, types[duration]);
                 } else {
@@ -285,13 +285,13 @@ export class DateUtils {
         }
 
         let validity = 0;
-        let ref = "";
+        let ref = '';
         let check = [];
 
         for (let i = 0; i < types.length; i++) {
             let count = 0;
-            types[i].split("|").forEach(type => {
-                let value = !(type.replace(/^(!).*/, '$1') === "!");
+            types[i].split('|').forEach(type => {
+                const value = !(type.replace(/^(!).*/, '$1') === '!');
                 switch (type.replace(/^!(.*)/, '$1')) {
                     case 'weekday':
                         if ((DateUtils.isWeekDay(date) === value)) {
@@ -315,18 +315,18 @@ export class DateUtils {
                         break;
                     case 'monthend':
                         ref = DateUtils.format(date, 'DD/MM/YYYY');
-                        check = [DateUtils.math(`${ref}/^b|DD/MM/YYYY`), DateUtils.math(`${ref}/^M|DD/MM/YYYY`), DateUtils.math(`${ref}/^b<|DD/MM/YYYY`)]
+                        check = [DateUtils.math(`${ref}/^b|DD/MM/YYYY`), DateUtils.math(`${ref}/^M|DD/MM/YYYY`), DateUtils.math(`${ref}/^b<|DD/MM/YYYY`)];
                         if ((check.indexOf(ref) !== -1) === value) {
                             count++;
                         }
                         break;
                     case 'monthstart':
                         ref = DateUtils.format(date, 'DD/MM/YYYY');
-                        check = [DateUtils.math(`${ref}/b|DD/MM/YYYY`), DateUtils.math(`${ref}/b<|DD/MM/YYYY`), DateUtils.math(`${ref}/M|DD/MM/YYYY`)]
+                        check = [DateUtils.math(`${ref}/b|DD/MM/YYYY`), DateUtils.math(`${ref}/b<|DD/MM/YYYY`), DateUtils.math(`${ref}/M|DD/MM/YYYY`)];
                         if ((check.indexOf(ref) !== -1) === value) {
                             count++;
                         }
-                        break
+                        break;
                 }
             });
 

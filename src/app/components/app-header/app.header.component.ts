@@ -34,8 +34,8 @@ export class AppHeader {
         this.modalService.open(content, { centered: true });
     }
 
-    toggleSideBar(){
-        $("body").toggleClass("sidebar-toggled");
+    toggleSideBar() {
+        $('body').toggleClass('sidebar-toggled');
     }
 
     ngOnInit() {
@@ -45,10 +45,10 @@ export class AppHeader {
     }
 
     postSearch(text: string) {
-        this.store.dispatch(new SearchQuery(text))
+        this.store.dispatch(new SearchQuery(text));
     }
 
-    clearCache(){
+    clearCache() {
         localStorage.clear();
         window.location.reload();
         return false;
@@ -64,7 +64,7 @@ export class AppHeader {
         this.store.dispatch(new LogoutUser());
     }
 
-    login(){
+    login() {
         this.store.dispatch(new LoginUser());
         return false;
     }

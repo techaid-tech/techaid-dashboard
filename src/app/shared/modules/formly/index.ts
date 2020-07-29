@@ -1,9 +1,9 @@
 
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ReactiveFormsModule, FormControl } from "@angular/forms";
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FormlyModule, ConfigOption } from '@ngx-formly/core';
 import { FormlyBootstrapModule, FormlyFieldInput } from '@ngx-formly/bootstrap';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,7 +14,7 @@ import { DateInput } from './components/date.component';
 import { DateTimeInput, DateTimeInputWidget } from './components/datetime.component';
 import { MaskedInput } from './components/input-mask.component';
 import { AppSharedModule } from '@app/shared';
-import { GooglePlaceModule } from "ngx-google-places-autocomplete";
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { GalleryInput } from './components/gallery.component';
 import { CKEditorModule } from 'ckeditor4-angular';
 import { RichTextComponent } from './components/richtext.component';
@@ -36,7 +36,7 @@ export function numberValidator(c: FormControl, field) {
     return true;
 }
 
-export const FORMLYCONFIG : ConfigOption = {
+export const FORMLYCONFIG: ConfigOption = {
     types: [
         {
             name: 'mask',
@@ -116,11 +116,11 @@ export const FORMLYCONFIG : ConfigOption = {
                     multiple: false,
                     allowClear: true,
                     closeOnSelect: true,
-                    bindLabel: "label",
-                    bindValue: "value",
+                    bindLabel: 'label',
+                    bindValue: 'value',
                     searchable: false,
                     inline: false,
-                    placeholder: ""
+                    placeholder: ''
                 }
             }
         },
@@ -131,15 +131,15 @@ export const FORMLYCONFIG : ConfigOption = {
             wrappers: ['form-field'],
             defaultOptions: {
                 templateOptions: {
-                    placeholder: "",
-                    height: "100%",
+                    placeholder: '',
+                    height: '100%',
                     htmlEdit: true,
                     editorConfig: {
                         height: 500,
                         allowedContent: true,
-                        contentsCss: "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+                        contentsCss: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
                     },
-                    type: "divarea", // classic | divarea | inline
+                    type: 'divarea', // classic | divarea | inline
                     html: false,
                 }
             }
@@ -150,7 +150,7 @@ export const FORMLYCONFIG : ConfigOption = {
             wrappers: ['form-field'],
             defaultOptions: {
                 templateOptions: {
-                    placeholder: "",
+                    placeholder: '',
                     mapOptions: {
                         componentRestrictions: { country: 'GB' },
                     }
@@ -163,8 +163,8 @@ export const FORMLYCONFIG : ConfigOption = {
             wrappers: ['form-field'],
             defaultOptions: {
                 templateOptions: {
-                    placeholder: "",
-                    prefix: ""
+                    placeholder: '',
+                    prefix: ''
                 }
             }
         },
@@ -174,10 +174,10 @@ export const FORMLYCONFIG : ConfigOption = {
             wrappers: ['form-field'],
             defaultOptions: {
                 templateOptions: {
-                    placeholder: "yyyy-mm-dd",
-                    buttonClass: "input-group-text",
+                    placeholder: 'yyyy-mm-dd',
+                    buttonClass: 'input-group-text',
                     displayMonths: 1,
-                    navigation: "select",
+                    navigation: 'select',
                     inline: true,
                     showWeekNumbers: false,
                     input_formats: [
@@ -196,10 +196,10 @@ export const FORMLYCONFIG : ConfigOption = {
             wrappers: ['form-field'],
             defaultOptions: {
                 templateOptions: {
-                    placeholder: "yyyy-mm-dd",
-                    buttonClass: "input-group-text",
+                    placeholder: 'yyyy-mm-dd',
+                    buttonClass: 'input-group-text',
                     displayMonths: 1,
-                    navigation: "select",
+                    navigation: 'select',
                     inline: true,
                     time: {
                         seconds: false,
@@ -226,9 +226,9 @@ export const FORMLYCONFIG : ConfigOption = {
     ],
     validationMessages: [
         { name: 'required', message: 'This field is required' },
-        { name: 'pattern', message: "This field doesn't match the required pattern" }
+        { name: 'pattern', message: 'This field doesn\'t match the required pattern' }
     ]
-}
+};
 
 @NgModule({
     imports: [

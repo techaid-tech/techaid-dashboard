@@ -1,6 +1,6 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppHeader } from './app.header.component';
-import { AppSharedModule } from '@app/shared'
+import { AppSharedModule } from '@app/shared';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -39,8 +39,8 @@ describe('AppHeader', () => {
   }));
 
   it('renders user logged in state', async(() => {
-    let store: Store = TestBed.get(Store);
-    let user: User = new User({
+    const store: Store = TestBed.get(Store);
+    const user: User = new User({
       username: 'mock',
       name: 'Mocked User',
       token: 'logged_in'

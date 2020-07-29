@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -71,135 +71,10 @@ mutation deleteDonor($id: ID!) {
 @Component({
   selector: 'donor-info',
   styleUrls: ['donor-info.scss'],
- 
+
   templateUrl: './donor-info.html'
 })
 export class DonorInfoComponent {
-  sub: Subscription;
-  form: FormGroup = new FormGroup({});
-  options: FormlyFormOptions = {
-    formState: {
-      disabled: true
-    }
-  };
-  model : any = {};
-  entityName: string;
-  entityId: number;
-  public user: User;
-  @Select(UserState.user) user$: Observable<User>;
-
-  ages = {
-    0: "I don't know",
-    1: "Less than a year",
-    2: "1 - 2 years",
-    4: '3 - 4 years',
-    5: '5 - 6 years',
-    6: 'more than 6 years old'
- };
-
-  fields: Array<FormlyFieldConfig> = [
-    {
-      key: "name",
-      type: "input",
-      className: "col-md-12 border-left-info card pt-3 mb-3",
-      defaultValue: "",
-      templateOptions: {
-        label: "Name",
-        placeholder: "",
-        required: false
-      },
-      validation: {
-        show: false,
-      },
-      expressionProperties: {
-        "validation.show": "model.showErrorState",
-        'templateOptions.disabled': 'formState.disabled',
-      },
-    },
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "email",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Email",
-            type: "email",
-            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            placeholder: "",
-            required: true
-          },
-          validation: {
-            show: false,
-          },
-          expressionProperties: {
-            "validation.show": "model.showErrorState",
-            'templateOptions.disabled': 'formState.disabled',
-          },
-        },
-        {
-          key: "phoneNumber",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Phone Number",
-            pattern: /\+?[0-9]+/,
-            description: "Required if email is not provided.",
-            required: true
-          },
-          validation: {
-            show: false,
-          },
-          expressionProperties: {
-            "validation.show": "model.showErrorState",
-            'templateOptions.disabled': 'formState.disabled',
-          },
-        }
-      ]
-    },
-    {
-      key: "postCode",
-      type: "place",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Address",
-        placeholder: "",
-        postCode: false,
-        required: false
-      },
-      validation: {
-        show: false,
-      },
-      expressionProperties: {
-        "validation.show": "model.showErrorState",
-        'templateOptions.disabled': 'formState.disabled',
-      },
-    },
-    {
-      key: "referral",
-      type: "input",
-      className: "col-md-12 border-bottom-info card pt-3 mb-3",
-      defaultValue: "",
-      templateOptions: {
-        label: "How did you hear about us?",
-        placeholder: "",
-        required: false
-      },
-      validation: {
-        show: false,
-      },
-      expressionProperties: {
-        "validation.show": "model.showErrorState",
-        'templateOptions.disabled': 'formState.disabled',
-      },
-    },
-  ];
-
-  kitStatus: any = KIT_STATUS;
 
 
   constructor(
@@ -211,10 +86,131 @@ export class DonorInfoComponent {
   ) {
 
   }
+  sub: Subscription;
+  form: FormGroup = new FormGroup({});
+  options: FormlyFormOptions = {
+    formState: {
+      disabled: true
+    }
+  };
+  model: any = {};
+  entityName: string;
+  entityId: number;
+  public user: User;
+  @Select(UserState.user) user$: Observable<User>;
 
-  modal(content) {
-    this.modalService.open(content, { centered: true });
-  }
+  ages = {
+    0: 'I don\'t know',
+    1: 'Less than a year',
+    2: '1 - 2 years',
+    4: '3 - 4 years',
+    5: '5 - 6 years',
+    6: 'more than 6 years old'
+ };
+
+  fields: Array<FormlyFieldConfig> = [
+    {
+      key: 'name',
+      type: 'input',
+      className: 'col-md-12 border-left-info card pt-3 mb-3',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Name',
+        placeholder: '',
+        required: false
+      },
+      validation: {
+        show: false,
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
+        'templateOptions.disabled': 'formState.disabled',
+      },
+    },
+    {
+      fieldGroupClassName: 'row',
+      fieldGroup: [
+        {
+          key: 'email',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Email',
+            type: 'email',
+            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            placeholder: '',
+            required: true
+          },
+          validation: {
+            show: false,
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+            'templateOptions.disabled': 'formState.disabled',
+          },
+        },
+        {
+          key: 'phoneNumber',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Phone Number',
+            pattern: /\+?[0-9]+/,
+            description: 'Required if email is not provided.',
+            required: true
+          },
+          validation: {
+            show: false,
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+            'templateOptions.disabled': 'formState.disabled',
+          },
+        }
+      ]
+    },
+    {
+      key: 'postCode',
+      type: 'place',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Address',
+        placeholder: '',
+        postCode: false,
+        required: false
+      },
+      validation: {
+        show: false,
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
+        'templateOptions.disabled': 'formState.disabled',
+      },
+    },
+    {
+      key: 'referral',
+      type: 'input',
+      className: 'col-md-12 border-bottom-info card pt-3 mb-3',
+      defaultValue: '',
+      templateOptions: {
+        label: 'How did you hear about us?',
+        placeholder: '',
+        required: false
+      },
+      validation: {
+        show: false,
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
+        'templateOptions.disabled': 'formState.disabled',
+      },
+    },
+  ];
+
+  kitStatus: any = KIT_STATUS;
 
   private queryRef = this.apollo
     .watchQuery({
@@ -222,7 +218,11 @@ export class DonorInfoComponent {
       variables: {}
     });
 
-  private normalizeData(data: any){
+  modal(content) {
+    this.modalService.open(content, { centered: true });
+  }
+
+  private normalizeData(data: any) {
     return data;
   }
 
@@ -235,12 +235,12 @@ export class DonorInfoComponent {
       id: this.entityId
     }).then(res => {
       if (res.data && res.data['donor']) {
-        var data = res.data['donor'];
+        const data = res.data['donor'];
         this.model = this.normalizeData(data);
-        this.entityName = `${this.model['name'] || ""}/${this.model['email'] || ""}/${this.model['phoneNumber'] || ""}`.trim().split("/").filter(f => f.trim().length > 0)[0];
+        this.entityName = `${this.model['name'] || ''}/${this.model['email'] || ''}/${this.model['phoneNumber'] || ''}`.trim().split('/').filter(f => f.trim().length > 0)[0];
       } else {
         this.model = {};
-        this.entityName = "Not Found!"
+        this.entityName = 'Not Found!';
       }
     }, err => {
       this.toastr.warning(`
@@ -249,7 +249,7 @@ export class DonorInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 
@@ -273,7 +273,7 @@ export class DonorInfoComponent {
 
   updateEntity(data: any) {
     if (!this.form.valid) {
-      this.model["showErrorState"] = true;
+      this.model['showErrorState'] = true;
       return;
     }
     data.id = this.entityId;
@@ -284,7 +284,7 @@ export class DonorInfoComponent {
       }
     }).subscribe(res => {
       this.model = this.normalizeData(res.data['updateDonor']);
-      this.entityName = `${this.model['name'] || ""} ${this.model['email'] || ""} ${this.model['phoneNumber'] || ""}`.trim().split(" ")[0];
+      this.entityName = `${this.model['name'] || ''} ${this.model['email'] || ''} ${this.model['phoneNumber'] || ''}`.trim().split(' ')[0];
       this.toastr.info(`
       <small>Successfully updated donor ${this.entityName}</small>
       `, 'Updated Donor', {
@@ -296,7 +296,7 @@ export class DonorInfoComponent {
       `, 'Update Error', {
           enableHtml: true
         });
-    })
+    });
   }
 
   deleteEntity() {
@@ -304,13 +304,13 @@ export class DonorInfoComponent {
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {
-      if(res.data.deleteDonor){
+      if (res.data.deleteDonor) {
         this.toastr.info(`
         <small>Successfully deleted donor ${this.entityName}</small>
         `, 'Donor Deleted', {
             enableHtml: true
           });
-        this.router.navigate(['/dashboard/donors'])
+        this.router.navigate(['/dashboard/donors']);
       }
     }, err => {
       this.toastr.error(`
@@ -318,6 +318,6 @@ export class DonorInfoComponent {
       `, 'Error Deleting Donor', {
           enableHtml: true
         });
-    })
+    });
   }
 }

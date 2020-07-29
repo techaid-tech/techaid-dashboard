@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
-import { FieldType } from "@ngx-formly/core";
-import { NgSelectComponent } from "@ng-select/ng-select";
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FieldType } from '@ngx-formly/core';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'form-choice',

@@ -1,8 +1,8 @@
-import { Component, AfterViewInit, Renderer2, Inject, Input } from "@angular/core";
+import { Component, AfterViewInit, Renderer2, Inject, Input } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-    selector: "ngx-commento",
+    selector: 'ngx-commento',
     template: `
       <div id="commento" [attr.data-page-id]="pageId"></div>
     `,
@@ -10,19 +10,19 @@ import { DOCUMENT } from '@angular/common';
   })
   export class NgxCommentoComponent {
     constructor(private _renderer2: Renderer2, @Inject(DOCUMENT) private _document) {}
-  
-    @Input()
-    pageId: string =  ""
 
-    ngAfterViewInit(){
+    @Input()
+    pageId =  '';
+
+    ngAfterViewInit() {
         this.initCommento();
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.removeChild();
     }
 
-    initCommento(){
+    initCommento() {
         this.removeChild();
         const s = this._renderer2.createElement('script');
         s.src = 'https://commento.ju.ma/js/commento.js';
@@ -30,11 +30,11 @@ import { DOCUMENT } from '@angular/common';
         this._renderer2.appendChild(this._document.body, s);
     }
 
-    removeChild(){
+    removeChild() {
         const script = window.document.getElementById('commento-js');
         if (script) {
             this._renderer2.removeChild(this._document.body, script);
         }
     }
   }
-  
+

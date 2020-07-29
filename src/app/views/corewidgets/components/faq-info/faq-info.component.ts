@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -19,7 +19,7 @@ query findFAQ($id: Long!) {
      id
      title
      content
-     published 
+     published
      position
      createdAt
      updatedAt
@@ -33,7 +33,7 @@ mutation updateFaq($data: UpdateFaqInput!) {
      id
      content
      title
-     published 
+     published
      createdAt
      updatedAt
      position
@@ -50,71 +50,10 @@ mutation deleteFaq($id: ID!) {
 @Component({
   selector: 'faq-info',
   styleUrls: ['faq-info.scss'],
- 
+
   templateUrl: './faq-info.html'
 })
 export class FaqInfoComponent {
-  sub: Subscription;
-  form: FormGroup = new FormGroup({});
-  options: FormlyFormOptions = {};
-  model = {};
-  entityName: string;
-  entityId: number;
-
-  fields: Array<FormlyFieldConfig> = [
-    {
-      key: "title",
-      type: "input",
-      className: "col-md-12 border-left-info card pt-3 mb-3",
-      defaultValue: "",
-      templateOptions: {
-        label: "Title",
-        placeholder: "",
-        required: false
-      }
-    },
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "position",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: true,
-          templateOptions: {
-            label: "Order",
-            description: "The order dermines where in the list this FAQ appears, the higher the order, the higher up in the list the FAQ will apper",
-            type: "number",
-            placeholder: "",
-            required: false
-          }
-        },
-        {
-          key: "published",
-          type: "checkbox",
-          className: "col-md-6",
-          defaultValue: true,
-          templateOptions: {
-            label: "Published?",
-            description: "Unpublished FAQ's will not appear in the FAQ list",
-            placeholder: "",
-            required: false
-          }
-        }
-      ]
-    },
-    {
-      key: "content",
-      type: "richtext",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Content",
-        placeholder: "",
-        required: false
-      }
-    },
-  ];
 
 
   constructor(
@@ -126,10 +65,67 @@ export class FaqInfoComponent {
   ) {
 
   }
+  sub: Subscription;
+  form: FormGroup = new FormGroup({});
+  options: FormlyFormOptions = {};
+  model = {};
+  entityName: string;
+  entityId: number;
 
-  modal(content) {
-    this.modalService.open(content, { centered: true });
-  }
+  fields: Array<FormlyFieldConfig> = [
+    {
+      key: 'title',
+      type: 'input',
+      className: 'col-md-12 border-left-info card pt-3 mb-3',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Title',
+        placeholder: '',
+        required: false
+      }
+    },
+    {
+      fieldGroupClassName: 'row',
+      fieldGroup: [
+        {
+          key: 'position',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: true,
+          templateOptions: {
+            label: 'Order',
+            description: 'The order dermines where in the list this FAQ appears, the higher the order, the higher up in the list the FAQ will apper',
+            type: 'number',
+            placeholder: '',
+            required: false
+          }
+        },
+        {
+          key: 'published',
+          type: 'checkbox',
+          className: 'col-md-6',
+          defaultValue: true,
+          templateOptions: {
+            label: 'Published?',
+            description: 'Unpublished FAQ\'s will not appear in the FAQ list',
+            placeholder: '',
+            required: false
+          }
+        }
+      ]
+    },
+    {
+      key: 'content',
+      type: 'richtext',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Content',
+        placeholder: '',
+        required: false
+      }
+    },
+  ];
 
   private queryRef = this.apollo
     .watchQuery({
@@ -137,7 +133,11 @@ export class FaqInfoComponent {
       variables: {}
     });
 
-  private normalizeData(data: any){
+  modal(content) {
+    this.modalService.open(content, { centered: true });
+  }
+
+  private normalizeData(data: any) {
     return data;
   }
 
@@ -150,12 +150,12 @@ export class FaqInfoComponent {
       id: this.entityId
     }).then(res => {
       if (res.data && res.data['faq']) {
-        var data = res.data['faq'];
+        const data = res.data['faq'];
         this.model = this.normalizeData(data);
-        this.entityName = this.model['title']
+        this.entityName = this.model['title'];
       } else {
         this.model = {};
-        this.entityName = "Not Found!"
+        this.entityName = 'Not Found!';
       }
     }, err => {
       this.toastr.warning(`
@@ -164,7 +164,7 @@ export class FaqInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 
@@ -202,7 +202,7 @@ export class FaqInfoComponent {
       `, 'Update Error', {
           enableHtml: true
         });
-    })
+    });
   }
 
   deleteEntity() {
@@ -210,13 +210,13 @@ export class FaqInfoComponent {
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {
-      if(res.data.deleteFaq){
+      if (res.data.deleteFaq) {
         this.toastr.info(`
         <small>Successfully deleted FAQ ${this.entityName}</small>
         `, 'FAQ Deleted', {
             enableHtml: true
           });
-        this.router.navigate(['/dashboard/faqs'])
+        this.router.navigate(['/dashboard/faqs']);
       }
     }, err => {
       this.toastr.error(`
@@ -224,6 +224,6 @@ export class FaqInfoComponent {
       `, 'Error Deleting FAQ', {
           enableHtml: true
         });
-    })
+    });
   }
 }

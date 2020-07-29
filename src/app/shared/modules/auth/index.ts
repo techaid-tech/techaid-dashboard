@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppSharedModule } from '@app/shared'
+import { AppSharedModule } from '@app/shared';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 export const ROUTES: Routes = [
-]
+];
 
 @NgModule({
     imports: [

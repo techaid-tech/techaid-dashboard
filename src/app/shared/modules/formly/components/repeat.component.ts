@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { FieldArrayType } from "@ngx-formly/core";
+import { Component } from '@angular/core';
+import { FieldArrayType } from '@ngx-formly/core';
 
 @Component({
     selector: 'formly-repeat-section',
@@ -34,22 +34,22 @@ import { FieldArrayType } from "@ngx-formly/core";
     `,
   })
   export class RepeatTypeComponent extends FieldArrayType {
-    
+
 
       state = {
           remove: {}
-      }
+      };
 
-      get size (){
+      get size () {
         return (this.formControl.value || []).length;
       }
 
-      markRemove(index){
-       
+      markRemove(index) {
+
           this.state.remove[index] = !this.state.remove[index];
       }
 
-      delete(index){
+      delete(index) {
           delete this.state.remove[index];
           this.remove(index);
       }

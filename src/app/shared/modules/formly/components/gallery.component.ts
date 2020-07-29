@@ -51,7 +51,7 @@ import { Subscription } from 'rxjs';
       </div>
       <div class="file file-button img-thumbnail mr-1">
         <label class="btn btn-sm btn-primary btn-outline">
-            <i class="fas fa-plus"></i> 
+            <i class="fas fa-plus"></i>
             <input (change)="fileChange($event)" #fileInput type="file" accept=".jpg,.jpeg,.png,.bmp,.gif" multiple style="display: none;">
         </label>
       </div>
@@ -60,7 +60,7 @@ import { Subscription } from 'rxjs';
   `
 })
 export class GalleryInput extends FieldType implements OnInit {
-  @ViewChild('fileInput') fileInput: ElementRef
+  @ViewChild('fileInput') fileInput: ElementRef;
   files = [];
   sub: Subscription;
 
@@ -75,48 +75,48 @@ export class GalleryInput extends FieldType implements OnInit {
     });
   }
 
-  setFiles(files){
+  setFiles(files) {
     this.files = (files || []).map(f => {
       return {
         url: f.url,
         image: f.image,
         id: f.id
-      }
+      };
     });
   }
 
   fileChange(event: any) {
-    for(var i=0; i<event.target.files.length; i++){
-      var file = event.target.files[i];
-      var reader = new FileReader();
+    for (let i = 0; i < event.target.files.length; i++) {
+      const file = event.target.files[i];
+      const reader = new FileReader();
       reader.onload = (e) => {
         this.resizeImage(e.target['result'], 640, (data) => {
           this.files.push({image: data, id: null, url: null});
           this.fileInput.nativeElement.value = '';
-          this.formControl.setValue(this.files); 
+          this.formControl.setValue(this.files);
         });
       };
       reader.readAsDataURL(file);
     }
   }
 
-  remove(file){
+  remove(file) {
     this.files = this.files.filter(f => f != file);
     this.formControl.setValue(this.files);
     return false;
   }
 
   resizeImage(base64Image, width, callback) {
-    var img = new Image();
+    const img = new Image();
     img.onload = function() {
-      var canvas = document.createElement('canvas');
+      const canvas = document.createElement('canvas');
       canvas.width = width;
       const scaleFactor = width / img.width;
       canvas.height = img.height * scaleFactor;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, img.height * scaleFactor);
-      callback(canvas.toDataURL("image/png", 0.7));
+      callback(canvas.toDataURL('image/png', 0.7));
     };
     img.src = base64Image;
-  };
+  }
 }

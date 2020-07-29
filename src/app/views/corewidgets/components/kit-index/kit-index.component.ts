@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -60,7 +60,7 @@ query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) 
      createdAt
      donor {
        id
-       name 
+       name
        email
        phoneNumber
      }
@@ -75,7 +75,7 @@ query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) 
       type
       volunteer {
         id
-        name 
+        name
         email
         phoneNumber
       }
@@ -103,7 +103,7 @@ query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
     name: {
       _contains: $term
     }
-    OR: [ 
+    OR: [
     {
       id: {
         _in: $ids
@@ -138,7 +138,7 @@ query findAutocompleteOrgs($term: String, $ids: [Long!]) {
     name: {
       _contains: $term
     }
-    OR: [ 
+    OR: [
     {
       id: {
         _in: $ids
@@ -204,10 +204,18 @@ query findAutocompleteVolunteers($volunteerIds: [Long!], $orgIds: [Long!]) {
 @Component({
   selector: 'kit-index',
   styleUrls: ['kit-index.scss'],
- 
+
   templateUrl: './kit-index.html'
 })
 export class KitIndexComponent {
+
+  constructor(
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private apollo: Apollo
+  ) {
+
+  }
   @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
@@ -219,9 +227,9 @@ export class KitIndexComponent {
   form: FormGroup = new FormGroup({});
   model = {};
   ages = {
-     0: "I don't know",
-     1: "Less than a year",
-     2: "1 - 2 years",
+     0: 'I don\'t know',
+     1: 'Less than a year',
+     2: '1 - 2 years',
      4: '3 - 4 years',
      5: '5 - 6 years',
      6: 'more than 6 years old'
@@ -233,18 +241,18 @@ export class KitIndexComponent {
     'ORGANISER': 'success'
   };
 
-  statusTypes : any = KIT_STATUS;
+  statusTypes: any = KIT_STATUS;
 
   users$: Observable<any>;
   userInput$ = new Subject<string>();
   usersLoading = false;
   userField: FormlyFieldConfig = {
-    key: "userIds",
-    type: "choice",
-    className: "col-md-12",
+    key: 'userIds',
+    type: 'choice',
+    className: 'col-md-12',
     templateOptions: {
-      label: "Assigned Volunteer",
-      description: "Filter by assigned user.",
+      label: 'Assigned Volunteer',
+      description: 'Filter by assigned user.',
       loading: this.usersLoading,
       typeahead: this.userInput$,
       multiple: true,
@@ -258,12 +266,12 @@ export class KitIndexComponent {
   orgInput$ = new Subject<string>();
   orgLoading = false;
   orgField: FormlyFieldConfig = {
-    key: "orgIds",
-    type: "choice",
-    className: "col-md-12",
+    key: 'orgIds',
+    type: 'choice',
+    className: 'col-md-12',
     templateOptions: {
-      label: "Assigned Organisation",
-      description: "Filter by assigned organisation.",
+      label: 'Assigned Organisation',
+      description: 'Filter by assigned organisation.',
       loading: this.orgLoading,
       typeahead: this.orgInput$,
       multiple: true,
@@ -279,82 +287,82 @@ export class KitIndexComponent {
   filterForm: FormGroup = new FormGroup({});
   filterFields: Array<FormlyFieldConfig> = [
     {
-      fieldGroupClassName: "row",
+      fieldGroupClassName: 'row',
       fieldGroup: [
         {
-          key: "type",
-          type: "multicheckbox",
-          className: "col-sm-4",
+          key: 'type',
+          type: 'multicheckbox',
+          className: 'col-sm-4',
           defaultValue: [],
           templateOptions: {
-            label: "Type of device",
-            type: "array",
-            options: [
-              {label: "Laptop", value: "LAPTOP" },
-              {label: "Chromebook", value: "CHROMEBOOK" },
-              {label: "Tablet", value: "TABLET" },
-              {label: "Smart Phone", value: "SMARTPHONE" },
-              {label: "All In One (PC)", value: "ALLINONE" },
-              {label: "Other", value: "OTHER" }
-            ],
-          } 
-        },
-        {
-          key: "age",
-          type: "multicheckbox",
-          className: "col-sm-4",
-          templateOptions: {
-            label: "Roughly how old is your device?",
+            label: 'Type of device',
             type: 'array',
             options: [
-              {label: "Less than a year", value: 1},
-              {label: "1 - 2 years", value: 2},
-              {label: "3 - 4 years", value: 4 },
-              {label: "5 - 6 years", value: 5},
-              {label: "More than 6 years old", value: 6 },
-              {label: "I don't know!", value: 0 }
+              {label: 'Laptop', value: 'LAPTOP' },
+              {label: 'Chromebook', value: 'CHROMEBOOK' },
+              {label: 'Tablet', value: 'TABLET' },
+              {label: 'Smart Phone', value: 'SMARTPHONE' },
+              {label: 'All In One (PC)', value: 'ALLINONE' },
+              {label: 'Other', value: 'OTHER' }
             ],
-            required: false
-          } 
+          }
         },
         {
-          key: "archived",
-          type: "multicheckbox",
-          className: "col-sm-4",
+          key: 'age',
+          type: 'multicheckbox',
+          className: 'col-sm-4',
+          templateOptions: {
+            label: 'Roughly how old is your device?',
+            type: 'array',
+            options: [
+              {label: 'Less than a year', value: 1},
+              {label: '1 - 2 years', value: 2},
+              {label: '3 - 4 years', value: 4 },
+              {label: '5 - 6 years', value: 5},
+              {label: 'More than 6 years old', value: 6 },
+              {label: 'I don\'t know!', value: 0 }
+            ],
+            required: false
+          }
+        },
+        {
+          key: 'archived',
+          type: 'multicheckbox',
+          className: 'col-sm-4',
           defaultValue: [false],
           templateOptions: {
             type: 'array',
-            label: "Filter by Archived?",
+            label: 'Filter by Archived?',
             options: [
-              {label: "Active Devices", value: false },
-              {label: "Archived Devices", value: true },
+              {label: 'Active Devices', value: false },
+              {label: 'Archived Devices', value: true },
             ],
             required: false,
           }
-        }, 
+        },
         {
-          key: "status",
-          type: "choice",
-          className: "col-md-12",
+          key: 'status',
+          type: 'choice',
+          className: 'col-md-12',
           templateOptions: {
-            label: "Status of the device",
+            label: 'Status of the device',
             items: [
-              {label: "New - Donation Registered", value: "NEW" },
-              {label: "Declined - Not Suitable", value: "DECLINED" },
-              {label: "Accepted - Assesment Needed", value: "ASSESSMENT_NEEDED" },
-              {label: "Accepted - No Assesment Required", value: "ACCEPTED" },
-              {label: "Collection from donor scheduled", value: "PICKUP_SCHEDULED" },
-              {label: "Donor drop off agreed", value: "DROPOFF_AGGREED" },
-              {label: "Donation received by Tech Team", value: "WITH_TECHIE" },
-              {label: "Donation faulty - collect for recycling", value: "UPDATE_FAILED" },
-              {label: "Donation updated - arrange collection", value: "READY" },
-              {label: "Device allocated to referring organisation", value: "ALLOCATED" },
-              {label: "Collection / drop off to referring organisation agreed", value: "DELIVERY_ARRANGED" },
-              {label: "Device received by organisation", value: "DELIVERED" }
+              {label: 'New - Donation Registered', value: 'NEW' },
+              {label: 'Declined - Not Suitable', value: 'DECLINED' },
+              {label: 'Accepted - Assesment Needed', value: 'ASSESSMENT_NEEDED' },
+              {label: 'Accepted - No Assesment Required', value: 'ACCEPTED' },
+              {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
+              {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
+              {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
+              {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
+              {label: 'Donation updated - arrange collection', value: 'READY' },
+              {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
+              {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
+              {label: 'Device received by organisation', value: 'DELIVERED' }
             ],
             multiple: true,
             required: false
-          } 
+          }
         },
         this.userField,
         this.orgField
@@ -362,95 +370,54 @@ export class KitIndexComponent {
     }
   ];
 
-  applyFilter(data){
-    var filter = {};
-    var count = 0;
-
-    if(data.type && data.type.length) {
-      count = count + data.type.length;
-      filter["type"] = {"_in": data.type };
-    }
-
-    if(data.status && data.status.length) {
-      count = count + data.status.length;
-      filter["status"] = {"_in": data.status };
-    }
-
-    if(data.age && data.age.length) {
-      count = count + data.age.length;
-      filter["age"] = {"_in": data.age };
-    }
-
-    if(data.archived && data.archived.length){
-      count += data.archived.length;
-      filter["archived"] = {_in: data.archived}
-    }
-
-    if(data.userIds && data.userIds.length){
-      count += data.userIds.length;
-      filter["volunteer"] = {id: {_in: data.userIds}};
-    }
-
-    if(data.orgIds && data.orgIds.length){
-      count += data.orgIds.length;
-      filter["organisation"] = {id: {_in: data.orgIds}};
-    }
-
-    localStorage.setItem(`kitFilters-${this.tableId}`, JSON.stringify(data));
-    this.filter = filter;
-    this.filterCount = count;
-    this.filterModel = data;
-    this.table.ajax.reload(null, false);
-  }
-
   @Select(CoreWidgetState.query) search$: Observable<string>;
 
   fields: Array<FormlyFieldConfig> = [
     {
-      key: "location",
-      type: "place",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'location',
+      type: 'place',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Address",
-        description: "The address of the device",
-        placeholder: "",
+        label: 'Address',
+        description: 'The address of the device',
+        placeholder: '',
         postCode: false,
         required: true
       }
     },
     {
-      key: "attributes.pickup",
-      type: "radio",
-      className: "col-md-12",
-      defaultValue: "DROPOFF",
+      key: 'attributes.pickup',
+      type: 'radio',
+      className: 'col-md-12',
+      defaultValue: 'DROPOFF',
       templateOptions: {
-        label: "Are you able to drop off your device to a location in Streatham Hill or would you need it to be collected?",
-        placeholder: "",
+        label: 'Are you able to drop off your device to a location in Streatham Hill or would you need it to be collected?',
+        placeholder: '',
         required: true,
         options: [
-          { label: "I am able to drop off my device to a location in Streatham Hill", value: "DROPOFF" },
-          { label: "I would need you to come and collect my device", value: "PICKUP" },
-          { label: "I'm not sure – it depends on the exact location", value: "NOTSURE" }
+          { label: 'I am able to drop off my device to a location in Streatham Hill', value: 'DROPOFF' },
+          { label: 'I would need you to come and collect my device', value: 'PICKUP' },
+          { label: 'I\'m not sure – it depends on the exact location', value: 'NOTSURE' }
         ]
       }
     },
     {
-      key: "attributes.pickupAvailability",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'attributes.pickupAvailability',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Pickup Availability",
+        label: 'Pickup Availability',
         rows: 2,
         description: `
-          Please let us know when you are typically available at home for someone 
-          to arrange to come and pick up your device. Alternatively provide us with times 
-          when you are usually not available. 
+          Please let us know when you are typically available at home for someone
+          to arrange to come and pick up your device. Alternatively provide us with times
+          when you are usually not available.
           `,
         required: true
       },
-      hideExpression: "model.attributes.pickup != 'PICKUP'",
+      hideExpression: 'model.attributes.pickup != \'PICKUP\'',
     },
     {
       template: `
@@ -459,7 +426,7 @@ export class KitIndexComponent {
           <div class="border-bottom-info card mb-3 p-3">
             <strong><p>About your device</p></strong>
             <p>
-              In order to understand what condition your device is in - and how easy it will be for us 
+              In order to understand what condition your device is in - and how easy it will be for us
               to get it ready to deliver - please answer as many of the following questions as you can.
             </p>
           </div>
@@ -468,114 +435,114 @@ export class KitIndexComponent {
       `
     },
     {
-      fieldGroupClassName: "row",
+      fieldGroupClassName: 'row',
       fieldGroup: [
         {
-          className: "col-md-6",
+          className: 'col-md-6',
           fieldGroup: [
             {
-              key: "type",
-              type: "radio",
-              className: "",
-              defaultValue: "LAPTOP",
+              key: 'type',
+              type: 'radio',
+              className: '',
+              defaultValue: 'LAPTOP',
               templateOptions: {
-                label: "Type of device",
+                label: 'Type of device',
                 options: [
-                  {label: "Laptop", value: "LAPTOP" },
-                  {label: "Chromebook", value: "CHROMEBOOK" },
-                  {label: "Tablet", value: "TABLET" },
-                  {label: "Smart Phone", value: "SMARTPHONE" },
-                  {label: "All In One (PC)", value: "ALLINONE" },
-                  {label: "Other", value: "OTHER" }
+                  {label: 'Laptop', value: 'LAPTOP' },
+                  {label: 'Chromebook', value: 'CHROMEBOOK' },
+                  {label: 'Tablet', value: 'TABLET' },
+                  {label: 'Smart Phone', value: 'SMARTPHONE' },
+                  {label: 'All In One (PC)', value: 'ALLINONE' },
+                  {label: 'Other', value: 'OTHER' }
                 ],
                 required: true
-              } 
+              }
             },
             {
-              key: "attributes.otherType",
-              type: "input",
-              className: "",
-              defaultValue: "",
+              key: 'attributes.otherType',
+              type: 'input',
+              className: '',
+              defaultValue: '',
               templateOptions: {
-                label: "Type of device",
+                label: 'Type of device',
                 rows: 2,
-                placeholder: "(Other device type)",
+                placeholder: '(Other device type)',
                 required: true
               },
-              hideExpression: "model.type != 'OTHER'",
+              hideExpression: 'model.type != \'OTHER\'',
               expressionProperties: {
-                'templateOptions.required': "model.type == 'OTHER'",
+                'templateOptions.required': 'model.type == \'OTHER\'',
               },
             },
           ]
         },
         {
-          className: "col-md-6",
+          className: 'col-md-6',
           fieldGroup: [
             {
-              key: "attributes.status",
-              type: "multicheckbox",
-              className: "",
+              key: 'attributes.status',
+              type: 'multicheckbox',
+              className: '',
               templateOptions: {
-                type: "array",
+                type: 'array',
                 options: [],
-                description: "Please select all options that apply",
+                description: 'Please select all options that apply',
                 required: true
               },
               defaultValue: [],
               expressionProperties: {
-                'templateOptions.options': (model, state)=> {
+                'templateOptions.options': (model, state) => {
                   const props = {
                     'LAPTOP': [
-                      {label: "I have the charger / power cable for the Laptop", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Laptop", value: "NO_CHARGER"},
-                      {label: "Does the Laptop have a password set?", value: "PASSWORD_PROTECTED"}
+                      {label: 'I have the charger / power cable for the Laptop', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the Laptop', value: 'NO_CHARGER'},
+                      {label: 'Does the Laptop have a password set?', value: 'PASSWORD_PROTECTED'}
                     ],
                     'TABLET': [
-                      {label: "I have the charger for the Tablet", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Tablet", value: "NO_CHARGER"},
-                      {label: "Have you factory reset the Tablet?", value: "FACTORY_RESET"}
+                      {label: 'I have the charger for the Tablet', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the Tablet', value: 'NO_CHARGER'},
+                      {label: 'Have you factory reset the Tablet?', value: 'FACTORY_RESET'}
                     ],
                     'SMARTPHONE': [
-                      {label: "I have the charger for the Phone", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Phone", value: "NO_CHARGER"},
-                      {label: "Have you factory reset the Phone?", value: "FACTORY_RESET"}
+                      {label: 'I have the charger for the Phone', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the Phone', value: 'NO_CHARGER'},
+                      {label: 'Have you factory reset the Phone?', value: 'FACTORY_RESET'}
                     ],
                     'ALLINONE': [
-                      {label: "I have the charger for the Computer", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the Computer", value: "NO_CHARGER"},
-                      {label: "Do you have a mouse for the Computer?", value: "HAS_MOUSE"},
-                      {label: "Do you have a keyboard for the Computer", value: "HAS_KEYBOARD"},
-                      {label: "Does the Computer have a password set?", value: "PASSWORD_PROTECTED"}
+                      {label: 'I have the charger for the Computer', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the Computer', value: 'NO_CHARGER'},
+                      {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
+                      {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
+                      {label: 'Does the Computer have a password set?', value: 'PASSWORD_PROTECTED'}
                     ],
                     'OTHER': [
-                      {label: "I have the charger or power cable for the device", value: "CHARGER"},
-                      {label: "I don't have the charger / power cable for the device", value: "NO_CHARGER"},
+                      {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
                     ],
                   };
-                  return props[model.type] || props['OTHER']
+                  return props[model.type] || props['OTHER'];
                 },
               },
             },
             {
-              key: "attributes.credentials",
-              type: "input",
-              className: "",
-              defaultValue: "",
+              key: 'attributes.credentials',
+              type: 'input',
+              className: '',
+              defaultValue: '',
               templateOptions: {
-                label: "Device Password",
-                description: "If your device requires a password or a PIN to sign in, please provide it here",
+                label: 'Device Password',
+                description: 'If your device requires a password or a PIN to sign in, please provide it here',
                 rows: 2,
-                placeholder: "Password",
+                placeholder: 'Password',
                 required: false
               },
               hideExpression: (model, state) => {
-                if(['LAPTOP', 'ALLINONE', 'CHROMEBOOK'].indexOf(model.type) == -1){
+                if (['LAPTOP', 'ALLINONE', 'CHROMEBOOK'].indexOf(model.type) == -1) {
                   return true;
                 }
                 const status = HashUtils.dotNotation(model, 'attributes.status') || [];
-                if(status && status.length) {
-                  return status.indexOf('PASSWORD_PROTECTED') == -1
+                if (status && status.length) {
+                  return status.indexOf('PASSWORD_PROTECTED') == -1;
                 }
                 return true;
               }
@@ -583,46 +550,46 @@ export class KitIndexComponent {
           ]
         },
         {
-          key: "age",
-          type: "radio",
-          className: "col-md-6",
+          key: 'age',
+          type: 'radio',
+          className: 'col-md-6',
           defaultValue: 5,
           templateOptions: {
-            label: "Roughly how old is your device?",
+            label: 'Roughly how old is your device?',
             options: [
-              {label: "Less than a year", value: 1},
-              {label: "1 - 2 years", value: 2},
-              {label: "3 - 4 years", value: 4 },
-              {label: "5 - 6 years", value: 5},
-              {label: "More than 6 years old", value: 6 },
-              {label: "I don't know!", value: 0 }
+              {label: 'Less than a year', value: 1},
+              {label: '1 - 2 years', value: 2},
+              {label: '3 - 4 years', value: 4 },
+              {label: '5 - 6 years', value: 5},
+              {label: 'More than 6 years old', value: 6 },
+              {label: 'I don\'t know!', value: 0 }
             ],
             required: true
-          } 
+          }
         },
       ]
     },
     {
-      key: "model",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'model',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Make or model (if known)",
+        label: 'Make or model (if known)',
         rows: 2,
-        placeholder: "",
+        placeholder: '',
         required: true
       }
     },
     {
-      key: "attributes.state",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'attributes.state',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "What technical state is the device in? For example, does it turn on OK? Are there keys missing? Is the screen cracked?",
+        label: 'What technical state is the device in? For example, does it turn on OK? Are there keys missing? Is the screen cracked?',
         rows: 2,
-        placeholder: "",
+        placeholder: '',
         required: false
       }
     },
@@ -632,11 +599,11 @@ export class KitIndexComponent {
         <div class="col-md-12">
           <div class="border-bottom-warning card mb-3 p-3">
             <p>
-              In order to protect your data, Lambeth TechAid will delete any personal information 
-              submitted via this form as soon as it has been used for collecting and delivering your device. 
-              Alternatively, if we don't collect your device, we will delete your information immediately. 
-              We promise to process your data in accordance with data protection legislation, and will not 
-              share your details with any third parties. You have the right to ask for your information to be 
+              In order to protect your data, Lambeth TechAid will delete any personal information
+              submitted via this form as soon as it has been used for collecting and delivering your device.
+              Alternatively, if we don't collect your device, we will delete your information immediately.
+              We promise to process your data in accordance with data protection legislation, and will not
+              share your details with any third parties. You have the right to ask for your information to be
               deleted from our records - please contact covidtechaid@gmail.com for more information.
             </p>
           </div>
@@ -645,22 +612,22 @@ export class KitIndexComponent {
       `
     },
     {
-      key: "attributes.images",
-      type: "gallery",
-      className: "col-md-12",
+      key: 'attributes.images',
+      type: 'gallery',
+      className: 'col-md-12',
       templateOptions: {
-        label: "Upload an image of your device if you can",
+        label: 'Upload an image of your device if you can',
         required: false
       }
     },
     {
-      key: "attributes.consent",
-      type: "radio",
-      className: "col-md-12",
+      key: 'attributes.consent',
+      type: 'radio',
+      className: 'col-md-12',
       templateOptions: {
-        label: "",
+        label: '',
         options: [
-          {label: "I consent to my data being processed by Lambeth TechAid", value: "yes" },
+          {label: 'I consent to my data being processed by Lambeth TechAid', value: 'yes' },
           // {label: "I do not consent to my data being processed by Lambeth TechAid", value: "no" },
         ],
         required: true
@@ -668,12 +635,51 @@ export class KitIndexComponent {
     }
   ];
 
-  constructor(
-    private modalService: NgbModal,
-    private toastr: ToastrService,
-    private apollo: Apollo
-  ) {
+  @Input()
+  pageLength = 10;
 
+  @Input()
+  tableId = 'kit-index';
+
+  applyFilter(data) {
+    const filter = {};
+    let count = 0;
+
+    if (data.type && data.type.length) {
+      count = count + data.type.length;
+      filter['type'] = {'_in': data.type };
+    }
+
+    if (data.status && data.status.length) {
+      count = count + data.status.length;
+      filter['status'] = {'_in': data.status };
+    }
+
+    if (data.age && data.age.length) {
+      count = count + data.age.length;
+      filter['age'] = {'_in': data.age };
+    }
+
+    if (data.archived && data.archived.length) {
+      count += data.archived.length;
+      filter['archived'] = {_in: data.archived};
+    }
+
+    if (data.userIds && data.userIds.length) {
+      count += data.userIds.length;
+      filter['volunteer'] = {id: {_in: data.userIds}};
+    }
+
+    if (data.orgIds && data.orgIds.length) {
+      count += data.orgIds.length;
+      filter['organisation'] = {id: {_in: data.orgIds}};
+    }
+
+    localStorage.setItem(`kitFilters-${this.tableId}`, JSON.stringify(data));
+    this.filter = filter;
+    this.filterCount = count;
+    this.filterModel = data;
+    this.table.ajax.reload(null, false);
   }
 
   modal(content) {
@@ -691,7 +697,7 @@ export class KitIndexComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -700,12 +706,6 @@ export class KitIndexComponent {
     this.table.search(filter);
     this.table.ajax.reload(null, false);
   }
-
-  @Input()
-  pageLength = 10;
-
-  @Input()
-  tableId = "kit-index";
 
   ngOnInit() {
     const queryRef = this.apollo
@@ -735,7 +735,7 @@ export class KitIndexComponent {
       }
     });
 
-     
+
     this.users$ = concat(
       of([]),
       this.userInput$.pipe(
@@ -752,9 +752,9 @@ export class KitIndexComponent {
             const data = res['data']['volunteersConnection']['content'].map(v => {
               return {
                 label: this.volunteerName(v), value: v.id
-              }
+              };
             });
-            return of(data)
+            return of(data);
           })
         ))
       )
@@ -776,9 +776,9 @@ export class KitIndexComponent {
             const data = res['data']['organisationsConnection']['content'].map(v => {
               return {
                 label: this.volunteerName(v), value: v.id
-              }
+              };
             });
-            return of(data)
+            return of(data);
           })
         ))
       )
@@ -795,9 +795,9 @@ export class KitIndexComponent {
     this.dtOptions = {
       pagingType: 'simple_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: this.pageLength,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [1, 'desc'],
@@ -806,36 +806,36 @@ export class KitIndexComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           where: this.filter,
           term: params['search']['value']
-        }
+        };
 
         console.log(vars, params);
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['kitsConnection'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             data.content.forEach(d => {
-              if(d.donor){
+              if (d.donor) {
                 d.donorName = this.userName(d.donor);
               }
-              if(d.volunteer){
+              if (d.volunteer) {
                 d.volunteerName = this.userName(d.volunteer);
               }
             });
@@ -846,7 +846,7 @@ export class KitIndexComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -864,7 +864,7 @@ export class KitIndexComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -882,11 +882,11 @@ export class KitIndexComponent {
   }
 
   userName(data) {
-    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length)[0];
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length)[0];
   }
 
   volunteerName(data) {
-    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length).join(' / ').trim();
   }
 
 
@@ -901,7 +901,7 @@ export class KitIndexComponent {
       this.table = tbl;
       try {
         this.filterModel = JSON.parse(localStorage.getItem(`kitFilters-${this.tableId}`)) || {archived: [false]};
-        if(this.filterModel && (this.filterModel.userIds || this.filterModel.orgIds) ){
+        if (this.filterModel && (this.filterModel.userIds || this.filterModel.orgIds) ) {
           this.apollo.query({
             query: FIND_USERS,
             variables: {
@@ -909,40 +909,40 @@ export class KitIndexComponent {
               orgIds: this.filterModel.orgIds || []
             }
           }).toPromise().then(res => {
-            if(res.data){
-              if(res.data['volunteers']){
+            if (res.data) {
+              if (res.data['volunteers']) {
                 this.userField.templateOptions['items'] = res.data['volunteers'].map(v => {
-                  return {label: this.volunteerName(v), value: v.id }
+                  return {label: this.volunteerName(v), value: v.id };
                 });
               }
-              if(res.data['organisations']){
+              if (res.data['organisations']) {
                 this.orgField.templateOptions['items'] = res.data['organisations'].map(v => {
-                  return {label: this.volunteerName(v), value: v.id }
+                  return {label: this.volunteerName(v), value: v.id };
                 });
               }
             }
           });
         }
-      }catch(_){
+      } catch (_) {
         this.filterModel = {archived: [false]};
       }
 
       try {
         this.applyFilter(this.filterModel);
         this.filterForm.patchValue(this.filterModel);
-      }catch(_){
+      } catch (_) {
       }
     });
   }
 
   createEntity(data: any) {
-    data.status = "NEW";
+    data.status = 'NEW';
     data.attributes.images = (data.attributes.images || []).map(f => {
       return {
-        image: f.image, 
+        image: f.image,
         id: f.id
-      }
-    }); 
+      };
+    });
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: { data }
@@ -956,7 +956,7 @@ export class KitIndexComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
 
@@ -970,7 +970,7 @@ export class KitIndexComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

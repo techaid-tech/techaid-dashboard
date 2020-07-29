@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -64,7 +64,7 @@ const QUERY_API = gql`
 query typeaheadFindApis($appId: String, $term: String) {
   allApisConnection(page: {
     size: 50
-  }, 
+  },
     where: {
       tenant: {
         id: {
@@ -119,7 +119,7 @@ query findAutocompletePermissions($appId: ID!, $userId: Int) {
 @Component({
   selector: 'user-permissions',
   styleUrls: ['user-permissions.scss'],
- 
+
   templateUrl: './user-permissions.html'
 })
 export class UserPermissionsComponent {
@@ -140,11 +140,11 @@ export class UserPermissionsComponent {
   apis$: Observable<any>;
   apis: any[] = [];
   apiInput$ = new Subject<string>();
-  apiLoading = false
+  apiLoading = false;
   appField: FormlyFieldConfig = {
-    key: "appId",
-    type: "choice",
-    className: "col-md-12",
+    key: 'appId',
+    type: 'choice',
+    className: 'col-md-12',
     hooks: {
       onInit: (field) => {
         field.formControl.valueChanges.subscribe(v => {
@@ -153,10 +153,10 @@ export class UserPermissionsComponent {
       }
     },
     templateOptions: {
-      label: "",
+      label: '',
       loading: this.apiLoading,
       typeahead: this.apiInput$,
-      placeholder: "Select an API",
+      placeholder: 'Select an API',
       searchable: true,
       items: this.apis,
       required: true
@@ -164,12 +164,12 @@ export class UserPermissionsComponent {
   };
 
   permissionField: FormlyFieldConfig = {
-    key: "permissions",
-    type: "choice",
-    className: "col-md-12",
+    key: 'permissions',
+    type: 'choice',
+    className: 'col-md-12',
     templateOptions: {
-      label: "Select Permissions",
-      placeholder: "",
+      label: 'Select Permissions',
+      placeholder: '',
       searchable: true,
       multiple: true,
       items: this.apis,
@@ -217,7 +217,7 @@ export class UserPermissionsComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -260,9 +260,9 @@ export class UserPermissionsComponent {
           tap(() => this.apiLoading = false),
           switchMap(res => {
             const data = res['data']['allApisConnection']['content'].map(v => {
-              return { label: `${v.name} (${v.id})`, value: v.id }
+              return { label: `${v.name} (${v.id})`, value: v.id };
             });
-            return of(data)
+            return of(data);
           })
         ))
       )
@@ -275,9 +275,9 @@ export class UserPermissionsComponent {
     this.dtOptions = {
       pagingType: 'full_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: 10,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [1, 'desc'],
@@ -286,32 +286,32 @@ export class UserPermissionsComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           userId: this._userId,
           term: params['search']['value']
-        }
+        };
 
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {}
+          let data: any = {};
           if (res && res.data) {
             data = res['data']['user']['permissions'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
-            var roles = {};
+            const roles = {};
             res['data']['user']['roles']['content'].forEach(r => {
               r['permissions']['items'].forEach(p => {
                 roles[p.name] = roles[p.name] || [];
@@ -322,12 +322,12 @@ export class UserPermissionsComponent {
             console.log(roles);
 
             this.entities = data.content.map(row => {
-              row.mappedRoles = "";
-              row.roles =  roles[row.name] || []; 
+              row.mappedRoles = '';
+              row.roles =  roles[row.name] || [];
               row.byRole = roles[row.name] && roles[row.name].length > 0;
-              row.mappedRoles = this.trimString((roles[row.name] || []).join(","), 150)
+              row.mappedRoles = this.trimString((roles[row.name] || []).join(','), 150);
               row.direct = !roles[row.name];
-              return row
+              return row;
             });
           }
 
@@ -335,7 +335,7 @@ export class UserPermissionsComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -353,7 +353,7 @@ export class UserPermissionsComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -366,7 +366,7 @@ export class UserPermissionsComponent {
   }
 
   private trimString(str: String, length: number) {
-    return str.length > length ? str.substring(0, length) + "..." : str;
+    return str.length > length ? str.substring(0, length) + '...' : str;
   }
 
   ngOnDestory() {
@@ -377,7 +377,7 @@ export class UserPermissionsComponent {
 
   updatePermissions(appId: string) {
     if (!appId) {
-      return
+      return;
     }
 
     const apiRef = this.apollo
@@ -396,7 +396,7 @@ export class UserPermissionsComponent {
             name: v.name,
             description: v.description
           }
-        }
+        };
       });
       this.permissionField.templateOptions['items'] = data;
     }, err => {
@@ -406,7 +406,7 @@ export class UserPermissionsComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 
@@ -434,7 +434,7 @@ export class UserPermissionsComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
   deletePermission(permission: any) {
@@ -456,7 +456,7 @@ export class UserPermissionsComponent {
       `, 'Error Deleting Role', {
           enableHtml: true
         });
-    })
+    });
   }
 
   select(row?: any) {
@@ -469,7 +469,7 @@ export class UserPermissionsComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

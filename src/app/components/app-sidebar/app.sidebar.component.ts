@@ -8,12 +8,12 @@ import { Observable, Subscription } from 'rxjs';
     selector: 'app-sidebar',
     templateUrl: 'app.sidebar.component.html',
     styles: [`
-       
+
     `]
 })
 
 export class AppSidebar {
-    sidebar: Boolean = true
+    sidebar: Boolean = true;
     public user: User;
     private sub: Subscription;
     @Select(UserState.user) user$: Observable<User>;
@@ -33,12 +33,12 @@ export class AppSidebar {
         }
     }
 
-    logout(){
+    logout() {
         this.store.dispatch(new LogoutUser());
         return false;
     }
 
-    login(){
+    login() {
         this.store.dispatch(new LoginUser());
         return false;
     }

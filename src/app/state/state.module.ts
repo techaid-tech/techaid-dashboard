@@ -9,14 +9,14 @@ export { UserState } from './user/user.state';
 const DevToolsOptions: any = {
     name: 'PICNGXS',
     serialize: undefined
-}
+};
 
 @NgModule({
     exports: [
     ],
     imports: [
         NgxsModule.forRoot([UserState]),
-        //NgxsLoggerPluginModule.forRoot(),
+        // NgxsLoggerPluginModule.forRoot(),
         NgxsRouterPluginModule.forRoot(),
         NgxsFormPluginModule.forRoot(),
         NgxsReduxDevtoolsPluginModule.forRoot()

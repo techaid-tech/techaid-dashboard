@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, of, forkJoin, Observable, Subscription } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -51,7 +51,7 @@ query findAll {
 @Component({
   selector: 'dashboard-index',
   styleUrls: ['dashboard-index.scss'],
- 
+
   templateUrl: './dashboard-index.html'
 })
 export class DashboardIndexComponent {
@@ -75,15 +75,15 @@ export class DashboardIndexComponent {
     'TABLET': {title: 'Tablets', style: 'info', progress: 0},
     'OTHER': {title: 'Other', style: 'danger', progress: 0},
     'SMARTPHONE': {title: 'Phones', style: 'warning', progress: 0},
-    'ALLINONE': {title: "All In One's", style: 'success', progress: 0}
-  }
+    'ALLINONE': {title: 'All In One\'s', style: 'success', progress: 0}
+  };
 
   dtOptions = {
     pageLength: 5,
-    dom: "<'row'<'col-sm-12 col-md-6'><'col-sm-12 col-md-6'f>>" +
-          "<'row'<'col-sm-12'tr>>" + 
-          "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-  }
+    dom: '<\'row\'<\'col-sm-12 col-md-6\'><\'col-sm-12 col-md-6\'f>>' +
+          '<\'row\'<\'col-sm-12\'tr>>' +
+          '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
+  };
 
   kitStatus = KIT_STATUS;
 
@@ -93,10 +93,10 @@ export class DashboardIndexComponent {
       variables: {}
     });
 
-  private normalizeData(data: any){
+  private normalizeData(data: any) {
     (data.typeCount || []).forEach(s => {
-      var p = (data.requestCount[s.type]/s.count)*100;
-      if(p > 100) {
+      let p = (data.requestCount[s.type] / s.count) * 100;
+      if (p > 100) {
         p = 100;
       }
       this.styles[s.type].progress = p;
@@ -108,7 +108,7 @@ export class DashboardIndexComponent {
     this.queryRef.refetch(vars).then(res => {
       if (res.data) {
         this.model = this.normalizeData(res.data);
-      }else {
+      } else {
         this.model = {};
       }
     });

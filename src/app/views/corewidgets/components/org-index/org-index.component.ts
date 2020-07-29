@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { Observable, Subscription, from, Subject, concat, of } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -135,7 +135,7 @@ query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
     name: {
       _contains: $term
     }
-    OR: [ 
+    OR: [
     {
       id: {
         _in: $ids
@@ -166,10 +166,18 @@ query findAutocompleteVolunteers($term: String, $ids: [Long!]) {
 @Component({
   selector: 'org-index',
   styleUrls: ['org-index.scss'],
- 
+
   templateUrl: './org-index.html'
 })
 export class OrgIndexComponent {
+
+  constructor(
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private apollo: Apollo
+  ) {
+
+  }
   @ViewChild(AppGridDirective) grid: AppGridDirective;
   dtOptions: DataTables.Settings = {};
   sub: Subscription;
@@ -185,13 +193,13 @@ export class OrgIndexComponent {
 
   fields: Array<FormlyFieldConfig> = [
     {
-      key: "name",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'name',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Name",
-        placeholder: "",
+        label: 'Name',
+        placeholder: '',
         required: true
       },
       validation: {
@@ -202,13 +210,13 @@ export class OrgIndexComponent {
       }
     },
     {
-      key: "website",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'website',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Website",
-        placeholder: "",
+        label: 'Website',
+        placeholder: '',
         required: false
       },
       validation: {
@@ -219,16 +227,16 @@ export class OrgIndexComponent {
       }
     },
     {
-      fieldGroupClassName: "row",
+      fieldGroupClassName: 'row',
       fieldGroup: [
         {
-          key: "contact",
-          type: "input",
-          className: "col-md-12",
-          defaultValue: "",
+          key: 'contact',
+          type: 'input',
+          className: 'col-md-12',
+          defaultValue: '',
           templateOptions: {
-            label: "Primary Contact Name",
-            placeholder: "",
+            label: 'Primary Contact Name',
+            placeholder: '',
             required: true
           },
           validation: {
@@ -239,15 +247,15 @@ export class OrgIndexComponent {
           }
         },
         {
-          key: "email",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
+          key: 'email',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
           templateOptions: {
-            label: "Primary Contact Email",
-            type: "email",
+            label: 'Primary Contact Email',
+            type: 'email',
             pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            placeholder: "",
+            placeholder: '',
             required: true
           },
           expressionProperties: {
@@ -255,12 +263,12 @@ export class OrgIndexComponent {
           }
         },
         {
-          key: "phoneNumber",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
+          key: 'phoneNumber',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
           templateOptions: {
-            label: "Primary Contact Phone Number",
+            label: 'Primary Contact Phone Number',
             pattern: /\+?[0-9]+/,
             required: true
           },
@@ -269,21 +277,21 @@ export class OrgIndexComponent {
           }
         },
       ]
-    }, 
+    },
     {
-      key: "attributes.accepts",
-      type: "multicheckbox",
-      className: "",
+      key: 'attributes.accepts',
+      type: 'multicheckbox',
+      className: '',
       defaultValue: [],
       templateOptions: {
         type: 'array',
-        label: "What types of devices are you looking for?",
+        label: 'What types of devices are you looking for?',
         multiple: true,
         options: [
-          {value: "LAPTOPS", label: "Laptops"},
-          {value: "PHONES", label: "Phones"},
-          {value: "TABLETS", label: "Tablets" },
-          {value: "ALLINONES", label: "All In Ones" },
+          {value: 'LAPTOPS', label: 'Laptops'},
+          {value: 'PHONES', label: 'Phones'},
+          {value: 'TABLETS', label: 'Tablets' },
+          {value: 'ALLINONES', label: 'All In Ones' },
         ],
         required: true
       },
@@ -296,7 +304,7 @@ export class OrgIndexComponent {
     },
     {
       fieldGroupClassName: 'row',
-      hideExpression: "!model.attributes.accepts.length",
+      hideExpression: '!model.attributes.accepts.length',
       fieldGroup: [
         {
           className: 'col-12',
@@ -305,90 +313,90 @@ export class OrgIndexComponent {
           `
         },
         {
-          key: "attributes.request.laptops",
-          type: "input",
-          className: "col-6",
+          key: 'attributes.request.laptops',
+          type: 'input',
+          className: 'col-6',
           defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') < 0',
           templateOptions: {
             min: 0,
-            label: 'Laptops', 
+            label: 'Laptops',
             addonLeft: {
               class: 'fas fa-laptop'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
         {
-          key: "attributes.request.phones",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') < 0",
+          key: 'attributes.request.phones',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') < 0',
           defaultValue: 0,
           templateOptions: {
             min: 0,
-            label: "Phones",
+            label: 'Phones',
             addonLeft: {
               class: 'fas fa-mobile-alt'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
         {
-          key: "attributes.request.tablets",
-          type: "input",
-          className: "col-6",
+          key: 'attributes.request.tablets',
+          type: 'input',
+          className: 'col-6',
           defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') < 0",
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') < 0',
           templateOptions: {
             min: 0,
-            label: "Tablets",
+            label: 'Tablets',
             addonLeft: {
               class: 'fas fa-tablet-alt'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
         {
-          key: "attributes.request.allInOnes",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') < 0",
+          key: 'attributes.request.allInOnes',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') < 0',
           defaultValue: 0,
           templateOptions: {
             min: 0,
-            label: "All In Ones",
+            label: 'All In Ones',
             addonLeft: {
               class: 'fas fa-desktop'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
       ]
     },
     {
-      key: "attributes.alternateAccepts",
-      type: "multicheckbox",
-      className: "",
-      hideExpression: "!model.attributes.accepts.length || model.attributes.accepts.length == 4",
+      key: 'attributes.alternateAccepts',
+      type: 'multicheckbox',
+      className: '',
+      hideExpression: '!model.attributes.accepts.length || model.attributes.accepts.length == 4',
       defaultValue: [],
       templateOptions: {
         type: 'array',
-        label: "If none of the items listed above are available, would you be willing to consider any of the following?",
+        label: 'If none of the items listed above are available, would you be willing to consider any of the following?',
         multiple: true,
         options: [
-          {value: "LAPTOPS", label: "Laptops"},
-          {value: "PHONES", label: "Phones"},
-          {value: "TABLETS", label: "Tablets" },
-          {value: "ALLINONES", label: "All In Ones" },
+          {value: 'LAPTOPS', label: 'Laptops'},
+          {value: 'PHONES', label: 'Phones'},
+          {value: 'TABLETS', label: 'Tablets' },
+          {value: 'ALLINONES', label: 'All In Ones' },
         ],
         required: false
       },
@@ -399,19 +407,19 @@ export class OrgIndexComponent {
         'validation.show': 'model.showErrorState',
         'templateOptions.options': (model, state) => {
           const opts = [
-            {value: "LAPTOPS", label: "Laptops"},
-            {value: "PHONES", label: "Phones"},
-            {value: "TABLETS", label: "Tablets" },
-            {value: "ALLINONES", label: "All In Ones" },
+            {value: 'LAPTOPS', label: 'Laptops'},
+            {value: 'PHONES', label: 'Phones'},
+            {value: 'TABLETS', label: 'Tablets' },
+            {value: 'ALLINONES', label: 'All In Ones' },
           ];
-          var values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
+          const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
           return values;
         }
       }
     },
     {
       fieldGroupClassName: 'row',
-      hideExpression: "!model.attributes.alternateAccepts.length",
+      hideExpression: '!model.attributes.alternateAccepts.length',
       fieldGroup: [
         {
           className: 'col-12',
@@ -420,75 +428,75 @@ export class OrgIndexComponent {
           `
         },
         {
-          key: "attributes.alternateRequest.laptops",
-          type: "input",
-          className: "col-6",
+          key: 'attributes.alternateRequest.laptops',
+          type: 'input',
+          className: 'col-6',
           defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') > -1 || model.attributes.alternateAccepts.toString().indexOf('LAPTOP') < 0",
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'LAPTOP\') < 0',
           templateOptions: {
             min: 0,
-            label: 'Laptops', 
+            label: 'Laptops',
             addonLeft: {
               class: 'fas fa-laptop'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
         {
-          key: "attributes.alternateRequest.phones",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('PHONE') < 0",
+          key: 'attributes.alternateRequest.phones',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'PHONE\') < 0',
           defaultValue: 0,
           templateOptions: {
             min: 0,
-            label: "Phones",
+            label: 'Phones',
             addonLeft: {
               class: 'fas fa-mobile-alt'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
         {
-          key: "attributes.alternateRequest.tablets",
-          type: "input",
-          className: "col-6",
+          key: 'attributes.alternateRequest.tablets',
+          type: 'input',
+          className: 'col-6',
           defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') > -1 || model.attributes.alternateAccepts.toString().indexOf('TABLET') < 0",
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'TABLET\') < 0',
           templateOptions: {
             min: 0,
-            label: "Tablets",
+            label: 'Tablets',
             addonLeft: {
               class: 'fas fa-tablet-alt'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
         {
-          key: "attributes.alternateRequest.allInOnes",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('ALLINONE') < 0",
+          key: 'attributes.alternateRequest.allInOnes',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'ALLINONE\') < 0',
           defaultValue: 0,
           templateOptions: {
             min: 0,
-            label: "All In Ones",
+            label: 'All In Ones',
             addonLeft: {
               class: 'fas fa-desktop'
             },
-            type: "number",
-            placeholder: "",
+            type: 'number',
+            placeholder: '',
             required: true
           }
         },
       ]
-    }, 
+    },
   ];
 
 
@@ -496,124 +504,127 @@ export class OrgIndexComponent {
   ownerInput$ = new Subject<string>();
   ownerLoading = false;
   ownerField: FormlyFieldConfig = {
-    key: "userIds",
-    type: "choice",
-    className: "col-md-12",
+    key: 'userIds',
+    type: 'choice',
+    className: 'col-md-12',
     templateOptions: {
-      label: "Organising Volunteer",
-      description: "The organising volunteer this organisation is currently assigned to.",
+      label: 'Organising Volunteer',
+      description: 'The organising volunteer this organisation is currently assigned to.',
       loading: this.ownerLoading,
       typeahead: this.ownerInput$,
-      placeholder: "Assign device to Organiser Volunteers",
+      placeholder: 'Assign device to Organiser Volunteers',
       multiple: true,
       searchable: true,
       items: [],
       required: false
     },
   };
-  
+
   filter: any = {};
   filterCount = 0;
   filterModel: any = {archived: [false]};
   filterForm: FormGroup = new FormGroup({});
   filterFields: Array<FormlyFieldConfig> = [
     {
-      fieldGroupClassName: "row",
+      fieldGroupClassName: 'row',
       fieldGroup: [
         {
-          key: "accepts",
-          type: "multicheckbox",
-          className: "col-sm-4",
+          key: 'accepts',
+          type: 'multicheckbox',
+          className: 'col-sm-4',
           defaultValue: [],
           templateOptions: {
-            label: "Accepts",
-            type: "array",
+            label: 'Accepts',
+            type: 'array',
             options: [
-              {label: "Laptop", value: "LAPTOPS" },
-              {label: "Tablet", value: "TABLETS" },
-              {label: "Smart Phone", value: "PHONES" },
-              {label: "All In One (PC)", value: "ALLINONES" }
+              {label: 'Laptop', value: 'LAPTOPS' },
+              {label: 'Tablet', value: 'TABLETS' },
+              {label: 'Smart Phone', value: 'PHONES' },
+              {label: 'All In One (PC)', value: 'ALLINONES' }
             ],
           }
         },
         {
-          key: "alternateAccepts",
-          type: "multicheckbox",
-          className: "col-sm-4",
+          key: 'alternateAccepts',
+          type: 'multicheckbox',
+          className: 'col-sm-4',
           defaultValue: [],
           templateOptions: {
-            label: "Alternate Accepts",
-            type: "array",
+            label: 'Alternate Accepts',
+            type: 'array',
             options: [
-              {label: "Laptop", value: "LAPTOPS" },
-              {label: "Tablet", value: "TABLETS" },
-              {label: "Smart Phone", value: "PHONES" },
-              {label: "All In One (PC)", value: "ALLINONES" }
+              {label: 'Laptop', value: 'LAPTOPS' },
+              {label: 'Tablet', value: 'TABLETS' },
+              {label: 'Smart Phone', value: 'PHONES' },
+              {label: 'All In One (PC)', value: 'ALLINONES' }
             ],
-          } 
+          }
         },
         {
-          key: "archived",
-          type: "multicheckbox",
-          className: "col-sm-4",
+          key: 'archived',
+          type: 'multicheckbox',
+          className: 'col-sm-4',
           defaultValue: [false],
           templateOptions: {
             type: 'array',
-            label: "Filter by Archived?",
+            label: 'Filter by Archived?',
             options: [
-              {label: "Active Requests", value: false },
-              {label: "Archived Requests", value: true },
+              {label: 'Active Requests', value: false },
+              {label: 'Archived Requests', value: true },
             ],
             required: false,
           }
-        }, 
+        },
         this.ownerField
       ]
     }
   ];
 
-  applyFilter(data){
-    var filter = {"OR": [], "AND": []};
-    var count = 0;
+  @Input()
+  tableId = 'org-index';
 
-    if(data.accepts && data.accepts.length) {
+  applyFilter(data) {
+    const filter = {'OR': [], 'AND': []};
+    let count = 0;
+
+    if (data.accepts && data.accepts.length) {
       count = count + data.accepts.length;
-      var filt = {
+      const filt = {
         attributes: {
           filters: [
             {
-              key: "accepts",
+              key: 'accepts',
               _in: data.accepts
             }
           ]
         }
-      }
-      filter["AND"].push(filt);
+      };
+      filter['AND'].push(filt);
     }
 
-    if(data.alternateAccepts && data.alternateAccepts.length) {
+    if (data.alternateAccepts && data.alternateAccepts.length) {
       count = count + data.alternateAccepts.length;
-      var filt = {
+      const filt = {
         attributes: {
           filters: [
             {
-              key: "alternateAccepts",
+              key: 'alternateAccepts',
               _in: data.alternateAccepts
             }
           ]
         }
-      }
-      filter["AND"].push(filt);
+      };
+      filter['AND'].push(filt);
     }
 
-    if(data.archived && data.archived.length){
+    if (data.archived && data.archived.length) {
       count += data.archived.length;
-      filter["archived"] = {_in: data.archived}
+      filter['archived'] = {_in: data.archived};
     }
 
-    if(data.userIds && data.userIds.length){
+    if (data.userIds && data.userIds.length) {
       count += data.userIds.length;
-      filter["volunteer"] = {id: {_in: data.userIds}};
+      filter['volunteer'] = {id: {_in: data.userIds}};
     }
 
     localStorage.setItem(`orgFilters-${this.tableId}`, JSON.stringify(data));
@@ -621,17 +632,6 @@ export class OrgIndexComponent {
     this.filterCount = count;
     this.filterModel = data;
     this.table.ajax.reload(null, false);
-  }
-
-  @Input()
-  tableId = "org-index"
-
-  constructor(
-    private modalService: NgbModal,
-    private toastr: ToastrService,
-    private apollo: Apollo
-  ) {
-
   }
 
   modal(content) {
@@ -649,7 +649,7 @@ export class OrgIndexComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -696,9 +696,9 @@ export class OrgIndexComponent {
             const data = res['data']['volunteersConnection']['content'].map(v => {
               return {
                 label: `${this.volunteerName(v)}`, value: v.id
-              }
+              };
             });
-            return of(data)
+            return of(data);
           })
         ))
       )
@@ -711,9 +711,9 @@ export class OrgIndexComponent {
     this.dtOptions = {
       pagingType: 'simple_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: 10,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [7, 'desc'],
@@ -722,37 +722,37 @@ export class OrgIndexComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           term: params['search']['value'],
           filter: this.filter
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['organisationsConnection'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             data.content.forEach(d => {
               d.types = {};
-              if(d.kits && d.kits.length){
+              if (d.kits && d.kits.length) {
                 d.kits.forEach(k => {
-                  var t = `${k.type}S`;
+                  const t = `${k.type}S`;
                   d.types[t] = d.types[t] || 0;
-                  d.types[t]++; 
+                  d.types[t]++;
                 });
               }
             });
@@ -763,7 +763,7 @@ export class OrgIndexComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -781,7 +781,7 @@ export class OrgIndexComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -799,7 +799,7 @@ export class OrgIndexComponent {
   }
 
   volunteerName(data) {
-    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length).join(' / ').trim();
   }
 
   ngOnDestory() {
@@ -813,35 +813,35 @@ export class OrgIndexComponent {
       this.table = tbl;
       try {
         this.filterModel = JSON.parse(localStorage.getItem(`orgFilters-${this.tableId}`)) || {archived: [false]};
-        if(this.filterModel && (this.filterModel.userIds) ){
+        if (this.filterModel && (this.filterModel.userIds) ) {
           this.apollo.query({
             query: FIND_USERS,
             variables: {
               userIds: this.filterModel.userIds || [],
             }
           }).toPromise().then(res => {
-            if(res.data){
-              if(res.data['volunteers']){
+            if (res.data) {
+              if (res.data['volunteers']) {
                 this.ownerField.templateOptions['items'] = res.data['volunteers'].map(v => {
-                  return {label: this.volunteerName(v), value: v.id }
+                  return {label: this.volunteerName(v), value: v.id };
                 });
               }
             }
           });
         }
-      }catch(_){
+      } catch (_) {
         this.filterModel = {archived: [false]};
       }
 
       try {
         this.applyFilter(this.filterModel);
         this.filterForm.patchValue(this.filterModel);
-      }catch(_){
+      } catch (_) {
       }
     });
-  } 
+  }
 
-  createEntity(data: any) { 
+  createEntity(data: any) {
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: { data }
@@ -855,7 +855,7 @@ export class OrgIndexComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
 
@@ -869,7 +869,7 @@ export class OrgIndexComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

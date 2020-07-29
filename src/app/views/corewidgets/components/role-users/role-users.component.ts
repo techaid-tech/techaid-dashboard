@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -67,7 +67,7 @@ query typeaheadFindAllUsers($page: PaginationInput!, $term: String) {
 @Component({
   selector: 'role-users',
   styleUrls: ['role-users.scss'],
- 
+
   templateUrl: './role-users.html'
 })
 export class RoleUsersComponent {
@@ -87,16 +87,16 @@ export class RoleUsersComponent {
   apis$: Observable<any>;
   apis: any[] = [];
   apiInput$ = new Subject<string>();
-  apiLoading = false
+  apiLoading = false;
   appField: FormlyFieldConfig = {
-    key: "users",
-    type: "choice",
-    className: "col-md-12",
+    key: 'users',
+    type: 'choice',
+    className: 'col-md-12',
     templateOptions: {
-      label: "",
+      label: '',
       loading: this.apiLoading,
       typeahead: this.apiInput$,
-      placeholder: "Select a User",
+      placeholder: 'Select a User',
       multiple: true,
       searchable: true,
       items: this.apis,
@@ -115,7 +115,7 @@ export class RoleUsersComponent {
   ) {
   }
 
-  private _roleId: string = "";
+  private _roleId = '';
   @Input()
   set roleId(str: string) {
     this._roleId = str;
@@ -124,7 +124,7 @@ export class RoleUsersComponent {
     }
   }
 
-  private _roleName: string = "";
+  private _roleName = '';
   @Input()
   set roleName(str: string) {
     this._roleName = str;
@@ -151,7 +151,7 @@ export class RoleUsersComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -197,9 +197,9 @@ export class RoleUsersComponent {
           tap(() => this.apiLoading = false),
           switchMap(res => {
             const data = res['data']['users']['content'].map(v => {
-              return { label: `${v.name} (${v.email || v.phoneNumber})`, value: v.id }
+              return { label: `${v.name} (${v.email || v.phoneNumber})`, value: v.id };
             });
-            return of(data)
+            return of(data);
           })
         ))
       )
@@ -212,9 +212,9 @@ export class RoleUsersComponent {
     this.dtOptions = {
       pagingType: 'full_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: 5,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [0, 'desc'],
@@ -223,29 +223,29 @@ export class RoleUsersComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: (o.dir == 'asc') ? 1 : -1
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           roleId: this._roleId,
           term: params['search']['value']
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res && res.data) {
             data = res['data']['role']['users'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -254,7 +254,7 @@ export class RoleUsersComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -272,7 +272,7 @@ export class RoleUsersComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -297,7 +297,7 @@ export class RoleUsersComponent {
   assignRoles(data: any) {
     this.apollo.mutate({
       mutation: CREATE_USER_ROLES,
-      variables: { 
+      variables: {
         roleId: this._roleId,
         userIds: data.users
       }
@@ -313,7 +313,7 @@ export class RoleUsersComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
   deleteUser(user: any) {
@@ -331,7 +331,7 @@ export class RoleUsersComponent {
       `, 'Error Deleting Role', {
           enableHtml: true
         });
-    })
+    });
   }
 
   select(row?: any) {
@@ -344,7 +344,7 @@ export class RoleUsersComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
-import { FieldType } from "@ngx-formly/core";
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FieldType } from '@ngx-formly/core';
 
 @Component({
   selector: 'form-place',
@@ -9,7 +9,7 @@ import { FieldType } from "@ngx-formly/core";
           #placesRef
           [formControl]="formControl"
           autocomplete="off"
-          [class.is-invalid]="showError" 
+          [class.is-invalid]="showError"
           placeholder="{{this.to.placeholder}}"
         />
         <div class="input-group-append">
@@ -26,16 +26,16 @@ export class PlaceInput extends FieldType {
     const autocomplete = new google.maps.places.Autocomplete(this.placesRef.nativeElement, this.to.mapOptions || {});
       google.maps.event.addListener(autocomplete, 'place_changed', () => {
           const place = autocomplete.getPlace();
-          if(this.to.postCode){
-            var addr = <any>(place.address_components.find(a => a.types.indexOf("postal_code") > -1) || {});
-            this.formControl.setValue(addr.long_name || place.formatted_address); 
-          }else{
+          if (this.to.postCode) {
+            const addr = <any>(place.address_components.find(a => a.types.indexOf('postal_code') > -1) || {});
+            this.formControl.setValue(addr.long_name || place.formatted_address);
+          } else {
             this.formControl.setValue(place.formatted_address);
           }
       });
   }
 
-  clear(){
+  clear() {
     this.formControl.setValue(null);
   }
 }

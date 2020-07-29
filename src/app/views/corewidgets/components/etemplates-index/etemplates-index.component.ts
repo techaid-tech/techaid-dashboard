@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -61,7 +61,7 @@ mutation createFaq($data: CreateEmailTemplateInput!) {
 @Component({
   selector: 'etemplates-index',
   styleUrls: ['etemplates-index.scss'],
- 
+
   templateUrl: './etemplates-index.html'
 })
 export class EmailTemplatesIndexComponent {
@@ -83,24 +83,24 @@ export class EmailTemplatesIndexComponent {
       fieldGroupClassName: 'row',
       fieldGroup: [
         {
-          key: "subject",
-          type: "input",
-          className: "col-9",
-          defaultValue: "",
+          key: 'subject',
+          type: 'input',
+          className: 'col-9',
+          defaultValue: '',
           templateOptions: {
-            label: "Name",
-            placeholder: "",
+            label: 'Name',
+            placeholder: '',
             required: true
           }
         },
         {
-          key: "active",
-          type: "checkbox",
-          className: "col-3",
+          key: 'active',
+          type: 'checkbox',
+          className: 'col-3',
           defaultValue: true,
           templateOptions: {
-            label: "Active?",
-            placeholder: "",
+            label: 'Active?',
+            placeholder: '',
             required: false
           }
         },
@@ -120,7 +120,7 @@ export class EmailTemplatesIndexComponent {
   pageLength = 10;
 
   @Input()
-  tableId = "email-templates";
+  tableId = 'email-templates';
 
   modal(content) {
     this.modalService.open(content, { centered: true, size: 'lg' });
@@ -137,7 +137,7 @@ export class EmailTemplatesIndexComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -165,9 +165,9 @@ export class EmailTemplatesIndexComponent {
     this.dtOptions = {
       pagingType: 'simple_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: this.pageLength,
       lengthMenu: [ 5, 10, 25, 50, 100 ],
       order: [1, 'desc'],
@@ -176,28 +176,28 @@ export class EmailTemplatesIndexComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           term: params['search']['value']
-        }
+        };
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['emailTemplatesConnection'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -206,7 +206,7 @@ export class EmailTemplatesIndexComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -224,7 +224,7 @@ export class EmailTemplatesIndexComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -248,8 +248,8 @@ export class EmailTemplatesIndexComponent {
     });
   }
 
-  createEntity(data: any) { 
-    data.body = "";
+  createEntity(data: any) {
+    data.body = '';
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: { data }
@@ -263,7 +263,7 @@ export class EmailTemplatesIndexComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
 
@@ -277,7 +277,7 @@ export class EmailTemplatesIndexComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

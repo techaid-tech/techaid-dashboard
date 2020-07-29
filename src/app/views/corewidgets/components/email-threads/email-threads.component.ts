@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -87,14 +87,14 @@ export class EmailThreadsComponent {
   sub: Subscription;
   table: any;
   selections = {};
-  filter = {email: "", threadId: "", labelIds: []};
+  filter = {email: '', threadId: '', labelIds: []};
   entities = [];
   form: FormGroup = new FormGroup({});
   model = {};
   selected = {};
-  loading: boolean = false;
+  loading = false;
   pages = {
-    nextPageToken: "",
+    nextPageToken: '',
     stack: []
   };
   public user: User;
@@ -116,57 +116,57 @@ export class EmailThreadsComponent {
 
   }
 
-  paginate(next: Boolean){
-    if(next){
+  paginate(next: Boolean) {
+    if (next) {
       this.pages.stack.push(this.pages.nextPageToken);
       this.fetchData({pageToken: this.pages.nextPageToken});
-    }else {
-      var page = this.pages.stack.pop();
-      this.fetchData({pageToken: page}); 
+    } else {
+      const page = this.pages.stack.pop();
+      this.fetchData({pageToken: page});
     }
     return false;
   }
 
   @Input()
-  set email(value){
+  set email(value) {
     this.filter.email = value;
     this.refresh();
   }
 
   @Input()
-  set thread(value){
+  set thread(value) {
     this.filter.threadId = value;
     this.refresh();
   }
 
   @Input()
-  set labelIds(value){
+  set labelIds(value) {
     this.filter.labelIds = value;
     this.refresh();
   }
- 
+
 
   modal(content) {
     this.modalService.open(content, { centered: true, size: 'lg' });
   }
 
-  fetchData(vars = {}){
+  fetchData(vars = {}) {
     this.loading = true;
-    vars["query"] = `${this.filter.email} ${vars['query'] || ''}`.trim();
-    vars["id"] = this.filter.threadId;
-    vars["labels"] = this.filter.labelIds;
+    vars['query'] = `${this.filter.email} ${vars['query'] || ''}`.trim();
+    vars['id'] = this.filter.threadId;
+    vars['labels'] = this.filter.labelIds;
     this.queryRef.refetch(vars).then(res => {
         this.loading = false;
-        var data: any = {};
+        let data: any = {};
         if (res.data) {
           data = res['data']['emailThreads'];
           this.pages.nextPageToken = data.nextPageToken;
           this.entities = data.threads || [];
           this.entities.forEach(thread => {
             (thread.messages || []).forEach(m => {
-              var addr = [].concat(m.payload.to || []).concat(m.payload.from || []);
+              const addr = [].concat(m.payload.to || []).concat(m.payload.from || []);
               m.address = (addr.find(x => x.value.toLowerCase().indexOf('covidtechaid@gmail.com') == -1) || {}).value;
-              m.email = (m.address || "").replace(/.*<([^>]+)>/, "$1");
+              m.email = (m.address || '').replace(/.*<([^>]+)>/, '$1');
             });
           });
         }
@@ -176,17 +176,17 @@ export class EmailThreadsComponent {
   }
 
 
-  refresh(){
+  refresh() {
     this.fetchData();
   }
 
   ngOnInit() {
     this.sub = this.search$.subscribe(query => {
       this.pages = {
-        nextPageToken: "",
+        nextPageToken: '',
         stack: []
       };
-      this.fetchData({query: query})
+      this.fetchData({query: query});
     });
     this.sub.add(this.user$.subscribe(user => {
       this.user = user;

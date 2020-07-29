@@ -1,4 +1,4 @@
-import { User } from "../user.state";
+import { User } from '../user.state';
 
 export class LoginUser {
     static readonly type = '[User API] Login User';

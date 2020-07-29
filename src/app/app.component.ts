@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { RouterNavigation } from '@ngxs/router-plugin';
 import { Store, Actions, ofAction } from '@ngxs/store';
-import { Subscription } from "rxjs";
+import { Subscription } from 'rxjs';
 import { APP_VERSION } from '@env/version';
 
 @Component({
@@ -26,7 +26,7 @@ export class AppComponent {
 
   handleAction(action) {
     if (action.state && action.state.root && action.state.root.queryParams.advanced) {
-      let html = `
+      const html = `
         <small>
           <p>We trust you have received the usual lecture from the System Administrator.</p>
           <hr />
@@ -36,7 +36,7 @@ export class AppComponent {
       this.toastr.warning(html, 'Advanced Mode Activated', {
         enableHtml: true,
         timeOut: 15000
-      })
+      });
     }
   }
 

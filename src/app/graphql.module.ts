@@ -8,7 +8,7 @@ import { onError } from 'apollo-link-error';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { mergeMap, catchError, map, flatMap, switchMap, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { setContext } from "apollo-link-context";
+import { setContext } from 'apollo-link-context';
 
 
 export function createApollo(httpLink: HttpLink, config: ConfigService, authService: AuthenticationService) {
@@ -20,10 +20,10 @@ export function createApollo(httpLink: HttpLink, config: ConfigService, authServ
   const asyncAuthLink = setContext((request, previous) =>  new Promise((success, fail) => {
     authService.getTokenSilently$({audience: 'https://lambeth-techaid.ju.ma'}).subscribe(
       token => {
-        success({headers: {  'Authorization': `Bearer ${token}`}})
+        success({headers: {  'Authorization': `Bearer ${token}`}});
       },
       err => success({})
-    )
+    );
   }));
 
   const errorHandler = onError(({ graphQLErrors, networkError, operation, forward }) => {

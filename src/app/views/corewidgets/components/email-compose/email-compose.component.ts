@@ -28,7 +28,7 @@ const QUERY_TEMPLATES = gql`
 const QUERY_VARIABLES = gql`
   query findVariables($to: String!, $user: String){
     donor(where: {email: {_eq: $to}}){
-        id 
+        id
         name
         email
         phoneNumber
@@ -49,7 +49,7 @@ const QUERY_VARIABLES = gql`
                 {email: {_neq: ""}}
             ]
         }){
-        id 
+        id
         name
         email
         phoneNumber
@@ -57,7 +57,7 @@ const QUERY_VARIABLES = gql`
     }
 
     organisation(where: {email: {_eq: $to}}){
-        id 
+        id
         name
         email
         website
@@ -196,22 +196,22 @@ export class EmailComposeComponent {
     @Select(UserState.user) user$: Observable<User>;
     form: FormGroup = new FormGroup({});
     options: FormlyFormOptions = {};
-    model : any = {};
+    model: any = {};
     messageThread: any = {};
     message: any = {};
     variables: any = {};
     sub: Subscription;
     templatesField: FormlyFieldConfig = {
-        key: "template",
-        type: "choice",
-        className: "col-md-12",
+        key: 'template',
+        type: 'choice',
+        className: 'col-md-12',
         hide: true,
         hooks: {
-            onInit: (field)=> {
+            onInit: (field) => {
                 this.sub.add(field.formControl.valueChanges.subscribe(v => {
-                    if(v && v.body){
-                        var data  = HashUtils.interpolate(v.body, this.variables);
-                        if(this.model.body && this.model.body.trim().length){
+                    if (v && v.body) {
+                        let data  = HashUtils.interpolate(v.body, this.variables);
+                        if (this.model.body && this.model.body.trim().length) {
                             data = `${this.model.body}<br />${data}`;
                         }
                         this.form.patchValue({
@@ -223,9 +223,9 @@ export class EmailComposeComponent {
             }
         },
         templateOptions: {
-          label: "Email Template",
-          description: "The pre-configured email template to use.",
-          placeholder: "Select an email template",
+          label: 'Email Template',
+          description: 'The pre-configured email template to use.',
+          placeholder: 'Select an email template',
           multiple: false,
           searchable: true,
           items: [],
@@ -235,16 +235,16 @@ export class EmailComposeComponent {
 
     fields: Array<FormlyFieldConfig> = [
         {
-            key: "to",
-            type: "input",
-            className: "col-md-12",
-            defaultValue: "",
+            key: 'to',
+            type: 'input',
+            className: 'col-md-12',
+            defaultValue: '',
             templateOptions: {
-              placeholder: "To",
+              placeholder: 'To',
               pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
               required: true,
               change: (field) => {
-                  if(field.formControl.valid){
+                  if (field.formControl.valid) {
                     this.fetchVariables(field.formControl.value);
                   }
               },
@@ -254,31 +254,31 @@ export class EmailComposeComponent {
             }
         },
         {
-            key: "subject",
-            type: "input",
-            className: "col-md-12",
-            defaultValue: "",
+            key: 'subject',
+            type: 'input',
+            className: 'col-md-12',
+            defaultValue: '',
             templateOptions: {
-              placeholder: "Subject",
+              placeholder: 'Subject',
               required: true,
             },
-            hideExpression: "model.messageId"
+            hideExpression: 'model.messageId'
         },
         this.templatesField,
         {
-            key: "body",
-            type: "richtext",
-            className: "col-md-12",
-            defaultValue: "",
+            key: 'body',
+            type: 'richtext',
+            className: 'col-md-12',
+            defaultValue: '',
             templateOptions: {
-              label: "",
-              placeholder: "",
+              label: '',
+              placeholder: '',
               editorConfig: {
                 height: 300,
                 allowedContent: true,
                 contentsCss: []
               },
-              type: "divarea",
+              type: 'divarea',
               required: false,
               htmlEdit: false
             }
@@ -292,17 +292,17 @@ export class EmailComposeComponent {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private location: Location ) {
-    
+
       }
 
-    fetchVariables(email: String){
-        if(!email || !email.length){
+    fetchVariables(email: String) {
+        if (!email || !email.length) {
             this.variables = {};
             return;
         }
 
-        var user = "";
-        if(this.user && this.user['email']){
+        let user = '';
+        if (this.user && this.user['email']) {
             user = this.user['email'];
         }
         this.apollo.query({
@@ -312,11 +312,11 @@ export class EmailComposeComponent {
                 user: user
             }
         }).toPromise().then(res => {
-           this.variables = Object.assign({}, res.data); 
+           this.variables = Object.assign({}, res.data);
         });
     }
 
-    ngOnInit(){
+    ngOnInit() {
         const queryRef = this.apollo
         .watchQuery({
           query: QUERY_EMAIL,
@@ -326,9 +326,9 @@ export class EmailComposeComponent {
         this.apollo.query({
         query: QUERY_TEMPLATES,
         }).toPromise().then(res => {
-            if(res.data && res.data['emailTemplates']){
+            if (res.data && res.data['emailTemplates']) {
                 const templates = res.data['emailTemplates'].map((r) => {
-                    return {label: r.subject, value: r}
+                    return {label: r.subject, value: r};
                 });
                 this.templatesField.hide = templates.length <= 0;
                 this.templatesField.templateOptions.items = templates;
@@ -336,7 +336,7 @@ export class EmailComposeComponent {
         });
 
         this.sub = this.activatedRoute.queryParams.subscribe(params => {
-            if(params.to){
+            if (params.to) {
                 this.model.to = params.to;
                 this.model.email = params.to;
                 this.fields[0].templateOptions.readonly = true;
@@ -344,11 +344,11 @@ export class EmailComposeComponent {
             }
             this.model.thread = params.thread;
             this.model.messageId = params.id;
-            if(params.id) {
+            if (params.id) {
                queryRef.refetch({
                    id: params.id
                }).then(res => {
-                   if(res && res.data && res.data['email']){
+                   if (res && res.data && res.data['email']) {
                       this.message = res.data['email'];
                    }
                }, err => {
@@ -378,7 +378,7 @@ export class EmailComposeComponent {
     @Input()
     to(value: String) {
         this.model.to = value;
-    } 
+    }
 
     @Input()
     subject(value: String) {
@@ -386,20 +386,20 @@ export class EmailComposeComponent {
     }
 
     @Input()
-    thread(value: any){
+    thread(value: any) {
         this.messageThread = value;
     }
 
-    back(){
+    back() {
         this.location.back();
     }
 
-    save(data: any){
+    save(data: any) {
         delete data['template'];
-        if(this.model.messageId && this.model.messageId.length){
-            this.quoted.nativeElement.innerHTML
-            if(this.quoted && this.quoted.nativeElement && this.quoted.nativeElement.innerHTML){
-                data.body = `${data.body} <div><br /></div><br />${this.quoted.nativeElement.innerHTML}`
+        if (this.model.messageId && this.model.messageId.length) {
+            this.quoted.nativeElement.innerHTML;
+            if (this.quoted && this.quoted.nativeElement && this.quoted.nativeElement.innerHTML) {
+                data.body = `${data.body} <div><br /></div><br />${this.quoted.nativeElement.innerHTML}`;
             }
             this.replyEmail(data);
             return;
@@ -407,22 +407,22 @@ export class EmailComposeComponent {
         this.sendEmail(data);
     }
 
-    replyEmail(data: any){
+    replyEmail(data: any) {
         data.mimeType = 'html';
-        data.subject = data.subject || "";
+        data.subject = data.subject || '';
         this.apollo.mutate<any>({
             mutation: REPLY_EMAIL,
             variables: {
                 data: data,
                 id: this.model.messageId
-            } 
+            }
          }).subscribe(res => {
             this.emailThreads.refresh();
-            if(res.data.replyEmail){
+            if (res.data.replyEmail) {
                 this.form.setValue({
-                    body: "",
+                    body: '',
                     to: this.model.to,
-                    template: ""
+                    template: ''
                 });
                 this.router.navigate(['/dashboard/email'], {
                     queryParams: {
@@ -442,20 +442,20 @@ export class EmailComposeComponent {
         });
     }
 
-    sendEmail(data: any){
+    sendEmail(data: any) {
         data.mimeType = 'html';
-        data.subject = data.subject || "";
+        data.subject = data.subject || '';
         this.apollo.mutate<any>({
             mutation: SEND_EMAIL,
-            variables: {data} 
+            variables: {data}
          }).subscribe(res => {
             this.emailThreads.refresh();
-            if(res.data.sendEmail){
+            if (res.data.sendEmail) {
                 this.message = data.sendEmail;
                 this.form.setValue({
-                    subject: "",
-                    body: "",
-                    template: "",
+                    subject: '',
+                    body: '',
+                    template: '',
                     to: this.model.to,
                 });
                 this.router.navigate(['/dashboard/email'], {

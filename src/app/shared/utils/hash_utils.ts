@@ -1,25 +1,25 @@
-import * as _ from "lodash";
+import * as _ from 'lodash';
 import * as moment from 'moment';
 import { DateUtils } from './date_utils';
 
 export interface Token {
-    start: number,
-    stop: number,
-    name: string,
-    content: string,
-    mode?: string,
-    embedded?: boolean,
-    type?: 'variable' | 'function',
-    quote?: string,
-    quoteMode?: string,
-    functionMode?: string,
-    args?: any[],
-    default?: string | Token
+    start: number;
+    stop: number;
+    name: string;
+    content: string;
+    mode?: string;
+    embedded?: boolean;
+    type?: 'variable' | 'function';
+    quote?: string;
+    quoteMode?: string;
+    functionMode?: string;
+    args?: any[];
+    default?: string | Token;
 }
 
 
 export function isObject(obj) {
-    return obj && (typeof obj === "object") && obj.constructor == Object;
+    return obj && (typeof obj === 'object') && obj.constructor == Object;
 }
 
 export function isNull(obj) {
@@ -31,7 +31,7 @@ export function isBlank(obj) {
 }
 
 export function escapeRegExp(string) {
-    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
 }
 
 export interface HashProcessor {
@@ -43,51 +43,47 @@ export function flattenDeep(arr1) {
 }
 
 export class HashUtils {
-
-    static blank(obj) {
-        return isBlank(obj);
-    }
     static processors: HashProcessor = {
-        "var": (args: string[], options) => {
+        'var': (args: string[], options) => {
             let data = null;
-            for (let arg of args) {
+            for (const arg of args) {
                 data = HashUtils.dotNotation(options.variables, arg) || HashUtils.dotNotation(options.env, arg);
-                if (data) break;
+                if (data) { break; }
             }
 
             return data;
         },
-        "empy.array": (args: string[], options) => {
+        'empy.array': (args: string[], options) => {
             return [];
         },
-        "empy.object": (args: string[], options) => {
+        'empy.object': (args: string[], options) => {
             return {};
         },
-        "random.int": (args: string[]) => {
+        'random.int': (args: string[]) => {
             let [min, max] = [0, 1000000];
-            if (args[0]) min = +args[0];
-            if (args[1]) max = +args[1];
+            if (args[0]) { min = +args[0]; }
+            if (args[1]) { max = +args[1]; }
             return Math.floor(Math.random() * (max - min + 1)) + min;
         },
-        "random.value": () => {
+        'random.value': () => {
             return Math.random();
         },
-        "time.now": () => {
+        'time.now': () => {
             return new Date();
         },
-        "date.today": () => {
+        'date.today': () => {
             return moment().startOf('day').toDate();
         },
-        "self": (args: string[], options: any) => {
+        'self': (args: string[], options: any) => {
             return HashUtils.dotNotation(options.env, args[0]);
         },
-        "date.format": (args: string[]) => {
-            let [date, format] = args;
+        'date.format': (args: string[]) => {
+            const [date, format] = args;
             let dt = null;
 
             if (typeof date == 'string') {
-                for (let fmt of DateUtils.options.formats) {
-                    let m = moment(date.substring(0, fmt.length), fmt, true);
+                for (const fmt of DateUtils.options.formats) {
+                    const m = moment(date.substring(0, fmt.length), fmt, true);
                     if (m.isValid()) {
                         dt = m;
                         break;
@@ -95,7 +91,7 @@ export class HashUtils {
                 }
             }
 
-            if (!dt) dt = moment(date);
+            if (!dt) { dt = moment(date); }
 
             if (dt.isValid()) {
                 return dt.format(format);
@@ -103,19 +99,19 @@ export class HashUtils {
 
             return null;
         },
-        "date.math": (args: string[]) => {
-            let [date, now] = args;
-            let opts: any = {};
+        'date.math': (args: string[]) => {
+            const [date, now] = args;
+            const opts: any = {};
             if (now) {
                 opts.now = now;
             }
 
             return DateUtils.math(date, opts);
         },
-        "date.parse": (args: string[]) => {
-            let [expr, format, strict] = args;
+        'date.parse': (args: string[]) => {
+            const [expr, format, strict] = args;
 
-            let m = moment(expr.substring(0, format.length), format, !!strict);
+            const m = moment(expr.substring(0, format.length), format, !!strict);
             if (m.isValid()) {
                 return m.toDate();
             }
@@ -124,12 +120,16 @@ export class HashUtils {
         },
     };
 
+    static blank(obj) {
+        return isBlank(obj);
+    }
+
     static mapToProperties(properties: any, hash: any, prefix = '') {
-        for (let key in hash) {
+        for (const key in hash) {
             if (hash.hasOwnProperty(key)) {
-                let value = hash[key];
+                const value = hash[key];
                 if (Array.isArray(value)) {
-                    let data = {};
+                    const data = {};
                     for (let i = 0; i < value.length; i++) {
                         data[`${key}[${i}]`] = value[i];
                     }
@@ -148,12 +148,12 @@ export class HashUtils {
     static setMapForKey(key: string, value: any, hash: any, options: any = {}) {
         let keys = [key];
         if (key.match(/^([a-zA-Z_\/\\-]+(\[\s*[0-9]+\s*\])?\.)*([a-zA-Z_\/\\-]+(\[\s*[0-9]+\s*\])?)$/)) {
-            keys = key.split(".").filter(v => v.trim().length);
+            keys = key.split('.').filter(v => v.trim().length);
         }
 
-        if (typeof value == 'string' && value == '{}') value = {};
-        if (typeof value == 'string' && value == '[]') value = [];
-        if (typeof value == 'string' && ['null', 'nil'].indexOf(value) > -1) value = null;
+        if (typeof value == 'string' && value == '{}') { value = {}; }
+        if (typeof value == 'string' && value == '[]') { value = []; }
+        if (typeof value == 'string' && ['null', 'nil'].indexOf(value) > -1) { value = null; }
 
         if (options.stringify) {
             value = (value === null || value === undefined) ? 'null' : value.toString();
@@ -162,19 +162,19 @@ export class HashUtils {
         if (keys.length) {
             let hashMap = hash;
             for (let i = 0; i < keys.length; i++) {
-                let k = keys[i];
-                let [__, arrKey, arrIndex] = key.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
-                let isLast = (i == (keys.length - 1));
+                const k = keys[i];
+                const [__, arrKey, arrIndex] = key.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
+                const isLast = (i == (keys.length - 1));
 
                 if (arrIndex) {
-                    if (!hashMap[arrKey]) hashMap[arrKey] = [];
+                    if (!hashMap[arrKey]) { hashMap[arrKey] = []; }
                     if (!Array.isArray(hashMap[arrKey])) {
                         throw new Error(`Element ${arrKey} is not an array but a ${typeof hashMap[arrKey]}`);
                     }
                     if (isLast) {
                         hashMap[arrKey][+arrIndex] = value;
                     } else {
-                        if (!hashMap[arrKey][+arrIndex]) hashMap[arrKey][+arrIndex] = {};
+                        if (!hashMap[arrKey][+arrIndex]) { hashMap[arrKey][+arrIndex] = {}; }
                         hashMap = hashMap[arrKey][+arrIndex];
                     }
                 } else {
@@ -189,9 +189,9 @@ export class HashUtils {
                             }
                         }
                     } else {
-                        if (!hashMap[k]) hashMap[k] = {};
+                        if (!hashMap[k]) { hashMap[k] = {}; }
                         if (!isObject(hashMap[k])) {
-                            throw new Error(`Element ${k} is a ${typeof hashMap[k]} not a hash.`)
+                            throw new Error(`Element ${k} is a ${typeof hashMap[k]} not a hash.`);
                         } else {
                             hashMap = hashMap[k];
                         }
@@ -204,10 +204,10 @@ export class HashUtils {
     }
 
     static flattenHash(...hashes): any {
-        let properties = {};
+        const properties = {};
         flattenDeep([].concat(...hashes)).forEach(data => {
             if (isObject(data)) {
-                HashUtils.mapToProperties(properties, data, "")
+                HashUtils.mapToProperties(properties, data, '');
             }
         });
 
@@ -215,9 +215,9 @@ export class HashUtils {
     }
 
     static mergeHashes(...hashes): any {
-        let properties = HashUtils.flattenHash(...hashes);
-        let data = {};
-        for (let key in properties) {
+        const properties = HashUtils.flattenHash(...hashes);
+        const data = {};
+        for (const key in properties) {
             HashUtils.setMapForKey(key, properties[key], data);
         }
 
@@ -233,8 +233,8 @@ export class HashUtils {
             if (Array.isArray(data)) {
                 return data;
             } else if (isObject(data)) {
-                let results = [];
-                for (let k in data) {
+                const results = [];
+                for (const k in data) {
                     if (data.hasOwnProperty(k)) {
                         results.push(data[k]);
                     }
@@ -249,9 +249,9 @@ export class HashUtils {
         if (isObject(data) && (key in data)) {
             let value = data[key];
             if (isObject(value)) {
-                let children = _.keys(data).filter(k => k.startsWith(`${key}.`));
+                const children = _.keys(data).filter(k => k.startsWith(`${key}.`));
                 if (children.length) {
-                    let val = {};
+                    const val = {};
                     children.forEach(k => {
                         val[k.replace(`${key}.`, '')] = data[k];
                     });
@@ -263,14 +263,14 @@ export class HashUtils {
             return value;
         }
 
-        let [__, arrKey, arrIndex] = key.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
+        const [__, arrKey, arrIndex] = key.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
         if (arrIndex && arrIndex.length) {
             if (data[arrKey]) {
                 if (arrIndex.trim() == '*') {
-                    let value = data[arrKey];
+                    const value = data[arrKey];
                     if (isObject(value)) {
-                        let results = [];
-                        for (let k in value) {
+                        const results = [];
+                        for (const k in value) {
                             if (value.hasOwnProperty(k)) {
                                 results.push(value[k]);
                             }
@@ -295,9 +295,9 @@ export class HashUtils {
         let value = null;
 
         if (vars.length > 1) {
-            let keys = Array(vars.length).fill(null).map((_, i) => vars.slice(0, i + 1).join('.'));
-            let primaryKey = keys.find(k => {
-                let [__, arrKey, arrIndex] = k.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
+            const keys = Array(vars.length).fill(null).map((_, i) => vars.slice(0, i + 1).join('.'));
+            const primaryKey = keys.find(k => {
+                const [__, arrKey, arrIndex] = k.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
                 if (arrIndex && arrIndex.trim() == '*') {
                     return Array.isArray(data[k]) || isObject(data[k]);
                 } else if (!arrIndex) {
@@ -309,12 +309,12 @@ export class HashUtils {
 
             if (primaryKey) {
                 vars = vars.slice(keys.findIndex(v => v == primaryKey) + 1, vars.length);
-                let [__, arrKey, arrIndex] = primaryKey.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
+                const [__, arrKey, arrIndex] = primaryKey.match(/^([^\[]+)\s*\[([\\*0-9]+)\]\s*$/) || [null, null, null];
                 if (arrIndex && arrIndex.trim() == '*') {
                     value = data[arrKey];
                     if (isObject(value)) {
-                        let results = [];
-                        for (let k in value) {
+                        const results = [];
+                        for (const k in value) {
                             if (value.hasOwnProperty(k)) {
                                 results.push(value[k]);
                             }
@@ -338,13 +338,13 @@ export class HashUtils {
             }
 
             if (vars.length && Array.isArray(value)) {
-                value = value.map(v => HashUtils.dotNotation(v, vars.join('.')))
+                value = value.map(v => HashUtils.dotNotation(v, vars.join('.')));
             }
 
             if (isObject(value)) {
-                let children = _.keys(data).filter(k => k.startsWith(`${key}.`));
+                const children = _.keys(data).filter(k => k.startsWith(`${key}.`));
                 if (children.length) {
-                    let val = {};
+                    const val = {};
                     children.forEach(k => {
                         val[k.replace(`${key}.`, '')] = data[k];
                     });
@@ -354,9 +354,9 @@ export class HashUtils {
             }
         } else {
             if (isObject(data)) {
-                let children = _.keys(data).filter(k => k.startsWith(`${key}.`));
+                const children = _.keys(data).filter(k => k.startsWith(`${key}.`));
                 if (children.length) {
-                    let val = {};
+                    const val = {};
                     children.forEach(k => {
                         val[k.replace(`${key}.`, '')] = data[k];
                     });
@@ -390,15 +390,15 @@ export class HashUtils {
         const QUOTES = options.quotes;
         const STACK: Token[] = [];
 
-        let tokens: Token[] = [];
+        const tokens: Token[] = [];
 
         let mode = 'IGNORE';
         for (let index = 0; index < expression.length; index++) {
-            let char = expression[index];
-            let lastChar = (index > 0) ? expression[index - 1] : '';
-            let nextChar = expression[index + 1] || '';
-            let isEscaped = lastChar == ESCAPE;
-            let last = STACK[STACK.length - 1];
+            const char = expression[index];
+            const lastChar = (index > 0) ? expression[index - 1] : '';
+            const nextChar = expression[index + 1] || '';
+            const isEscaped = lastChar == ESCAPE;
+            const last = STACK[STACK.length - 1];
 
             if (['IGNORE', 'OPEN_QUOTED'].indexOf(mode) == -1 && !isEscaped && QUOTES.indexOf(char) > -1) {
                 last.quote = char;
@@ -408,9 +408,9 @@ export class HashUtils {
             }
 
             if (isEscaped && last && mode !== 'OPEN_QUOTED') {
-                let content = last.content.split("");
+                const content = last.content.split('');
                 content.pop();
-                last.content = content.join("");
+                last.content = content.join('');
             }
 
             switch (mode) {
@@ -441,20 +441,20 @@ export class HashUtils {
                             last.args.push(last.content);
                         }
 
-                        last.content = "";
+                        last.content = '';
                     } else if (OPEN.indexOf(char) > -1 && !isEscaped && nextChar == START) {
-                        let embedded: Token = {
+                        const embedded: Token = {
                             start: index,
                             stop: -1,
-                            name: "",
+                            name: '',
                             mode: 'FUNCTION',
-                            content: "",
+                            content: '',
                             embedded: true,
-                            type: "variable"
-                        }
+                            type: 'variable'
+                        };
 
                         last.args.push(embedded);
-                        last.content = "";
+                        last.content = '';
                         STACK.push(embedded);
                         mode = 'START';
                     } else {
@@ -465,16 +465,16 @@ export class HashUtils {
                 case 'VARIABLE':
                     if (!isEscaped && char == ':') {
                         mode = 'DEFAULT';
-                        last.default = "";
-                        if (!last.name.length) last.name = last.content;
-                        last.content = "";
+                        last.default = '';
+                        if (!last.name.length) { last.name = last.content; }
+                        last.content = '';
                     } else {
                         if (CLOSE.indexOf(char) > -1 && !isEscaped) {
                             mode = last.mode;
                             delete last.mode;
-                            if (!last.name.length) last.name = last.content;
+                            if (!last.name.length) { last.name = last.content; }
                             last.stop = index;
-                            last.content = "";
+                            last.content = '';
                             if (last.embedded) {
                                 STACK.pop();
                             } else {
@@ -484,10 +484,10 @@ export class HashUtils {
                             STACK.push({
                                 start: index,
                                 stop: -1,
-                                name: "",
+                                name: '',
                                 mode: mode,
-                                content: "",
-                                type: "variable"
+                                content: '',
+                                type: 'variable'
                             });
 
                             mode = 'START';
@@ -496,7 +496,7 @@ export class HashUtils {
                             last.type = 'function';
                             last.functionMode = mode;
                             last.args = [];
-                            last.content = "";
+                            last.content = '';
                             mode = 'FUNCTION';
                         } else {
                             last.content = last.content.concat(char);
@@ -509,7 +509,7 @@ export class HashUtils {
                         mode = last.mode;
                         delete last.mode;
                         last.stop = index;
-                        if (last.content.length) last.default = last.content;
+                        if (last.content.length) { last.default = last.content; }
                         delete last.content;
                         if (last.embedded) {
                             STACK.pop();
@@ -520,13 +520,13 @@ export class HashUtils {
                         last.default = {
                             start: index,
                             stop: -1,
-                            name: "",
+                            name: '',
                             mode: mode,
-                            content: "",
+                            content: '',
                             embedded: true,
                             type: 'variable'
                         };
-                        last.content = "";
+                        last.content = '';
                         STACK.push(last.default);
                         mode = 'START';
                     } else {
@@ -539,9 +539,9 @@ export class HashUtils {
                         STACK.push({
                             start: index,
                             stop: -1,
-                            name: "",
+                            name: '',
                             mode: mode,
-                            content: "",
+                            content: '',
                             type: 'variable'
                         });
                         mode = 'START';
@@ -555,12 +555,12 @@ export class HashUtils {
     }
 
     static interpolate(expression: any, variables: any, options: any = {}) {
-        let default_options = {
+        const default_options = {
             processors: {},
             variables: variables,
             env: variables,
-            key: "",
-        }
+            key: '',
+        };
 
         options = { ...default_options, ...options };
         if (typeof expression === 'string') {
@@ -569,14 +569,14 @@ export class HashUtils {
                 return expression;
             }
 
-            let tokens = HashUtils.extractTokens(expression);
-            for (let token of HashUtils.extractTokens(expression)) {
-                let vr = expression.substring(token.start, token.stop + 1);
+            const tokens = HashUtils.extractTokens(expression);
+            for (const token of HashUtils.extractTokens(expression)) {
+                const vr = expression.substring(token.start, token.stop + 1);
                 let value = HashUtils.tokenValue(token, variables, options);
-                let vars = HashUtils.tokenExtractVars(expression);
-                let varsData = {};
+                const vars = HashUtils.tokenExtractVars(expression);
+                const varsData = {};
                 vars.forEach(v => {
-                    let vval = HashUtils.dotNotation(variables, v) || HashUtils.dotNotation(options.env, v);
+                    const vval = HashUtils.dotNotation(variables, v) || HashUtils.dotNotation(options.env, v);
                     if (vval && HashUtils.tokenExtractVars(vval).indexOf(v) == -1) {
                         varsData[v] = vval;
                     }
@@ -593,19 +593,19 @@ export class HashUtils {
                         expr = expr.replace(new RegExp(escapeRegExp(vr), 'g'), value.toString());
                     }
                 }
-            };
+            }
 
             return expr;
         } else if (Array.isArray(expression)) {
             return expression.map(v => HashUtils.interpolate(v, variables, options));
         } else if (isObject(expression)) {
-            let currentKey = options.key;
-            let data = {};
+            const currentKey = options.key;
+            const data = {};
 
-            for (let key of _.keys(expression)) {
-                let value = expression[key];
+            for (const key of _.keys(expression)) {
+                const value = expression[key];
                 options.key = (isBlank(currentKey)) ? key : `${currentKey}.${key}`;
-                let val = HashUtils.interpolate(value, variables, options);
+                const val = HashUtils.interpolate(value, variables, options);
                 options.env[options.key] = val;
                 data[key] = val;
             }
@@ -626,7 +626,7 @@ export class HashUtils {
                 val = HashUtils.dotNotation(options.env, token.name);
             }
         } else if (token.type == 'function') {
-            let proc = (options.processors || {})[token.name] || HashUtils.processors[token.name];
+            const proc = (options.processors || {})[token.name] || HashUtils.processors[token.name];
             let args = [];
 
             for (let i = 0; i < token.args.length; i++) {
@@ -639,12 +639,12 @@ export class HashUtils {
                     }
                 }
 
-                let matches = `${arg}`.match(/\$([a-z0-9A-Z_.-]+)/g);
+                const matches = `${arg}`.match(/\$([a-z0-9A-Z_.-]+)/g);
                 if (matches && matches.length) {
                     for (let j = 0; j < matches.length; j++) {
-                        let m = matches[j];
-                        let [t, prop] = m.match(/\$([a-z0-9A-Z_.-]+)/) || [null, null];
-                        let propVal = HashUtils.dotNotation(variables, prop) || HashUtils.dotNotation(options.env, prop);
+                        const m = matches[j];
+                        const [t, prop] = m.match(/\$([a-z0-9A-Z_.-]+)/) || [null, null];
+                        const propVal = HashUtils.dotNotation(variables, prop) || HashUtils.dotNotation(options.env, prop);
                         if (isNull(propVal)) {
                             args = null;
                             break;
@@ -672,7 +672,7 @@ export class HashUtils {
                 args.push(arg);
             }
 
-            if (args) val = proc(args, options);
+            if (args) { val = proc(args, options); }
         }
 
         if (!options.ignoreDefaults) {
@@ -697,7 +697,7 @@ export class HashUtils {
             }
 
             if (token.default) {
-                vars = vars.concat(...HashUtils.tokenVars(token.default))
+                vars = vars.concat(...HashUtils.tokenVars(token.default));
             }
 
             if (token.type == 'function' && token.args && token.args.length) {
@@ -705,18 +705,18 @@ export class HashUtils {
                     if (isObject(arg)) {
                         vars = vars.concat(...HashUtils.tokenVars(arg));
                     } else {
-                        let matches = `${arg}`.match(/\$([a-z0-9A-Z_.-]+)/g);
+                        const matches = `${arg}`.match(/\$([a-z0-9A-Z_.-]+)/g);
                         if (matches && matches.length) {
                             for (let j = 0; j < matches.length; j++) {
-                                let m = matches[j];
-                                let [token, prop] = m.match(/\$([a-z0-9A-Z_.-]+)/) || [null, null];
+                                const m = matches[j];
+                                const [token, prop] = m.match(/\$([a-z0-9A-Z_.-]+)/) || [null, null];
                                 if (prop) {
                                     vars.push(prop);
                                 }
                             }
                         }
                     }
-                })
+                });
             }
         }
 

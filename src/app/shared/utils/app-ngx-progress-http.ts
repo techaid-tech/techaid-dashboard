@@ -31,7 +31,7 @@ export class AppNgProgressInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-   
+
     if (this.checkUrl(req)) {
       return next.handle(req);
     }

@@ -1,6 +1,6 @@
 import { Component, ViewChild, ViewEncapsulation, Input } from '@angular/core';
 import { concat, Subject, of, forkJoin, Observable, Subscription, from } from 'rxjs';
-import { AppGridDirective } from "@app/shared/modules/grid/app-grid.directive";
+import { AppGridDirective } from '@app/shared/modules/grid/app-grid.directive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import gql from 'graphql-tag';
@@ -43,7 +43,7 @@ query findAllPosts($page: PaginationInput,, $term: String) {
      id
      slug
      title
-     published 
+     published
      createdAt
      updatedAt
     }
@@ -57,7 +57,7 @@ mutation createPost($data: CreatePostInput!) {
      id
      slug
      title
-     published 
+     published
      createdAt
      updatedAt
   }
@@ -67,7 +67,7 @@ mutation createPost($data: CreatePostInput!) {
 @Component({
   selector: 'post-index',
   styleUrls: ['post-index.scss'],
- 
+
   templateUrl: './post-index.html'
 })
 export class PostIndexComponent {
@@ -86,47 +86,47 @@ export class PostIndexComponent {
 
   fields: Array<FormlyFieldConfig> = [
     {
-      key: "title",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'title',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Page Title",
-        placeholder: "",
+        label: 'Page Title',
+        placeholder: '',
         required: true
       }
     },
     {
-      key: "slug",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
+      key: 'slug',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
       templateOptions: {
-        label: "Url",
-        placeholder: "",
+        label: 'Url',
+        placeholder: '',
         required: true
       }
     },
     {
-      key: "published",
-      type: "checkbox",
-      className: "col-md-6",
+      key: 'published',
+      type: 'checkbox',
+      className: 'col-md-6',
       defaultValue: true,
       templateOptions: {
-        label: "Published?",
-        placeholder: "",
+        label: 'Published?',
+        placeholder: '',
         required: false
       }
     },
     {
-      key: "secured",
-      type: "checkbox",
-      className: "col-md-6",
+      key: 'secured',
+      type: 'checkbox',
+      className: 'col-md-6',
       defaultValue: false,
       templateOptions: {
-        label: "Secured?",
-        description: "Secured pages are only visible to logged in users",
-        placeholder: "",
+        label: 'Secured?',
+        description: 'Secured pages are only visible to logged in users',
+        placeholder: '',
         required: false
       }
     },
@@ -136,7 +136,7 @@ export class PostIndexComponent {
   pageLength = 10;
 
   @Input()
-  tableId = "post-index";
+  tableId = 'post-index';
 
   constructor(
     private modalService: NgbModal,
@@ -161,7 +161,7 @@ export class PostIndexComponent {
     }
 
     if (evt) {
-      let code = (evt.keyCode ? evt.keyCode : evt.which);
+      const code = (evt.keyCode ? evt.keyCode : evt.which);
       if (code !== 13) {
         return;
       }
@@ -189,9 +189,9 @@ export class PostIndexComponent {
     this.dtOptions = {
       pagingType: 'simple_numbers',
       dom:
-        "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        '<\'row\'<\'col-sm-12 col-md-6\'l><\'col-sm-12 col-md-6\'f>>' +
+        '<\'row\'<\'col-sm-12\'tr>>' +
+        '<\'row\'<\'col-sm-12 col-md-5\'i><\'col-sm-12 col-md-7\'p>>',
       pageLength: this.pageLength,
       order: [2, 'desc'],
       lengthMenu: [ 5, 10, 25, 50, 100 ],
@@ -200,29 +200,29 @@ export class PostIndexComponent {
       processing: true,
       searching: true,
       ajax: (params: any, callback) => {
-        let sort = params.order.map(o => {
+        const sort = params.order.map(o => {
           return {
             key: this.dtOptions.columns[o.column].data,
             value: o.dir
-          }
+          };
         });
 
         const vars = {
           page: {
             sort: sort,
             size: params.length,
-            page: Math.round(params.start/params.length),
+            page: Math.round(params.start / params.length),
           },
           term: params['search']['value']
-        }
+        };
 
 
         queryRef.refetch(vars).then(res => {
-          var data: any = {};
+          let data: any = {};
           if (res.data) {
             data = res['data']['postsConnection'];
             if (!this.total) {
-              this.total = data['totalElements']
+              this.total = data['totalElements'];
             }
             this.entities = data.content;
           }
@@ -231,7 +231,7 @@ export class PostIndexComponent {
             draw: params.draw,
             recordsTotal: this.total,
             recordsFiltered: data['totalElements'],
-            error: "",
+            error: '',
             data: []
           });
         }, err => {
@@ -249,7 +249,7 @@ export class PostIndexComponent {
               enableHtml: true,
               timeOut: 15000,
               disableTimeOut: true
-            })
+            });
         });
       },
       columns: [
@@ -273,8 +273,8 @@ export class PostIndexComponent {
     });
   }
 
-  createEntity(data: any) { 
-    data.content = "";
+  createEntity(data: any) {
+    data.content = '';
     this.apollo.mutate({
       mutation: CREATE_ENTITY,
       variables: { data }
@@ -288,7 +288,7 @@ export class PostIndexComponent {
           enableHtml: true,
           timeOut: 15000
         });
-    })
+    });
   }
 
 
@@ -302,7 +302,7 @@ export class PostIndexComponent {
     }
 
     this.selected = [];
-    for (let k in this.selections) {
+    for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
   }

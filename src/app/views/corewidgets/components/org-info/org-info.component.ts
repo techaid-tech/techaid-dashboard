@@ -37,8 +37,8 @@ query findOrganisation($id: Long!) {
     }
     volunteer {
          id
-         name 
-         email 
+         name
+         email
          phoneNumber
      }
      attributes {
@@ -47,14 +47,14 @@ query findOrganisation($id: Long!) {
        alternateAccepts
        request {
          laptops
-         tablets 
+         tablets
          phones
          allInOnes
          other
        }
        alternateRequest {
          laptops
-         tablets 
+         tablets
          phones
          allInOnes
          other
@@ -75,7 +75,7 @@ query findAutocompleteVolunteers($term: String, $subGroup: String) {
     subGroup: {
       _contains: $subGroup
     }
-    OR: [ 
+    OR: [
     {
       subGroup: {
         _contains: $subGroup
@@ -117,8 +117,8 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      archived
      volunteer {
          id
-         name 
-         email 
+         name
+         email
          phoneNumber
      }
      kits {
@@ -137,14 +137,14 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
        alternateAccepts
        request {
          laptops
-         tablets 
+         tablets
          phones
          allInOnes
          other
        }
        alternateRequest {
          laptops
-         tablets 
+         tablets
          phones
          allInOnes
          other
@@ -163,423 +163,10 @@ mutation deleteOrganisation($id: ID!) {
 @Component({
   selector: 'org-info',
   styleUrls: ['org-info.scss'],
- 
+
   templateUrl: './org-info.html'
 })
 export class OrgInfoComponent {
-  sub: Subscription;
-  form: FormGroup = new FormGroup({});
-  options: FormlyFormOptions = {};
-  model : any = {};
-  entityName: string;
-  entityId: number;
-
-  owner$: Observable<any>;
-  ownerInput$ = new Subject<string>();
-  ownerLoading = false;
-  ownerField: FormlyFieldConfig = {
-    key: "volunteerId",
-    type: "choice",
-    className: "col-md-12",
-    templateOptions: {
-      label: "Organising Volunteer",
-      description: "The organising volunteer this organisation is currently assigned to.",
-      loading: this.ownerLoading,
-      typeahead: this.ownerInput$,
-      placeholder: "Assign device to Organiser Volunteers",
-      multiple: false,
-      searchable: true,
-      items: [],
-      required: false
-    },
-  };
-
-  fields: Array<FormlyFieldConfig> = [
-    {
-      key: "archived",
-      type: "radio",
-      className: "col-md-12",
-      templateOptions: {
-        type: 'array',
-        label: "Archived?",
-        description: "Archived requests are hidden from view",
-        options: [
-          {label: "Request Active and Visible", value: false },
-          {label: "Archive and Hide this Request", value: true },
-        ],
-        required: true,
-      }
-    }, 
-    {
-      key: "attributes.notes",
-      type: "textarea",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Notes about the organisation",
-        rows: 5,
-        required: false
-      } 
-    },
-    this.ownerField,
-    {
-      key: "name",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Name",
-        placeholder: "",
-        required: true
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
-    {
-      key: "website",
-      type: "input",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Website",
-        placeholder: "",
-        required: false
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
-    {
-      fieldGroupClassName: "row",
-      fieldGroup: [
-        {
-          key: "contact",
-          type: "input",
-          className: "col-md-12",
-          defaultValue: "",
-          templateOptions: {
-            label: "Primary Contact Name",
-            placeholder: "",
-            required: true
-          },
-          validation: {
-            show: false
-          },
-          expressionProperties: {
-            'validation.show': 'model.showErrorState',
-          }
-        },
-        {
-          key: "email",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Primary Contact Email",
-            type: "email",
-            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            placeholder: "",
-            required: true
-          },
-          expressionProperties: {
-            'templateOptions.required': '!model.phoneNumber.length'
-          }
-        },
-        {
-          key: "phoneNumber",
-          type: "input",
-          className: "col-md-6",
-          defaultValue: "",
-          templateOptions: {
-            label: "Primary Contact Phone Number",
-            required: true
-          },
-          expressionProperties: {
-            'templateOptions.required': '!model.email.length'
-          }
-        },
-      ]
-    }, 
-    {
-      key: "attributes.accepts",
-      type: "multicheckbox",
-      className: "",
-      defaultValue: [],
-      templateOptions: {
-        type: 'array',
-        label: "What types of devices are you looking for?",
-        multiple: true,
-        options: [
-          {value: "LAPTOPS", label: "Laptops"},
-          {value: "PHONES", label: "Phones"},
-          {value: "TABLETS", label: "Tablets" },
-          {value: "ALLINONES", label: "All In Ones" },
-          {value: "OTHER", label: "Other" }
-        ],
-        required: true
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
-    {
-      fieldGroupClassName: 'row',
-      hideExpression: "!model.attributes.accepts.length",
-      fieldGroup: [
-        {
-          className: 'col-12',
-          template: `
-            <p>How many of the following items can you currently take?</p>
-          `
-        },
-        {
-          key: "attributes.request.laptops",
-          type: "input",
-          className: "col-6",
-          defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') < 0",
-          templateOptions: {
-            min: 0,
-            label: 'Laptops', 
-            addonLeft: {
-              class: 'fas fa-laptop'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "attributes.request.phones",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') < 0",
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: "Phones",
-            addonLeft: {
-              class: 'fas fa-mobile-alt'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "attributes.request.tablets",
-          type: "input",
-          className: "col-6",
-          defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') < 0",
-          templateOptions: {
-            min: 0,
-            label: "Tablets",
-            addonLeft: {
-              class: 'fas fa-tablet-alt'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "attributes.request.allInOnes",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') < 0",
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: "All In Ones",
-            addonLeft: {
-              class: 'fas fa-desktop'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        }, 
-        {
-          key: "attributes.request.other",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('OTHER') < 0",
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            max: 5,
-            label: "Other",
-            description: "Specify the other types of devies you would like in the additional details field below",
-            addonLeft: {
-              class: 'fas fa-laptop-house'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-      ]
-    },
-    {
-      key: "attributes.alternateAccepts",
-      type: "multicheckbox",
-      className: "",
-      hideExpression: "!model.attributes.accepts.length || model.attributes.accepts.length == 4",
-      defaultValue: [],
-      templateOptions: {
-        type: 'array',
-        label: "If none of the items listed above are available, would you be willing to consider any of the following?",
-        multiple: true,
-        options: [
-          {value: "LAPTOPS", label: "Laptops"},
-          {value: "PHONES", label: "Phones"},
-          {value: "TABLETS", label: "Tablets" },
-          {value: "ALLINONES", label: "All In Ones" },
-          {value: "OTHER", label: "Other" }
-        ],
-        required: false
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-        'templateOptions.options': (model, state) => {
-          const opts = [
-            {value: "LAPTOPS", label: "Laptops"},
-            {value: "PHONES", label: "Phones"},
-            {value: "TABLETS", label: "Tablets" },
-            {value: "ALLINONES", label: "All In Ones" },
-            {value: "OTHER", label: "Other" }
-          ];
-          var values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
-          return values;
-        }
-      }
-    },
-    {
-      fieldGroupClassName: 'row',
-      hideExpression: "!model.attributes.alternateAccepts.length",
-      fieldGroup: [
-        {
-          className: 'col-12',
-          template: `
-            <p>How many of the following alternate items are you willing to take?</p>
-          `
-        },
-        {
-          key: "attributes.alternateRequest.laptops",
-          type: "input",
-          className: "col-6",
-          defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('LAPTOP') > -1 || model.attributes.alternateAccepts.toString().indexOf('LAPTOP') < 0",
-          templateOptions: {
-            min: 0,
-            label: 'Laptops', 
-            addonLeft: {
-              class: 'fas fa-laptop'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "attributes.alternateRequest.phones",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('PHONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('PHONE') < 0",
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: "Phones",
-            addonLeft: {
-              class: 'fas fa-mobile-alt'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "attributes.alternateRequest.tablets",
-          type: "input",
-          className: "col-6",
-          defaultValue: 0,
-          hideExpression: "model.attributes.accepts.toString().indexOf('TABLET') > -1 || model.attributes.alternateAccepts.toString().indexOf('TABLET') < 0",
-          templateOptions: {
-            min: 0,
-            label: "Tablets",
-            addonLeft: {
-              class: 'fas fa-tablet-alt'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "attributes.alternateRequest.allInOnes",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('ALLINONE') > -1 || model.attributes.alternateAccepts.toString().indexOf('ALLINONE') < 0",
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: "All In Ones",
-            addonLeft: {
-              class: 'fas fa-desktop'
-            },
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-        {
-          key: "attributes.alternateRequest.other",
-          type: "input",
-          className: "col-6",
-          hideExpression: "model.attributes.accepts.toString().indexOf('OTHER') > -1 || model.attributes.alternateAccepts.toString().indexOf('OTHER') < 0",
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            max: 5,
-            label: "Other",
-            addonLeft: {
-              class: 'fas fa-laptop-house'
-            },
-            description: "Specify the other types of devies you would like in the additional details field below",
-            type: "number",
-            placeholder: "",
-            required: true
-          }
-        },
-      ]
-    }, 
-    {
-      key: "attributes.details",
-      type: "textarea",
-      className: "col-md-12",
-      defaultValue: "",
-      templateOptions: {
-        label: "Any additional details about your request?",
-        description: "If you have any additional details you would like to specify about your request, enter them here.",
-        rows: 3,
-        required: false
-      } 
-    },
-  ];
 
   constructor(
     private modalService: NgbModal,
@@ -590,10 +177,419 @@ export class OrgInfoComponent {
   ) {
 
   }
+  sub: Subscription;
+  form: FormGroup = new FormGroup({});
+  options: FormlyFormOptions = {};
+  model: any = {};
+  entityName: string;
+  entityId: number;
 
-  modal(content) {
-    this.modalService.open(content, { centered: true });
-  }
+  owner$: Observable<any>;
+  ownerInput$ = new Subject<string>();
+  ownerLoading = false;
+  ownerField: FormlyFieldConfig = {
+    key: 'volunteerId',
+    type: 'choice',
+    className: 'col-md-12',
+    templateOptions: {
+      label: 'Organising Volunteer',
+      description: 'The organising volunteer this organisation is currently assigned to.',
+      loading: this.ownerLoading,
+      typeahead: this.ownerInput$,
+      placeholder: 'Assign device to Organiser Volunteers',
+      multiple: false,
+      searchable: true,
+      items: [],
+      required: false
+    },
+  };
+
+  fields: Array<FormlyFieldConfig> = [
+    {
+      key: 'archived',
+      type: 'radio',
+      className: 'col-md-12',
+      templateOptions: {
+        type: 'array',
+        label: 'Archived?',
+        description: 'Archived requests are hidden from view',
+        options: [
+          {label: 'Request Active and Visible', value: false },
+          {label: 'Archive and Hide this Request', value: true },
+        ],
+        required: true,
+      }
+    },
+    {
+      key: 'attributes.notes',
+      type: 'textarea',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Notes about the organisation',
+        rows: 5,
+        required: false
+      }
+    },
+    this.ownerField,
+    {
+      key: 'name',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Name',
+        placeholder: '',
+        required: true
+      },
+      validation: {
+        show: false
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
+      }
+    },
+    {
+      key: 'website',
+      type: 'input',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Website',
+        placeholder: '',
+        required: false
+      },
+      validation: {
+        show: false
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
+      }
+    },
+    {
+      fieldGroupClassName: 'row',
+      fieldGroup: [
+        {
+          key: 'contact',
+          type: 'input',
+          className: 'col-md-12',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Primary Contact Name',
+            placeholder: '',
+            required: true
+          },
+          validation: {
+            show: false
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+          }
+        },
+        {
+          key: 'email',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Primary Contact Email',
+            type: 'email',
+            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            placeholder: '',
+            required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.phoneNumber.length'
+          }
+        },
+        {
+          key: 'phoneNumber',
+          type: 'input',
+          className: 'col-md-6',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Primary Contact Phone Number',
+            required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.email.length'
+          }
+        },
+      ]
+    },
+    {
+      key: 'attributes.accepts',
+      type: 'multicheckbox',
+      className: '',
+      defaultValue: [],
+      templateOptions: {
+        type: 'array',
+        label: 'What types of devices are you looking for?',
+        multiple: true,
+        options: [
+          {value: 'LAPTOPS', label: 'Laptops'},
+          {value: 'PHONES', label: 'Phones'},
+          {value: 'TABLETS', label: 'Tablets' },
+          {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'OTHER', label: 'Other' }
+        ],
+        required: true
+      },
+      validation: {
+        show: false
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
+      }
+    },
+    {
+      fieldGroupClassName: 'row',
+      hideExpression: '!model.attributes.accepts.length',
+      fieldGroup: [
+        {
+          className: 'col-12',
+          template: `
+            <p>How many of the following items can you currently take?</p>
+          `
+        },
+        {
+          key: 'attributes.request.laptops',
+          type: 'input',
+          className: 'col-6',
+          defaultValue: 0,
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') < 0',
+          templateOptions: {
+            min: 0,
+            label: 'Laptops',
+            addonLeft: {
+              class: 'fas fa-laptop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.request.phones',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Phones',
+            addonLeft: {
+              class: 'fas fa-mobile-alt'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.request.tablets',
+          type: 'input',
+          className: 'col-6',
+          defaultValue: 0,
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') < 0',
+          templateOptions: {
+            min: 0,
+            label: 'Tablets',
+            addonLeft: {
+              class: 'fas fa-tablet-alt'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.request.allInOnes',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'All In Ones',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.request.other',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'OTHER\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Other',
+            description: 'Specify the other types of devies you would like in the additional details field below',
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+      ]
+    },
+    {
+      key: 'attributes.alternateAccepts',
+      type: 'multicheckbox',
+      className: '',
+      hideExpression: '!model.attributes.accepts.length || model.attributes.accepts.length == 4',
+      defaultValue: [],
+      templateOptions: {
+        type: 'array',
+        label: 'If none of the items listed above are available, would you be willing to consider any of the following?',
+        multiple: true,
+        options: [
+          {value: 'LAPTOPS', label: 'Laptops'},
+          {value: 'PHONES', label: 'Phones'},
+          {value: 'TABLETS', label: 'Tablets' },
+          {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'OTHER', label: 'Other' }
+        ],
+        required: false
+      },
+      validation: {
+        show: false
+      },
+      expressionProperties: {
+        'validation.show': 'model.showErrorState',
+        'templateOptions.options': (model, state) => {
+          const opts = [
+            {value: 'LAPTOPS', label: 'Laptops'},
+            {value: 'PHONES', label: 'Phones'},
+            {value: 'TABLETS', label: 'Tablets' },
+            {value: 'ALLINONES', label: 'All In Ones' },
+            {value: 'OTHER', label: 'Other' }
+          ];
+          const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
+          return values;
+        }
+      }
+    },
+    {
+      fieldGroupClassName: 'row',
+      hideExpression: '!model.attributes.alternateAccepts.length',
+      fieldGroup: [
+        {
+          className: 'col-12',
+          template: `
+            <p>How many of the following alternate items are you willing to take?</p>
+          `
+        },
+        {
+          key: 'attributes.alternateRequest.laptops',
+          type: 'input',
+          className: 'col-6',
+          defaultValue: 0,
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'LAPTOP\') < 0',
+          templateOptions: {
+            min: 0,
+            label: 'Laptops',
+            addonLeft: {
+              class: 'fas fa-laptop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.alternateRequest.phones',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'PHONE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Phones',
+            addonLeft: {
+              class: 'fas fa-mobile-alt'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.alternateRequest.tablets',
+          type: 'input',
+          className: 'col-6',
+          defaultValue: 0,
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'TABLET\') < 0',
+          templateOptions: {
+            min: 0,
+            label: 'Tablets',
+            addonLeft: {
+              class: 'fas fa-tablet-alt'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.alternateRequest.allInOnes',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'ALLINONE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'All In Ones',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.alternateRequest.other',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'OTHER\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'OTHER\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Other',
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            description: 'Specify the other types of devies you would like in the additional details field below',
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+      ]
+    },
+    {
+      key: 'attributes.details',
+      type: 'textarea',
+      className: 'col-md-12',
+      defaultValue: '',
+      templateOptions: {
+        label: 'Any additional details about your request?',
+        description: 'If you have any additional details you would like to specify about your request, enter them here.',
+        rows: 3,
+        required: false
+      }
+    },
+  ];
 
   private queryRef = this.apollo
     .watchQuery({
@@ -601,8 +597,12 @@ export class OrgInfoComponent {
       variables: {}
     });
 
-  private normalizeData(data: any){
-    if(data.volunteer){
+  modal(content) {
+    this.modalService.open(content, { centered: true });
+  }
+
+  private normalizeData(data: any) {
+    if (data.volunteer) {
       this.ownerField.templateOptions['items'] = [
         {label: this.volunteerName(data.volunteer), value: data.volunteer.id}
       ];
@@ -620,12 +620,12 @@ export class OrgInfoComponent {
       id: this.entityId
     }).then(res => {
       if (res.data && res.data['organisation']) {
-        var data = res.data['organisation'];
+        const data = res.data['organisation'];
         this.model = this.normalizeData(data);
-        this.entityName = this.model['name']
+        this.entityName = this.model['name'];
       } else {
         this.model = {};
-        this.entityName = "Not Found!"
+        this.entityName = 'Not Found!';
       }
     }, err => {
       this.toastr.warning(`
@@ -634,7 +634,7 @@ export class OrgInfoComponent {
           enableHtml: true,
           timeOut: 15000,
           disableTimeOut: true
-        })
+        });
     });
   }
 
@@ -654,7 +654,7 @@ export class OrgInfoComponent {
         tap(() => this.ownerLoading = true),
         switchMap(term => from(userRef.refetch({
           term: term,
-          subGroup: ""
+          subGroup: ''
         })).pipe(
           catchError(() => of([])),
           tap(() => this.ownerLoading = false),
@@ -662,9 +662,9 @@ export class OrgInfoComponent {
             const data = res['data']['volunteersConnection']['content'].map(v => {
               return {
                 label: `${this.volunteerName(v)}`, value: v.id
-              }
+              };
             });
-            return of(data)
+            return of(data);
           })
         ))
       )
@@ -681,7 +681,7 @@ export class OrgInfoComponent {
   }
 
   volunteerName(data) {
-    return `${data.name || ''}||${data.email ||''}||${data.phoneNumber||''}`.split('||').filter(f => f.trim().length).join(" / ").trim();
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length).join(' / ').trim();
   }
 
   ngOnDestory() {
@@ -691,7 +691,7 @@ export class OrgInfoComponent {
   }
 
   updateEntity(data: any) {
-    if(!this.form.valid){
+    if (!this.form.valid) {
       this.model.showErrorState = true;
       return false;
     }
@@ -715,7 +715,7 @@ export class OrgInfoComponent {
       `, 'Update Error', {
           enableHtml: true
         });
-    })
+    });
   }
 
   deleteEntity() {
@@ -723,13 +723,13 @@ export class OrgInfoComponent {
       mutation: DELETE_ENTITY,
       variables: { id: this.entityId }
     }).subscribe(res => {
-      if(res.data.deleteEmailTemplate){
+      if (res.data.deleteEmailTemplate) {
         this.toastr.info(`
         <small>Successfully deleted organisation ${this.entityName}</small>
         `, 'Organisation Deleted', {
             enableHtml: true
           });
-        this.router.navigate(['/dashboard/organisations'])
+        this.router.navigate(['/dashboard/organisations']);
       }
     }, err => {
       this.toastr.error(`
@@ -737,6 +737,6 @@ export class OrgInfoComponent {
       `, 'Error Deleting Organisation', {
           enableHtml: true
         });
-    })
+    });
   }
 }

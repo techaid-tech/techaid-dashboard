@@ -16,7 +16,7 @@ Object.defineProperty(document, 'doctype', {
 });
 
 /**
- * Mocking localStorage is optional, but without mocking getComputedStyle your test won’t run, 
+ * Mocking localStorage is optional, but without mocking getComputedStyle your test won’t run,
  * as Angular checks in which browser it executes. We need to fake it.
 **/
 

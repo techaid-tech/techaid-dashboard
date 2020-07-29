@@ -5,7 +5,7 @@ import { FieldType } from '@ngx-formly/core';
   selector: 'formly-masked-input',
   template: `
       <div [class.is-invalid]="showError">
-        <input-mask  [placeholder]="to.placeholder"  [mask]="to.mask.value" [options]="to.mask.options" [formControl]="formControl" [formlyAttributes]="field"></input-mask>  
+        <input-mask  [placeholder]="to.placeholder"  [mask]="to.mask.value" [options]="to.mask.options" [formControl]="formControl" [formlyAttributes]="field"></input-mask>
       </div>
       `,
   host: {
