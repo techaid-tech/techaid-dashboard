@@ -32,29 +32,35 @@ jobs:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
             - gcp-gcr/gcr-auth
             - gcp-gcr/build-image:
-                image: retinue-io/stretech-ui:${CIRCLE_SHA1:0:7}
+                image: retinue-io/stretech-ui
                 registry-url: eu.gcr.io
-            - gcp-gcr/push-image:
-                image: retinue-io/stretech-ui:${CIRCLE_SHA1:0:7}
+                tag: ${CIRCLE_SHA1:0:7}
+            - gcp-gcr/build-image:
+                image: retinue-io/stretech-ui
                 registry-url: eu.gcr.io
-            - gcp-gcr/add-image-tag:
-                context: global
+                tag: ${CIRCLE_SHA1:0:7}
+            - gcp-gcr/tag-image:
                 image: retinue-io/stretech-ui
                 registry-url: eu.gcr.io
                 source-tag: ${CIRCLE_SHA1:0:7}
-                target-tag: latest 
+                target-tag: latest
+            - gcp-gcr/push-image:
+                image: retinue-io/stretech-ui
+                registry-url: eu.gcr.io
+                tag: latest
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.8.0
 version: 2.1
 workflows:
     version: 2
     build_and_deploy:
-        jobs:
-            - build
-            - deploy:
-                requires:
-                    - build
-                filters:
-                    branches:
-                        only:
-                            - master
+      jobs:
+        - build
+        - deploy:
+            context: global
+            requires:
+              - build
+            filters:
+              branches:
+                only:
+                  - master
