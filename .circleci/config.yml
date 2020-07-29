@@ -23,10 +23,11 @@ jobs:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
                 paths:
                     - dist
+                    - Dockerfile
+                    - nginx.conf
     deploy:
         working_directory: ~/app
-        docker:
-            - image: google/cloud-sdk
+        executor: gcp-gcr/default
         steps:
             - restore_cache:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
