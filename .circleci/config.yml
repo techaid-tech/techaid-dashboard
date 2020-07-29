@@ -32,7 +32,6 @@ jobs:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
             - gcp-gcr/gcr-auth
             - gcp-gcr/build-image:
-                context: global
                 image: retinue-io/stretech-ui:${CIRCLE_SHA1:0:7}
                 registry-url: eu.gcr.io
             - gcp-gcr/push-image:
