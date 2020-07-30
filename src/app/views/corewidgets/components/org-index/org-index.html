@@ -8,7 +8,7 @@
             <div class="card-header py-3">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h6 class="m-0 font-weight-bold text-primary">Organisations</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Organisation Requests</h6>
                     </div>
                     <div>
                         <a href="#" (click)="modal(filters); false;" class="btn btn-info btn-icon-split btn-sm mr-1 mb-1">
@@ -21,7 +21,7 @@
                             <span class="icon text-white-50">
                                 <i class="fas fa-sitemap"></i>
                             </span>
-                            <span class="text">Create Organisation</span>
+                            <span class="text">Create Organisation Request</span>
                         </a>
                     </div>
                 </div>
@@ -48,7 +48,9 @@
                                 <tr *ngFor="let dt of entities" [class.selected]="selections[dt.id]" (click)="select(dt)">
                                     <td>
                                         <a href="#" [routerLink]="['./', dt.id]">
-                                          <i class="fas fa-info-circle"></i>
+                                            <span class="badge badge-primary">
+                                                {{dt.id}}
+                                            </span>
                                         </a>
                                     </td>
                                     <td>
@@ -97,10 +99,10 @@
                                         <a routerLink="/dashboard/email" [queryParams]="{to: dt.email}">{{dt.email}}</a>
                                     </td>
                                     <td>{{dt.phoneNumber}}</td>
-                                    <td [title]="dt.createdAt">
-                                    {{ dt.createdAt | timeAgo }}
+                                    <td  [title]="dt.createdAt" class="cursor-hand" placement="left" ngbTooltip="{{dt.createdAt | date:'full'}}" triggers="click:blur">
+                                        {{ dt.createdAt | timeAgo }}
                                     </td>
-                                    <td [title]="dt.updatedAt">
+                                    <td [title]="dt.updatedAt" class="cursor-hand" placement="left" ngbTooltip="{{dt.updatedAt | date:'full'}}" triggers="click:blur">
                                         {{ dt.updatedAt | timeAgo }}
                                     </td>
                                 </tr>

@@ -543,6 +543,10 @@ i.input-group-text {
  .dataTables_empty {
      display: none;
  }
+
+ .cursor-hand {
+     cursor: pointer;
+ }
  
  .modal-title{
      font-size: 0.9em;
