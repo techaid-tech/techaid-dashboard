@@ -325,6 +325,8 @@ export class KitComponent {
                 value: 'DELIVERY_ARRANGED',
               },
               { label: 'Device received by organisation', value: 'DELIVERED' },
+              {label: 'Ready but missing component', value: 'INCOMPLETE'},
+              {label: 'Recycled' , value: 'RECYCLED'}
             ],
             multiple: true,
             required: false,
