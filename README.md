@@ -1,5 +1,5 @@
 # TLDR
-[![CircleCi](https://circleci.com/gh/techaid-tech/techaid-dashboard.svg?style=svg)](https://circleci.com/gh/techaid-tech/techaid-dashboard.svg?style=svg)
+[![CircleCi](https://circleci.com/gh/techaid-tech/techaid-dashboard.svg?style=svg)](https://circleci.com/gh/techaid-tech/techaid-dashboard)
 
 This repo is the source for the UI provided at https://lambeth-techaid.ju.ma/
 
