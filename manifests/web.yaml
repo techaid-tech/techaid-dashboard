@@ -29,7 +29,7 @@ spec:
       imagePullSecrets:
         - name: gcr-regcred
       containers:
-        - image: eu.gcr.io/retinue-io/stretech-ui:latest
+        - image: eu.gcr.io/retinue-io/stretech-ui
           name: stretech-ui
           imagePullPolicy: Always
           readinessProbe:
