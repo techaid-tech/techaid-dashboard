@@ -524,6 +524,15 @@ i.input-group-text {
 
 .kit-status .custom-control:nth-child(13){
     background-color: #A2C4C9;
+}
+
+.kit-status .custom-control:nth-child(14){
+    background-color: #F1C233;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.kit-status .custom-control:nth-child(15){
+    background-color: #80234e;
     border-radius: 0px 0px 5px 5px;
 }
 

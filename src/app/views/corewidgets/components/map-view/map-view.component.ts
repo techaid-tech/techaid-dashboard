@@ -97,7 +97,9 @@ export class MapViewComponent {
               {label: 'Donation updated - arrange collection', value: 'READY' },
               {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
               {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
-              {label: 'Device received by organisation', value: 'DELIVERED' }
+              {label: 'Device received by organisation', value: 'DELIVERED' },
+              {label: 'Ready but missing component', value: 'INCOMPLETE'},
+              {label: 'Recycled' , value: 'RECYCLED'}
             ],
             multiple: true,
             required: false

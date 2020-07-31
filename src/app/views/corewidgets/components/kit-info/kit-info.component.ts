@@ -29,7 +29,9 @@ export const KIT_STATUS = {
   'READY': 'Donation updated - arrange collection',
   'ALLOCATED': 'Device allocated to referring organisation',
   'DELIVERY_ARRANGED': 'Collection / drop off to referring organisation agreed',
-  'DELIVERED': 'Device received by organisation'
+  'DELIVERED': 'Device received by organisation',
+  'INCOMPLETE': 'Ready but missing component',
+  'RECYCLED': 'Recycled'
 };
 
 const QUERY_ENTITY = gql`
@@ -406,7 +408,9 @@ export class KitInfoComponent {
               {label: 'Donation updated - arrange collection', value: 'READY' },
               {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
               {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
-              {label: 'Device received by organisation', value: 'DELIVERED' }
+              {label: 'Device received by organisation', value: 'DELIVERED' },
+              {label: 'Ready but missing component', value: 'INCOMPLETE'},
+              {label: 'Recycled' , value: 'RECYCLED'}
             ],
             required: true
           }
