@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: stretech-ui-ingress
+  name: techaid-dashboard-ingress
   namespace: apps
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -11,12 +11,12 @@ spec:
   tls:
     - hosts:
         - lambeth-techaid.ju.ma
-      secretName: stretech-ui-tls-cert
+      secretName: techaid-dashboard-tls-cert
   rules:
     - host: lambeth-techaid.ju.ma
       http:
         paths:
           - path: /
             backend:
-              serviceName: stretech-ui-svc
+              serviceName: techaid-dashboard-svc
               servicePort: 80

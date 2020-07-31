@@ -30,7 +30,7 @@ spec:
         - name: gcr-regcred
       containers:
         - image: eu.gcr.io/retinue-io/techaid-dashboard
-          name: techaid-dashboard
+          name: web
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
