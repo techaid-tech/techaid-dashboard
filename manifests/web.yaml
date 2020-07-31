@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: stretech-ui-svc
+  name: techaid-dashboard-svc
   namespace: apps
 spec:
   type: ClusterIP
@@ -9,28 +9,28 @@ spec:
     - port: 80
       targetPort: 80
   selector:
-    app: stretech-ui
+    app: techaid-dashboard
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: apps
-  name: stretech-ui
+  name: techaid-dashboard
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stretech-ui
+      app: techaid-dashboard
   template:
     metadata:
       labels:
-        app: stretech-ui
+        app: techaid-dashboard
     spec:
       imagePullSecrets:
         - name: gcr-regcred
       containers:
-        - image: eu.gcr.io/retinue-io/stretech-ui
-          name: stretech-ui
+        - image: eu.gcr.io/retinue-io/techaid-dashboard
+          name: techaid-dashboard
           imagePullPolicy: Always
           readinessProbe:
             httpGet:
