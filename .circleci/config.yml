@@ -35,7 +35,7 @@ jobs:
             - gcp-gcr/build-image:
                 image: techaid-dashboard
                 registry-url: eu.gcr.io
-                tag: ${CIRCLE_SHA1:0:7}
+                tag: prod-${CIRCLE_SHA1:0:7}
             - gcp-gcr/push-image:
                 image: techaid-dashboard
                 registry-url: eu.gcr.io
