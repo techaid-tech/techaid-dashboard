@@ -44,7 +44,6 @@ import { OrgRequestComponent } from './components/org-request/org-request';
 import { NgxCommentoComponent } from './components/comment.component';
 import { KitComponent } from './components/kit-component/kit-component.component';
 import { ReportsComponent} from './components/reports/reports.component';
-import { ReportDetailsComponent } from './components/report-details/report-details.component';
 
 const routes: Routes = [
   { path: '', component: DashboardIndexComponent },
@@ -138,7 +137,6 @@ const routes: Routes = [
     OrgRequestComponent,
     NgxCommentoComponent,
     KitComponent,
-    ReportDetailsComponent,
     ReportsComponent
   ],
   imports: [
