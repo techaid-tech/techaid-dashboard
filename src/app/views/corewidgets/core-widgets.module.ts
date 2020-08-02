@@ -43,6 +43,9 @@ import { DashboardIndexComponent } from './components/dashboard-index/dashboard-
 import { OrgRequestComponent } from './components/org-request/org-request';
 import { NgxCommentoComponent } from './components/comment.component';
 import { KitComponent } from './components/kit-component/kit-component.component';
+import { ReportsComponent} from './components/reports/reports.component';
+import { ReportDetailsComponent } from './components/report-details/report-details.component';
+
 const routes: Routes = [
   { path: '', component: DashboardIndexComponent },
   { path: 'donate-device', component: DonorRequestComponent },
@@ -95,6 +98,7 @@ const routes: Routes = [
   },
   { path: 'dashboard', component: DashboardIndexComponent, canActivate: [AuthGuard]},
   { path: 'about-us', component: PostDataComponent},
+  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: '**', component: PostDataComponent},
 ];
 
@@ -133,7 +137,9 @@ const routes: Routes = [
     DashboardIndexComponent,
     OrgRequestComponent,
     NgxCommentoComponent,
-    KitComponent
+    KitComponent,
+    ReportDetailsComponent,
+    ReportsComponent
   ],
   imports: [
     LightboxModule,

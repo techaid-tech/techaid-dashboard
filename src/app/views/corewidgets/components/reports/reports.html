@@ -1,0 +1,15 @@
+<div class="">
+    <ngb-tabset type="pills">
+        <ngb-tab *ngFor="let d of dashboards" [title]="d.header">
+            <ng-template ngbTabContent>
+                <iframe *ngIf="d.payload" class="mt-1"
+                    onload="iFrameResize({checkOrigin: false}, this)"
+                    [src]="d.payload.url"
+                    frameborder="0"
+                    style="width: 100%; height: 100vh"
+                    allowtransparency
+                ></iframe>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+</div>
