@@ -213,7 +213,7 @@ export class DonorRequestComponent {
                     },
                   },
                   {
-                    key: 'network',
+                    key: 'attributes.network',
                     type: 'radio',
                     className: '',
                     templateOptions: {
@@ -253,12 +253,12 @@ export class DonorRequestComponent {
                       required: true
                     },
                     hideExpression: (model, state, field) => {
-                      const data = field.parent.formControl.value || {};
+                      const data = (field.parent.formControl.value || {}).attributes || {};
                       return data['network'] != 'OTHER';
                     },
                     expressionProperties: {
                       'templateOptions.required': (model, state, field) => {
-                        const data = field.parent.formControl.value || {};
+                        const data = (field.parent.formControl.value || {}).attributes || {};
                         return data['network'] == 'OTHER';
                       },
                     },

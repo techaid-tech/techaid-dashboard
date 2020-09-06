@@ -606,12 +606,12 @@ export class KitInfoComponent {
                 required: true
               },
               hideExpression: (model, state, field) => {
-                const data = field.parent.formControl.value || {};
+                const data = (field.parent.formControl.value || {}).attributes || {};
                 return data['network'] != 'OTHER';
               },
               expressionProperties: {
                 'templateOptions.required': (model, state, field) => {
-                  const data = field.parent.formControl.value || {};
+                  const data = (field.parent.formControl.value || {}).attributes || {};
                   return data['network'] == 'OTHER';
                 },
               },
