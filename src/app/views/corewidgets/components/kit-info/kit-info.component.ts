@@ -931,7 +931,7 @@ export class KitInfoComponent {
         tap(() => this.logisticsLoading = true),
         switchMap(term => from(userRef.refetch({
           term: term,
-          subGroup: 'Distribution'
+          subGroup: 'Transport'
         })).pipe(
           catchError(() => of([])),
           tap(() => this.logisticsLoading = false),
