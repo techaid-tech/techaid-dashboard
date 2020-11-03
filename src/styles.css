@@ -510,25 +510,21 @@ i.input-group-text {
 }
 
 .kit-status .custom-control:nth-child(9),
-.kit-status .custom-control:nth-child(10){
-    background-color: #F1C233;
-}
-
+.kit-status .custom-control:nth-child(10),
 .kit-status .custom-control:nth-child(11){
-    background-color: #69A84F;
+    background-color: #F1C233;
 }
 
 .kit-status .custom-control:nth-child(12){
-    background-color: #B6D7A7;
+    background-color: #69A84F;
 }
 
 .kit-status .custom-control:nth-child(13){
-    background-color: #A2C4C9;
+    background-color: #B6D7A7;
 }
 
 .kit-status .custom-control:nth-child(14){
-    background-color: #F1C233;
-    border-radius: 0px 0px 5px 5px;
+    background-color: #A2C4C9;
 }
 
 .kit-status .custom-control:nth-child(15){
