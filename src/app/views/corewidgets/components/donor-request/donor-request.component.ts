@@ -107,6 +107,17 @@ export class DonorRequestComponent {
       }
     },
     {
+      key: 'donor.referral',
+      type: 'input',
+      className: 'col-md-12 border-bottom-info card pt-3 mb-3',
+      defaultValue: '',
+      templateOptions: {
+        label: 'How did you hear about us?',
+        placeholder: '',
+        required: false
+      }
+    },
+    {
       key: 'attributes.pickup',
       type: 'radio',
       className: 'col-md-12',
