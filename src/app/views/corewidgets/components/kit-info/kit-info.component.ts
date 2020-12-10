@@ -543,6 +543,7 @@ export class KitInfoComponent {
                   {label: 'Tablet', value: 'TABLET' },
                   {label: 'Smart Phone', value: 'SMARTPHONE' },
                   {label: 'All In One (PC)', value: 'ALLINONE' },
+                  {label: 'Desktop', value: 'DESKTOP' },
                   {label: 'Other', value: 'OTHER' }
                 ],
                 required: true
