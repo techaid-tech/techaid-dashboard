@@ -183,7 +183,8 @@ export class MapViewComponent {
               {value: 'OTHER_TABLETS', label: 'All Other Tablets ( Windows )' },
               {value: 'WINDOWS_LAPTOPS', label: 'Windows Laptops' },
               {value: 'WINDOWS_ALLINONES', label: 'Windows All In Ones' },
-              {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Laptops' },
+              {value: 'WINDOWS_DESKTOPS', label: 'Windows Desktops' },
+              {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Computers' },
               {value: 'APPLE_LAPTOPS', label: 'Apple Macbooks' },
               {value: 'APPLE_ALLINONES', label: 'Apple iMacs (All In One)' },
             ]
