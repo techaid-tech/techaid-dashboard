@@ -155,7 +155,7 @@ export class VolunteerComponent {
               type: 'radio',
               className: '',
               templateOptions: {
-                label: 'Would you like to be involved with the organisation of Streatham TechAid?',
+                label: 'Would you like to be involved with the organisation of Lambeth TechAid?',
                 options: [
                   {label: 'Yes', value: 'yes' },
                   {label: 'No', value: 'no' },
