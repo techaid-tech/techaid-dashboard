@@ -26,6 +26,7 @@ query findDonor($id: Long) {
     postCode
     phoneNumber
     email
+    referral
     kits {
       id
       model
@@ -48,6 +49,7 @@ mutation updateDonor($data: UpdateDonorInput!) {
     phoneNumber
     email
     name
+    referral
     kits {
       id
       model
