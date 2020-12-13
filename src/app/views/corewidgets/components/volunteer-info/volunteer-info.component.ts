@@ -35,6 +35,7 @@ const QUERY_ENTITY = gql`
           tablets
           laptops
           allInOnes
+          desktops
         }
       }
     }
@@ -65,6 +66,7 @@ const UPDATE_ENTITY = gql`
           tablets
           laptops
           allInOnes
+          desktops
         }
       }
     }
@@ -228,7 +230,7 @@ export class VolunteerInfoComponent {
               defaultValue: 'no',
               templateOptions: {
                 label:
-                  'Would you like to be involved with the organisation of Streatham TechAid?',
+                  'Would you like to be involved with the organisation of Lambeth TechAid?',
                 options: [
                   { label: 'Yes', value: 'yes' },
                   { label: 'No', value: 'no' }
@@ -352,9 +354,10 @@ export class VolunteerInfoComponent {
                   },
                   { value: 'WINDOWS_LAPTOPS', label: 'Windows Laptops' },
                   { value: 'WINDOWS_ALLINONES', label: 'Windows All In Ones' },
+                  { value: 'WINDOWS_DESKTOPS', label: 'Windows Desktops' },
                   {
                     value: 'LINUX_LAPTOPS',
-                    label: 'Capable of Installing Linux on Old Windows Laptops',
+                    label: 'Capable of Installing Linux on Old Windows Computers',
                   },
                   { value: 'APPLE_LAPTOPS', label: 'Apple Macbooks' },
                   {
@@ -513,6 +516,31 @@ export class VolunteerInfoComponent {
                   templateOptions: {
                     min: 0,
                     label: 'All In Ones',
+                    addonLeft: {
+                      class: 'fas fa-desktop',
+                    },
+                    type: 'number',
+                    placeholder: '',
+                    required: true,
+                  },
+                  validation: {
+                    show: false,
+                  },
+                  expressionProperties: {
+                    'validation.show': 'model.showErrorState',
+                    'templateOptions.disabled': 'formState.disabled',
+                  },
+                },
+                {
+                  key: 'attributes.capacity.desktops',
+                  type: 'input',
+                  className: 'col-6',
+                  hideExpression:
+                    '!model.attributes.accepts || model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
+                  defaultValue: 0,
+                  templateOptions: {
+                    min: 0,
+                    label: 'Desktops',
                     addonLeft: {
                       class: 'fas fa-desktop',
                     },

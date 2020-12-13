@@ -71,6 +71,7 @@ export class DashboardIndexComponent {
 
   styles = {
     'LAPTOP': {title: 'Laptops', style: 'primary', progress: 0},
+    'DESKTOP': {title: 'Desktops', style: 'primary', progress: 0},
     'CHROMEBOOK': {title: 'Chromebooks', style: 'primary', progress: 0},
     'TABLET': {title: 'Tablets', style: 'info', progress: 0},
     'OTHER': {title: 'Other', style: 'danger', progress: 0},

@@ -123,12 +123,12 @@ export class DonorRequestComponent {
       className: 'col-md-12',
       defaultValue: 'DROPOFF',
       templateOptions: {
-        label: 'Are you able to drop off your device to a location in Streatham or would you need it to be collected?',
+        label: 'Are you able to drop off your device to a location in Lambeth or would you need it to be collected?',
         placeholder: '',
         postCode: false,
         required: true,
         options: [
-          { label: 'I am able to drop off my device to a location in Streatham', value: 'DROPOFF' },
+          { label: 'I am able to drop off my device to a location in Lambeth', value: 'DROPOFF' },
           { label: 'I would need you to come and collect my device', value: 'PICKUP' },
           { label: 'I\'m not sure – it depends on the exact location', value: 'NOTSURE' }
         ]
@@ -196,6 +196,7 @@ export class DonorRequestComponent {
                         {label: 'Chromebook', value: 'CHROMEBOOK' },
                         {label: 'Smart Phone', value: 'SMARTPHONE' },
                         {label: 'All In One (PC)', value: 'ALLINONE' },
+                        {label: 'Desktop', value: 'DESKTOP' },
                         {label: 'Other', value: 'OTHER' }
                       ],
                       required: true

@@ -189,7 +189,8 @@ export class VolunteersIndexComponent {
                   {value: 'OTHER_TABLETS', label: 'All Other Tablets ( Windows )' },
                   {value: 'WINDOWS_LAPTOPS', label: 'Windows Laptops' },
                   {value: 'WINDOWS_ALLINONES', label: 'Windows All In Ones' },
-                  {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Laptops' },
+                  {value: 'WINDOWS_DESKTOPS', label: 'Windows Desktops' },
+                  {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Computers' },
                   {value: 'APPLE_LAPTOPS', label: 'Apple Macbooks' },
                   {value: 'APPLE_ALLINONES', label: 'Apple iMacs (All In One)' },
                 ]
@@ -324,7 +325,7 @@ export class VolunteersIndexComponent {
               type: 'radio',
               className: '',
               templateOptions: {
-                label: 'Would you like to be involved with the organisation of Streatham TechAid?',
+                label: 'Would you like to be involved with the organisation of Lambeth TechAid?',
                 options: [
                   {label: 'Yes', value: 'yes' },
                   {label: 'No', value: 'no' }
@@ -437,7 +438,8 @@ export class VolunteersIndexComponent {
                   {value: 'OTHER_TABLETS', label: 'All Other Tablets ( Windows )' },
                   {value: 'WINDOWS_LAPTOPS', label: 'Windows Laptops' },
                   {value: 'WINDOWS_ALLINONES', label: 'Windows All In Ones' },
-                  {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Laptops' },
+                  {value: 'WINDOWS_DESKTOPS', label: 'Windows Desktops' },
+                  {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Computers' },
                   {value: 'APPLE_LAPTOPS', label: 'Apple Macbooks' },
                   {value: 'APPLE_ALLINONES', label: 'Apple iMacs (All In One)' },
                 ],
@@ -563,6 +565,23 @@ export class VolunteersIndexComponent {
                   templateOptions: {
                     min: 0,
                     label: 'All In Ones',
+                    addonLeft: {
+                      class: 'fas fa-desktop'
+                    },
+                    type: 'number',
+                    placeholder: '',
+                    required: true
+                  }
+                },
+                {
+                  key: 'attributes.capacity.desktops',
+                  type: 'input',
+                  className: 'col-6',
+                  hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
+                  defaultValue: 0,
+                  templateOptions: {
+                    min: 0,
+                    label: 'Desktops',
                     addonLeft: {
                       class: 'fas fa-desktop'
                     },

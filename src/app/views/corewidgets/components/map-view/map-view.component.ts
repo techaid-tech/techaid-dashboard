@@ -183,7 +183,8 @@ export class MapViewComponent {
               {value: 'OTHER_TABLETS', label: 'All Other Tablets ( Windows )' },
               {value: 'WINDOWS_LAPTOPS', label: 'Windows Laptops' },
               {value: 'WINDOWS_ALLINONES', label: 'Windows All In Ones' },
-              {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Laptops' },
+              {value: 'WINDOWS_DESKTOPS', label: 'Windows Desktops' },
+              {value: 'LINUX_LAPTOPS', label: 'Capable of Installing Linux on Old Windows Computers' },
               {value: 'APPLE_LAPTOPS', label: 'Apple Macbooks' },
               {value: 'APPLE_ALLINONES', label: 'Apple iMacs (All In One)' },
             ]
@@ -308,6 +309,7 @@ export class MapViewComponent {
       const types = {
         'CHROMEBOOK': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
         'LAPTOP': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
+        'DESKTOP': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
         'TABLET': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-tablet&size=50&hoffset=0&voffset=-1&background=D8345F',
         'SMARTPHONE': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-mobile&size=50&hoffset=0&voffset=-1&background=DE7118',
         'ALLINONE': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-tv&size=50&hoffset=0&voffset=-1&background=9C5517',

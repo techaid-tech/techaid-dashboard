@@ -394,11 +394,11 @@ export class KitIndexComponent {
       className: 'col-md-12',
       defaultValue: 'DROPOFF',
       templateOptions: {
-        label: 'Are you able to drop off your device to a location in Streatham Hill or would you need it to be collected?',
+        label: 'Are you able to drop off your device to a location in Lambeth or would you need it to be collected?',
         placeholder: '',
         required: true,
         options: [
-          { label: 'I am able to drop off my device to a location in Streatham Hill', value: 'DROPOFF' },
+          { label: 'I am able to drop off my device to a location in Lambeth', value: 'DROPOFF' },
           { label: 'I would need you to come and collect my device', value: 'PICKUP' },
           { label: 'I\'m not sure – it depends on the exact location', value: 'NOTSURE' }
         ]
