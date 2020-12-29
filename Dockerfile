@@ -7,4 +7,5 @@ RUN npm run --prefix /app build
 FROM nginx:1.15.12
 COPY --from=builder /app/dist /usr/share/nginx/html
 WORKDIR /usr/share/nginx/html
+EXPOSE 80
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
