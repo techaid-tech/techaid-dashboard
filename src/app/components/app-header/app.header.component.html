@@ -67,14 +67,14 @@
                     Roles
                 </a>
                 <div class="dropdown-divider" *ngIf="user?.authorities['read:users']"></div>
-                <a class="dropdown-item" href="#" routerLink="/dashboard/posts" *ngIf="user?.authorities['write:content']">
+                <!-- <a class="dropdown-item" href="#" routerLink="/dashboard/posts" *ngIf="user?.authorities['write:content']">
                     <i class="fas fa-blog fa-sm fa-fw mr-2 text-gray-400"></i>
                     Posts
                 </a> 
                 <a class="dropdown-item" href="#" routerLink="/dashboard/faqs" *ngIf="user?.authorities['write:content']">
                     <i class="fas fa-question-circle fa-sm fa-fw mr-2 text-gray-400"></i>
                     FAQs
-                </a> 
+                </a>  -->
                 <div class="dropdown-divider" *ngIf="user?.authorities['write:content']"></div>
 
                 <!--
@@ -99,19 +99,19 @@
 <!-- End of Topbar -->
 <div class="nav-scroller bg-white box-shadow">
     <nav class="nav nav-underline">
-        <a class="nav-link"  routerLinkActive="active" href="/">
+        <a class="nav-link"  routerLinkActive="active" href="https://lambeth-techaid.ju.ma/">
             <i class="fas fa-laugh-wink"></i>
             Home
         </a>
-        <a class="nav-link"  routerLinkActive="active" href="#" routerLink="/reports">
+        <!-- <a class="nav-link"  routerLinkActive="active" href="#" routerLink="/reports">
             <i class="fas fa-chart-pie"></i>
             Reports
-        </a>
+        </a> -->
         <a class="nav-link"  routerLinkActive="active" href="#" routerLink="/dashboard">
             <i class="fas fa-laugh-wink"></i>
             Dashboard
         </a>
-        <a class="nav-link"  routerLinkActive="active" href="/about-us">
+        <a class="nav-link"  routerLinkActive="active" href="https://lambeth-techaid.ju.ma/about-us">
             <i class="far fa-address-card"></i>
             About Us
         </a>
@@ -127,7 +127,7 @@
             <i class="fas fa-sitemap"></i>
             Request Devices
         </a>
-        <a class="nav-link" href="/faqs"  routerLinkActive="active">
+        <a class="nav-link" href="https://lambeth-techaid.ju.ma/faqs"  routerLinkActive="active">
             <i class="fas fa-question-circle"></i>    
                 FAQs
         </a>
