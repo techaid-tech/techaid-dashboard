@@ -27,21 +27,15 @@ jobs:
                     - nginx.conf
     deploy:
         working_directory: ~/app
-        executor: gcp-gcr/default
+        docker:
+        - image: alpine:3.6
         steps:
-            - restore_cache:
-                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-            - gcp-gcr/gcr-auth
-            - gcp-gcr/build-image:
-                image: techaid-dashboard
-                registry-url: eu.gcr.io
-                tag: prod-${CIRCLE_SHA1:0:7}
-            - gcp-gcr/push-image:
-                image: techaid-dashboard
-                registry-url: eu.gcr.io
-                tag: prod-${CIRCLE_SHA1:0:7}
-orbs:
-  gcp-gcr: circleci/gcp-gcr@0.8.0
+        - checkout
+        - run: apk add --no-cache git openssh-client
+        - run: mkdir -p ~/.ssh
+        - run: ssh-keyscan "techaid.ju.ma" >> ~/.ssh/known_hosts
+        - run: git push ssh://dokku@techaid.ju.ma/app HEAD:refs/heads/master
+
 version: 2.1
 workflows:
     version: 2
