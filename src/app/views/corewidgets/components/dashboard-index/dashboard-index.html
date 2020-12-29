@@ -107,12 +107,12 @@
       <!-- <kit-index [pageLength]="5" tableId="kit-index-dashboard"></kit-index> -->
       <kit-component *ngIf="user?.email" title="My Devices" [where]="{volunteer: {email: {_eq: user.email}}}" [tableId]="'my-devices-dashboard'"></kit-component>
     </div>
-    <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
+    <!-- <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
       <faq-index [pageLength]="5" tableId="faq-index-dashboard"></faq-index>
-    </div>
-    <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
+    </div> -->
+    <!-- <div class="col-lg-6" *ngIf="user?.authorities['write:content']">
       <post-index [pageLength]="5" tableId="post-index-dashboard"></post-index>
-    </div>
+    </div> -->
     <div class="col-lg-6" *ngIf="user?.authorities['read:emails']">
       <div class="card shadow mb-4">
         <div class="card-header">
