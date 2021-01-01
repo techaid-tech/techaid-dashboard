@@ -25,7 +25,7 @@ import { DOCUMENT } from '@angular/common';
     initCommento() {
         this.removeChild();
         const s = this._renderer2.createElement('script');
-        s.src = 'https://commento.ju.ma/js/commento.js';
+        s.src = 'https://commento.techaid.ju.ma/js/commento.js';
         s.id = 'commento-js';
         this._renderer2.appendChild(this._document.body, s);
     }
