@@ -309,6 +309,7 @@ export class KitComponent {
               },
               { label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
               { label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
+              { label: 'Donation in storage at The Hub', value: 'STORED' },
               {
                 label: 'Donation faulty - collect for recycling',
                 value: 'UPDATE_FAILED',

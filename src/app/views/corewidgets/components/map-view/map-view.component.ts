@@ -94,6 +94,7 @@ export class MapViewComponent {
               {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
               {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
               {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
+              {label: 'Donation in storage at The Hub', value: 'STORED' },
               {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
               {label: 'Donation updated - arrange collection', value: 'READY' },
               {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },

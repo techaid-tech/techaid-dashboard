@@ -505,29 +505,30 @@ i.input-group-text {
     background-color: #E69138;
 }
 
-.kit-status .custom-control:nth-child(8){
+.kit-status .custom-control:nth-child(8),
+.kit-status .custom-control:nth-child(9){
     background-color: #F7B26C;
 }
 
-.kit-status .custom-control:nth-child(9),
 .kit-status .custom-control:nth-child(10),
-.kit-status .custom-control:nth-child(11){
+.kit-status .custom-control:nth-child(11),
+.kit-status .custom-control:nth-child(12){
     background-color: #F1C233;
 }
 
-.kit-status .custom-control:nth-child(12){
+.kit-status .custom-control:nth-child(13){
     background-color: #69A84F;
 }
 
-.kit-status .custom-control:nth-child(13){
+.kit-status .custom-control:nth-child(14){
     background-color: #B6D7A7;
 }
 
-.kit-status .custom-control:nth-child(14){
+.kit-status .custom-control:nth-child(15){
     background-color: #A2C4C9;
 }
 
-.kit-status .custom-control:nth-child(15){
+.kit-status .custom-control:nth-child(16){
     background-color: #80234e;
     color: #FFFFFF;
     border-radius: 0px 0px 5px 5px;
