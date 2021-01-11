@@ -41,7 +41,8 @@ query findAll {
     TABLET: tablets
     OTHER: other
     SMARTPHONE: phones
-    ALLINONE: allInOnes,
+    ALLINONE: allInOnes
+    DESKTOP: desktops
     CHROMEBOOK: chromebooks
   }
 }

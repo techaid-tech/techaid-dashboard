@@ -303,6 +303,7 @@ export class KitIndexComponent {
               {label: 'Tablet', value: 'TABLET' },
               {label: 'Smart Phone', value: 'SMARTPHONE' },
               {label: 'All In One (PC)', value: 'ALLINONE' },
+              {label: 'Desktop', value: 'DESKTOP' },
               {label: 'Other', value: 'OTHER' }
             ],
           }
@@ -455,6 +456,7 @@ export class KitIndexComponent {
                   {label: 'Tablet', value: 'TABLET' },
                   {label: 'Smart Phone', value: 'SMARTPHONE' },
                   {label: 'All In One (PC)', value: 'ALLINONE' },
+                  {label: 'Desktop', value: 'DESKTOP' },
                   {label: 'Other', value: 'OTHER' }
                 ],
                 required: true
@@ -513,6 +515,13 @@ export class KitIndexComponent {
                     'ALLINONE': [
                       {label: 'I have the charger for the Computer', value: 'CHARGER'},
                       {label: 'I don\'t have the charger / power cable for the Computer', value: 'NO_CHARGER'},
+                      {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
+                      {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
+                      {label: 'Does the Computer have a password set?', value: 'PASSWORD_PROTECTED'}
+                    ],
+                    'DESKTOP': [
+                      {label: 'I have the power cable for the Computer', value: 'CHARGER'},
+                      {label: 'I don\'t have the power cable for the Computer', value: 'NO_CHARGER'},
                       {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
                       {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
                       {label: 'Does the Computer have a password set?', value: 'PASSWORD_PROTECTED'}

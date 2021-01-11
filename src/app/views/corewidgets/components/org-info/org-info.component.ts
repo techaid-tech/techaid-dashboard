@@ -50,6 +50,7 @@ query findOrganisation($id: Long!) {
          tablets
          phones
          allInOnes
+         desktops
          other
        }
        alternateRequest {
@@ -57,6 +58,7 @@ query findOrganisation($id: Long!) {
          tablets
          phones
          allInOnes
+         desktops
          other
        }
      }
@@ -140,6 +142,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
          tablets
          phones
          allInOnes
+         desktops
          other
        }
        alternateRequest {
@@ -147,6 +150,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
          tablets
          phones
          allInOnes
+         desktops
          other
        }
      }
@@ -331,6 +335,7 @@ export class OrgInfoComponent {
           {value: 'PHONES', label: 'Phones'},
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'DESKTOPS', label: 'Desktops' },
           {value: 'OTHER', label: 'Other' }
         ],
         required: true
@@ -421,6 +426,23 @@ export class OrgInfoComponent {
           }
         },
         {
+          key: 'attributes.request.desktops',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Desktops',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
           key: 'attributes.request.other',
           type: 'input',
           className: 'col-6',
@@ -456,6 +478,7 @@ export class OrgInfoComponent {
           {value: 'PHONES', label: 'Phones'},
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'DESKTOPS', label: 'Desktops' },
           {value: 'OTHER', label: 'Other' }
         ],
         required: false
@@ -471,6 +494,7 @@ export class OrgInfoComponent {
             {value: 'PHONES', label: 'Phones'},
             {value: 'TABLETS', label: 'Tablets' },
             {value: 'ALLINONES', label: 'All In Ones' },
+            {value: 'DESKTOPS', label: 'Desktops' },
             {value: 'OTHER', label: 'Other' }
           ];
           const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
@@ -548,6 +572,23 @@ export class OrgInfoComponent {
           templateOptions: {
             min: 0,
             label: 'All In Ones',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.alternateRequest.desktops',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'DESKTOP\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Desktops',
             addonLeft: {
               class: 'fas fa-desktop'
             },
