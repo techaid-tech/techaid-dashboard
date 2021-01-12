@@ -30,6 +30,7 @@ export const KIT_STATUS = {
   'READY': 'Donation updated - arrange collection',
   'INCOMPLETE': 'Ready but missing component',
   'ALLOCATED': 'Device allocated to referring organisation',
+  'COMPLETED': 'Device kitting complete',
   'DELIVERY_ARRANGED': 'Collection / drop off to referring organisation agreed',
   'DELIVERED': 'Device received by organisation',
   'RECYCLED': 'Recycled'
@@ -410,6 +411,7 @@ export class KitInfoComponent {
               {label: 'Donation updated - arrange collection', value: 'READY' },
               {label: 'Ready but missing component', value: 'INCOMPLETE'},
               {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
+              {label: 'Device kitting complete', value: 'COMPLETED' },
               {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
               {label: 'Device received by organisation', value: 'DELIVERED' },
               {label: 'Recycled' , value: 'RECYCLED'}

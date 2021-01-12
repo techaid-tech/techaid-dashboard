@@ -359,6 +359,7 @@ export class KitIndexComponent {
               {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
               {label: 'Donation updated - arrange collection', value: 'READY' },
               {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
+              {label: 'Device kitting complete', value: 'COMPLETED' },
               {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
               {label: 'Device received by organisation', value: 'DELIVERED' },
               {label: 'Ready but missing component', value: 'INCOMPLETE'},

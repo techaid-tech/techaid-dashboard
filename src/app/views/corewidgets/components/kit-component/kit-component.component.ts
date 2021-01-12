@@ -322,6 +322,7 @@ export class KitComponent {
                 label: 'Device allocated to referring organisation',
                 value: 'ALLOCATED',
               },
+              { label: 'Device kitting complete', value: 'COMPLETED' },
               {
                 label: 'Collection / drop off to referring organisation agreed',
                 value: 'DELIVERY_ARRANGED',

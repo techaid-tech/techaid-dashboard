@@ -516,19 +516,20 @@ i.input-group-text {
     background-color: #F1C233;
 }
 
-.kit-status .custom-control:nth-child(13){
+.kit-status .custom-control:nth-child(13),
+.kit-status .custom-control:nth-child(14){
     background-color: #69A84F;
 }
 
-.kit-status .custom-control:nth-child(14){
+.kit-status .custom-control:nth-child(15){
     background-color: #B6D7A7;
 }
 
-.kit-status .custom-control:nth-child(15){
+.kit-status .custom-control:nth-child(16){
     background-color: #A2C4C9;
 }
 
-.kit-status .custom-control:nth-child(16){
+.kit-status .custom-control:nth-child(17){
     background-color: #80234e;
     color: #FFFFFF;
     border-radius: 0px 0px 5px 5px;
