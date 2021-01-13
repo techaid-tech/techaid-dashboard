@@ -415,16 +415,16 @@ export class DonorRequestComponent {
               required: false
             }
           },
-          {
-            key: 'attributes.images',
-            type: 'gallery',
-            className: 'col-md-12',
-            templateOptions: {
-              label: 'Upload an image of your device if you can',
-              description: 'Hint: Take a picture of the front and back of the device. If you can capture the serial number / model number or any stickers on the device that would be useful',
-              required: false
-            }
-          },
+          // {
+          //   key: 'attributes.images',
+          //   type: 'gallery',
+          //   className: 'col-md-12',
+          //   templateOptions: {
+          //     label: 'Upload an image of your device if you can',
+          //     description: 'Hint: Take a picture of the front and back of the device. If you can capture the serial number / model number or any stickers on the device that would be useful',
+          //     required: false
+          //   }
+          // },
         ]
       }
     },
