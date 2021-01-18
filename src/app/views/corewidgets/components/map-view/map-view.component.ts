@@ -65,7 +65,7 @@ export class MapViewComponent {
           key: 'type',
           type: 'multicheckbox',
           className: 'col-md-6',
-          defaultValue: ['LAPTOP', 'TABLET', 'SMARTPHONE', 'CHROMEBOOK', 'ALLINONE', 'OTHER'],
+          defaultValue: ['LAPTOP', 'TABLET', 'SMARTPHONE', 'CHROMEBOOK', 'ALLINONE', 'DESKTOP', 'OTHER'],
           templateOptions: {
             label: 'Type of device',
             type: 'array',
@@ -75,6 +75,7 @@ export class MapViewComponent {
               {label: 'Tablet', value: 'TABLET' },
               {label: 'Smart Phone', value: 'SMARTPHONE' },
               {label: 'All In One (PC)', value: 'ALLINONE' },
+              {label: 'Desktop', value: 'DESKTOP' },
               {label: 'Other', value: 'OTHER' }
             ],
           }
@@ -93,9 +94,11 @@ export class MapViewComponent {
               {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
               {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
               {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
+              {label: 'Donation stored at the Hub', value: 'STORED' },
               {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
               {label: 'Donation updated - arrange collection', value: 'READY' },
               {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
+              {label: 'Device kitting complete', value: 'COMPLETED' },
               {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
               {label: 'Device received by organisation', value: 'DELIVERED' },
               {label: 'Ready but missing component', value: 'INCOMPLETE'},
@@ -309,7 +312,7 @@ export class MapViewComponent {
       const types = {
         'CHROMEBOOK': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
         'LAPTOP': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
-        'DESKTOP': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-laptop&size=50&hoffset=0&voffset=-1&background=30475E',
+        'DESKTOP': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-tv&size=50&hoffset=0&voffset=-1&background=30475E',
         'TABLET': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-tablet&size=50&hoffset=0&voffset=-1&background=D8345F',
         'SMARTPHONE': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-mobile&size=50&hoffset=0&voffset=-1&background=DE7118',
         'ALLINONE': 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-tv&size=50&hoffset=0&voffset=-1&background=9C5517',

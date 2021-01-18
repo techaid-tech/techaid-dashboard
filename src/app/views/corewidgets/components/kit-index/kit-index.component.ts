@@ -303,6 +303,7 @@ export class KitIndexComponent {
               {label: 'Tablet', value: 'TABLET' },
               {label: 'Smart Phone', value: 'SMARTPHONE' },
               {label: 'All In One (PC)', value: 'ALLINONE' },
+              {label: 'Desktop', value: 'DESKTOP' },
               {label: 'Other', value: 'OTHER' }
             ],
           }
@@ -354,9 +355,11 @@ export class KitIndexComponent {
               {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
               {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
               {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
+              {label: 'Donation stored at the Hub', value: 'STORED' },
               {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
               {label: 'Donation updated - arrange collection', value: 'READY' },
               {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
+              {label: 'Device kitting complete', value: 'COMPLETED' },
               {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
               {label: 'Device received by organisation', value: 'DELIVERED' },
               {label: 'Ready but missing component', value: 'INCOMPLETE'},
@@ -455,6 +458,7 @@ export class KitIndexComponent {
                   {label: 'Tablet', value: 'TABLET' },
                   {label: 'Smart Phone', value: 'SMARTPHONE' },
                   {label: 'All In One (PC)', value: 'ALLINONE' },
+                  {label: 'Desktop', value: 'DESKTOP' },
                   {label: 'Other', value: 'OTHER' }
                 ],
                 required: true
@@ -513,6 +517,13 @@ export class KitIndexComponent {
                     'ALLINONE': [
                       {label: 'I have the charger for the Computer', value: 'CHARGER'},
                       {label: 'I don\'t have the charger / power cable for the Computer', value: 'NO_CHARGER'},
+                      {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
+                      {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
+                      {label: 'Does the Computer have a password set?', value: 'PASSWORD_PROTECTED'}
+                    ],
+                    'DESKTOP': [
+                      {label: 'I have the power cable for the Computer', value: 'CHARGER'},
+                      {label: 'I don\'t have the power cable for the Computer', value: 'NO_CHARGER'},
                       {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
                       {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
                       {label: 'Does the Computer have a password set?', value: 'PASSWORD_PROTECTED'}

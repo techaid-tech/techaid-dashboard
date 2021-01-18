@@ -146,6 +146,7 @@ export class OrgRequestComponent {
           {value: 'PHONES', label: 'Phones'},
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'DESKTOPS', label: 'Desktops' },
           {value: 'OTHER', label: 'Other' },
         ],
         required: true
@@ -240,6 +241,24 @@ export class OrgRequestComponent {
           }
         },
         {
+          key: 'attributes.request.desktops',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Desktops',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
           key: 'attributes.request.other',
           type: 'input',
           className: 'col-6',
@@ -275,6 +294,7 @@ export class OrgRequestComponent {
           {value: 'PHONES', label: 'Phones'},
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'DESKTOPS', label: 'Desktops' },
           {value: 'OTHER', label: 'Other' }
         ],
         required: false
@@ -290,6 +310,7 @@ export class OrgRequestComponent {
             {value: 'PHONES', label: 'Phones'},
             {value: 'TABLETS', label: 'Tablets' },
             {value: 'ALLINONES', label: 'All In Ones' },
+            {value: 'DESKTOPS', label: 'Desktops' },
             {value: 'OTHER', label: 'Other'},
           ];
           const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
@@ -371,6 +392,24 @@ export class OrgRequestComponent {
             min: 0,
             max: 5,
             label: 'All In Ones',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.alternateRequest.desktops',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'DESKTOP\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Desktops',
             addonLeft: {
               class: 'fas fa-desktop'
             },

@@ -251,6 +251,7 @@ export class KitComponent {
               { label: 'Tablet', value: 'TABLET' },
               { label: 'Smart Phone', value: 'SMARTPHONE' },
               { label: 'All In One (PC)', value: 'ALLINONE' },
+              { label: 'Desktop', value: 'DESKTOP' },
               { label: 'Other', value: 'OTHER' },
             ],
           },
@@ -308,6 +309,7 @@ export class KitComponent {
               },
               { label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
               { label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
+              { label: 'Donation stored at the Hub', value: 'STORED' },
               {
                 label: 'Donation faulty - collect for recycling',
                 value: 'UPDATE_FAILED',
@@ -320,6 +322,7 @@ export class KitComponent {
                 label: 'Device allocated to referring organisation',
                 value: 'ALLOCATED',
               },
+              { label: 'Device kitting complete', value: 'COMPLETED' },
               {
                 label: 'Collection / drop off to referring organisation agreed',
                 value: 'DELIVERY_ARRANGED',

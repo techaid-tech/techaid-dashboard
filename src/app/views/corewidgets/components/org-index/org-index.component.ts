@@ -88,6 +88,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
           LAPTOPS: laptops
           TABLETS: tablets
           ALLINONES:allInOnes
+          DESKTOPS:desktops
           PHONES: phones
         }
         alternateAccepts
@@ -95,6 +96,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
           LAPTOPS: laptops
           TABLETS: tablets
           ALLINONES:allInOnes
+          DESKTOPS:desktops
           PHONES: phones
         }
      }
@@ -292,6 +294,7 @@ export class OrgIndexComponent {
           {value: 'PHONES', label: 'Phones'},
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'DESKTOPS', label: 'Desktops' },
         ],
         required: true
       },
@@ -380,6 +383,23 @@ export class OrgIndexComponent {
             required: true
           }
         },
+        {
+          key: 'attributes.request.desktops',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Desktops',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
       ]
     },
     {
@@ -397,6 +417,7 @@ export class OrgIndexComponent {
           {value: 'PHONES', label: 'Phones'},
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
+          {value: 'DESKTOPS', label: 'Desktops' },
         ],
         required: false
       },
@@ -411,6 +432,7 @@ export class OrgIndexComponent {
             {value: 'PHONES', label: 'Phones'},
             {value: 'TABLETS', label: 'Tablets' },
             {value: 'ALLINONES', label: 'All In Ones' },
+            {value: 'DESKTOPS', label: 'Desktops' },
           ];
           const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
           return values;
@@ -495,6 +517,23 @@ export class OrgIndexComponent {
             required: true
           }
         },
+        {
+          key: 'attributes.alternateRequest.desktops',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'DESKTOP\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Desktops',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
       ]
     },
   ];
@@ -540,7 +579,8 @@ export class OrgIndexComponent {
               {label: 'Laptop', value: 'LAPTOPS' },
               {label: 'Tablet', value: 'TABLETS' },
               {label: 'Smart Phone', value: 'PHONES' },
-              {label: 'All In One (PC)', value: 'ALLINONES' }
+              {label: 'All In One (PC)', value: 'ALLINONES' },
+              {label: 'Desktop', value: 'DESKTOPS' }
             ],
           }
         },
@@ -556,7 +596,8 @@ export class OrgIndexComponent {
               {label: 'Laptop', value: 'LAPTOPS' },
               {label: 'Tablet', value: 'TABLETS' },
               {label: 'Smart Phone', value: 'PHONES' },
-              {label: 'All In One (PC)', value: 'ALLINONES' }
+              {label: 'All In One (PC)', value: 'ALLINONES' },
+              {label: 'Desktop', value: 'DESKTOPS' }
             ],
           }
         },

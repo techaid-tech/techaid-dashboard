@@ -325,6 +325,14 @@ export class DonorRequestComponent {
                             {label: 'I have a password set for the Computer', value: 'PASSWORD_PROTECTED'},
                             {label: 'I don\'t have a password set for the Computer', value: 'NO_PASSWORD'}
                           ],
+                          'DESKTOP': [
+                            {label: 'I have the power cable for the Computer', value: 'CHARGER'},
+                            {label: 'I don\'t have the power cable for the Computer', value: 'NO_CHARGER'},
+                            {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
+                            {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
+                            {label: 'I have a password set for the Computer', value: 'PASSWORD_PROTECTED'},
+                            {label: 'I don\'t have a password set for the Computer', value: 'NO_PASSWORD'}
+                          ],
                           'OTHER': [
                             {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
                             {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
