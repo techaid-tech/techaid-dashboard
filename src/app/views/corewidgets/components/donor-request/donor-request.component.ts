@@ -302,10 +302,10 @@ export class DonorRequestComponent {
                             {label: 'I don\'t have a password set for the Laptop', value: 'NO_PASSWORD'}
                           ],
                           'CHROMEBOOK': [
-                            {label: 'I have the charger / power cable for the Laptop', value: 'CHARGER'},
-                            {label: 'I don\'t have the charger / power cable for the Laptop', value: 'NO_CHARGER'},
-                            {label: 'I have a password set for the Laptop', value: 'PASSWORD_PROTECTED'},
-                            {label: 'I don\'t have a password set for the Laptop', value: 'NO_PASSWORD'}
+                            {label: 'I have the charger / power cable for the Chromebook', value: 'CHARGER'},
+                            {label: 'I don\'t have the charger / power cable for the Chromebook', value: 'NO_CHARGER'},
+                            {label: 'I have a password set for the Chromebook', value: 'PASSWORD_PROTECTED'},
+                            {label: 'I don\'t have a password set for the Chromebook', value: 'NO_PASSWORD'}
                           ],
                           'TABLET': [
                             {label: 'I have the charger for the Tablet', value: 'CHARGER'},
@@ -368,12 +368,9 @@ export class DonorRequestComponent {
                     },
                     hideExpression: (model, state, field) => {
                       const data = field.parent.formControl.value || {};
-                      if (['LAPTOP', 'ALLINONE', 'CHROMEBOOK'].indexOf(data.type) == -1) {
-                        return true;
-                      }
                       const status = data.attributes.status || [];
                       if (status && status.length) {
-                        return status.indexOf('PASSWORD_PROTECTED') == -1;
+                        return status.indexOf('PASSWORD_PROTECTED') === -1;
                       }
                       return true;
                     }

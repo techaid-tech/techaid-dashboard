@@ -645,6 +645,12 @@ export class KitInfoComponent {
                       {label: 'I have a password set for the Laptop', value: 'PASSWORD_PROTECTED'},
                       {label: 'I don\'t have a password set for the Laptop', value: 'NO_PASSWORD'}
                     ],
+                    'CHROMEBOOK': [
+                      {label: 'I have the charger / power cable for the Chromebook', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the Chromebook', value: 'NO_CHARGER'},
+                      {label: 'I have a password set for the Chromebook', value: 'PASSWORD_PROTECTED'},
+                      {label: 'I don\'t have a password set for the Chromebook', value: 'NO_PASSWORD'}
+                    ],
                     'TABLET': [
                       {label: 'I have the charger for the Tablet', value: 'CHARGER'},
                       {label: 'I don\'t have the charger / power cable for the Tablet', value: 'NO_CHARGER'},
@@ -658,6 +664,14 @@ export class KitInfoComponent {
                     'ALLINONE': [
                       {label: 'I have the charger for the Computer', value: 'CHARGER'},
                       {label: 'I don\'t have the charger / power cable for the Computer', value: 'NO_CHARGER'},
+                      {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
+                      {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
+                      {label: 'I have a password set for the Computer', value: 'PASSWORD_PROTECTED'},
+                      {label: 'I don\'t have a password set for the Computer', value: 'NO_PASSWORD'}
+                    ],
+                    'DESKTOP': [
+                      {label: 'I have the power cable for the Computer', value: 'CHARGER'},
+                      {label: 'I don\'t have the power cable for the Computer', value: 'NO_CHARGER'},
                       {label: 'Do you have a mouse for the Computer?', value: 'HAS_MOUSE'},
                       {label: 'Do you have a keyboard for the Computer', value: 'HAS_KEYBOARD'},
                       {label: 'I have a password set for the Computer', value: 'PASSWORD_PROTECTED'},
@@ -696,13 +710,11 @@ export class KitInfoComponent {
                 placeholder: 'Password',
                 required: false
               },
-              hideExpression: (model, state) => {
-                if (['LAPTOP', 'ALLINONE', 'CHROMEBOOK'].indexOf(model.type) == -1) {
-                  return true;
-                }
-                const status = HashUtils.dotNotation(model, 'attributes.status') || [];
+              hideExpression: (model, state, field) => {
+                const data = field.parent.formControl.value || {};
+                const status = data.attributes.status || [];
                 if (status && status.length) {
-                  return status.indexOf('PASSWORD_PROTECTED') == -1;
+                  return status.indexOf('PASSWORD_PROTECTED') === -1;
                 }
                 return true;
               }
