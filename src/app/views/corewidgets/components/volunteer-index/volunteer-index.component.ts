@@ -210,7 +210,6 @@ export class VolunteersIndexComponent {
       <div class="row">
         <div class="col-md-12">
           <div class="border-bottom-info card mb-3 p-3">
-            <strong><p>Covid TechAid Volunteers</p></strong>
             <p>
             Thank you for offering to help get isolated people connected on line through Lambeth TechAid.
             At the moment, there are hundreds of people stuck at home without a suitable device to access the
