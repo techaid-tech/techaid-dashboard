@@ -500,7 +500,7 @@ export class KitComponent {
                 'content'
               ].map((v) => {
                 return {
-                  label: this.volunteerName(v),
+                  label: this.organisationName(v),
                   value: v.id,
                 };
               });
@@ -628,6 +628,14 @@ export class KitComponent {
       .trim();
   }
 
+  organisationName(data) {
+    return `${data.name || ''}||${data.id || ''}||${data.email || ''}||${data.phoneNumber || ''}`
+      .split('||')
+      .filter((f) => f.trim().length)
+      .join(' / ')
+      .trim();
+  }
+
   ngOnDestory() {
     if (this.sub) {
       this.sub.unsubscribe();
@@ -666,7 +674,7 @@ export class KitComponent {
                   this.orgField.templateOptions['items'] = res.data[
                     'organisations'
                   ].map((v) => {
-                    return { label: this.volunteerName(v), value: v.id };
+                    return { label: this.organisationName(v), value: v.id };
                   });
                 }
               }

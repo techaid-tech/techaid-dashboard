@@ -847,7 +847,7 @@ export class KitInfoComponent {
     if (data.organisation && data.organisation.id) {
       data.organisationId = data.organisation.id;
       this.orgField.templateOptions['items'] = [
-        {label: this.volunteerName(data.organisation), value: data.organisation.id}
+        {label: this.organisationName(data.organisation), value: data.organisation.id}
       ];
     }
     return data;
@@ -1025,7 +1025,7 @@ export class KitInfoComponent {
           switchMap(res => {
             const data = res['data']['organisationsConnection']['content'].map(v => {
               return {
-                label: `${this.volunteerName(v)}`, value: v.id
+                label: `${this.organisationName(v)}`, value: v.id
               };
             });
             return of(data);
@@ -1062,6 +1062,14 @@ export class KitInfoComponent {
 
   volunteerName(data) {
     return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length).join(' / ').trim();
+  }
+
+  organisationName(data) {
+    return `${data.name || ''}||${data.id || ''}||${data.email || ''}||${data.phoneNumber || ''}`
+      .split('||')
+      .filter(f => f.trim().length)
+      .join(' / ')
+      .trim();
   }
 
   ngOnDestory() {

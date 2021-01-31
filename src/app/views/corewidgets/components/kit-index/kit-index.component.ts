@@ -898,11 +898,17 @@ export class KitIndexComponent {
   }
 
   userName(data) {
-    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length)[0];
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`
+      .split('||')
+      .filter(f => f.trim().length)[0];
   }
 
   volunteerName(data) {
-    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length).join(' / ').trim();
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`
+      .split('||')
+      .filter(f => f.trim().length)
+      .join(' / ')
+      .trim();
   }
 
 
