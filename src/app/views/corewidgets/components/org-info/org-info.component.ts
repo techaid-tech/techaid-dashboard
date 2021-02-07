@@ -619,7 +619,7 @@ export class OrgInfoComponent {
       ]
     },
     {
-      key: 'attributes.details',
+      key: 'attributes.notes',
       type: 'textarea',
       className: 'col-md-12',
       defaultValue: '',

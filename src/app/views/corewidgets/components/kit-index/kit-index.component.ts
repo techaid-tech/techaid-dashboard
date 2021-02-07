@@ -504,6 +504,11 @@ export class KitIndexComponent {
                       {label: 'I don\'t have the charger / power cable for the Laptop', value: 'NO_CHARGER'},
                       {label: 'Does the Laptop have a password set?', value: 'PASSWORD_PROTECTED'}
                     ],
+                    'CHROMEBOOK': [
+                      {label: 'I have the charger / power cable for the Chromebook', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the Chromebook', value: 'NO_CHARGER'},
+                      {label: 'Does the Chromebook have a password set?', value: 'PASSWORD_PROTECTED'}
+                    ],
                     'TABLET': [
                       {label: 'I have the charger for the Tablet', value: 'CHARGER'},
                       {label: 'I don\'t have the charger / power cable for the Tablet', value: 'NO_CHARGER'},
@@ -549,13 +554,11 @@ export class KitIndexComponent {
                 placeholder: 'Password',
                 required: false
               },
-              hideExpression: (model, state) => {
-                if (['LAPTOP', 'ALLINONE', 'CHROMEBOOK'].indexOf(model.type) == -1) {
-                  return true;
-                }
-                const status = HashUtils.dotNotation(model, 'attributes.status') || [];
+              hideExpression: (model, state, field) => {
+                const data = field.parent.formControl.value || {};
+                const status = data.attributes.status || [];
                 if (status && status.length) {
-                  return status.indexOf('PASSWORD_PROTECTED') == -1;
+                  return status.indexOf('PASSWORD_PROTECTED') === -1;
                 }
                 return true;
               }
@@ -895,11 +898,17 @@ export class KitIndexComponent {
   }
 
   userName(data) {
-    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length)[0];
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`
+      .split('||')
+      .filter(f => f.trim().length)[0];
   }
 
   volunteerName(data) {
-    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`.split('||').filter(f => f.trim().length).join(' / ').trim();
+    return `${data.name || ''}||${data.email || ''}||${data.phoneNumber || ''}`
+      .split('||')
+      .filter(f => f.trim().length)
+      .join(' / ')
+      .trim();
   }
 
 
