@@ -43,6 +43,7 @@ query findOrganisation($id: Long!) {
      }
      attributes {
        notes
+       details
        accepts
        alternateAccepts
        request {
@@ -135,6 +136,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      }
      attributes {
        notes
+       details
        accepts
        alternateAccepts
        request {
@@ -619,7 +621,7 @@ export class OrgInfoComponent {
       ]
     },
     {
-      key: 'attributes.notes',
+      key: 'attributes.details',
       type: 'textarea',
       className: 'col-md-12',
       defaultValue: '',

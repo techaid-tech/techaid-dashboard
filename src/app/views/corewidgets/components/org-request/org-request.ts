@@ -440,7 +440,7 @@ export class OrgRequestComponent {
       ]
     },
     {
-      key: 'attributes.notes',
+      key: 'attributes.details',
       type: 'textarea',
       className: 'col-md-12',
       defaultValue: '',

@@ -83,6 +83,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
      }
      attributes {
         notes
+        details
         accepts
         request {
           LAPTOPS: laptops
