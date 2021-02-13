@@ -15,6 +15,7 @@ import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
 import { HashUtils } from '@app/shared/utils';
 import { KIT_STATUS } from '../kit-info/kit-info.component';
+import { CsvService } from "@app/shared/services/csv.service";
 
 const QUERY_ENTITY = gql`
 query findAllKits($page: PaginationInput,$term: String, $where: KitWhereInput!) {
@@ -212,7 +213,8 @@ export class KitIndexComponent {
   constructor(
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private csvService: CsvService
   ) {
 
   }
@@ -995,5 +997,26 @@ export class KitIndexComponent {
     for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
+  }
+
+  exportToCsv(): void {
+    let csvData = JSON.parse(JSON.stringify(this.entities));
+    csvData.map((dt) => {
+      dt.age = this.ages[dt.age];
+      dt.status = this.statusTypes[dt.status];
+      if (dt.donor) {
+        dt.donor = dt.donor.name;
+      }
+      if (dt.organisation) {
+        dt.organisation = dt.organisation.name;
+      }
+      if (dt.volunteers) {
+        dt.volunteers = dt.volunteers.map((a) => a.volunteer.name).join();
+      }
+    });
+    for (let i = 0; i < this.entities.length; i++) {
+      console.log(csvData[i] === this.entities[i]);
+    }
+    this.csvService.exportToCsv(csvData, "devices.csv");
   }
 }
