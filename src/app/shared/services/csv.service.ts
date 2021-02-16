@@ -54,10 +54,7 @@ export class CsvService {
                 cell instanceof Date
                   ? cell.toLocaleString()
                   : cell.toString().replace(/"/g, '""');
-              if (cell.search(/("|,|\n)/g) >= 0) {
-                cell = `"${cell}"`;
-              }
-              return cell;
+              return `"${cell}"`;
             })
             .join(separator);
         })

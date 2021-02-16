@@ -885,6 +885,7 @@ export class VolunteersIndexComponent {
   }
 
   exportToCsv(): void {
-    this.csvService.exportToCsv(this.entities, "volunteers.csv");
+    let csvData = JSON.parse(JSON.stringify(this.entities));
+    this.csvService.exportToCsv(csvData, "volunteers.csv");
   }
 }

@@ -314,6 +314,7 @@ export class DonorIndexComponent {
   }
 
   exportToCsv(): void {
-    this.csvService.exportToCsv(this.entities, "donors.csv");
+    let csvData = JSON.parse(JSON.stringify(this.entities));
+    this.csvService.exportToCsv(csvData, "donors.csv");
   }
 }

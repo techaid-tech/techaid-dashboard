@@ -1014,9 +1014,6 @@ export class KitIndexComponent {
         dt.volunteers = dt.volunteers.map((a) => a.volunteer.name).join();
       }
     });
-    for (let i = 0; i < this.entities.length; i++) {
-      console.log(csvData[i] === this.entities[i]);
-    }
     this.csvService.exportToCsv(csvData, "devices.csv");
   }
 }
