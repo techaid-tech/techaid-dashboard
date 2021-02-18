@@ -295,7 +295,6 @@ export class KitInfoComponent {
     className: 'col-md-12',
     templateOptions: {
       label: 'Organising Volunteer',
-      description: 'The organising volunteer this device is currently assigned to.',
       loading: this.organisersLoading,
       typeahead: this.organisersInput$,
       placeholder: 'Assign device to Organiser Volunteers',
@@ -315,7 +314,6 @@ export class KitInfoComponent {
     className: 'col-md-12',
     templateOptions: {
       label: 'Logistics Volunteer',
-      description: 'The Logistics volunteer this device is currently assigned to.',
       loading: this.logisticsLoading,
       typeahead: this.logisticsInput$,
       placeholder: 'Assign device to Logistic Volunteers',
@@ -334,8 +332,7 @@ export class KitInfoComponent {
     type: 'choice',
     className: 'col-md-12',
     templateOptions: {
-      label: 'Techie Volunteer',
-      description: 'The techie volunteers this device is currently assigned to.',
+      label: 'Tech Volunteer',
       loading: this.techniciansLoading,
       typeahead: this.techniciansInput$,
       placeholder: 'Assign device to Tech Volunteers',
@@ -393,7 +390,7 @@ export class KitInfoComponent {
         {
           key: 'status',
           type: 'radio',
-          className: 'col-md-6 kit-status',
+          className: 'col-md-4 kit-status',
           defaultValue: 'REGISTERED',
           templateOptions: {
             label: 'Status of the device',
@@ -421,7 +418,7 @@ export class KitInfoComponent {
         },
         {
           fieldGroupClassName: 'd-flex flex-column justify-content-between',
-          className: 'col-md-6',
+          className: 'col-md-4',
           fieldGroup: [
             {
               key: 'attributes.notes',
@@ -430,7 +427,7 @@ export class KitInfoComponent {
               defaultValue: '',
               templateOptions: {
                 label: 'Notes about the device',
-                rows: 5,
+                rows: 8,
                 required: false
               }
             },
@@ -459,27 +456,32 @@ export class KitInfoComponent {
               hideExpression: 'model.status != \'DECLINED\''
             },
           ]
+        },
+        {
+          fieldGroupClassName: 'd-flex flex-column justify-content-between',
+          className: 'col-md-4',
+          fieldGroup: [
+            {
+              key: 'location',
+              type: 'place',
+              className: 'col-md-12',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Location of device',
+                placeholder: '',
+                postCode: false,
+                required: true
+              }
+            },
+            this.techniciansField,
+            this.organisersField,
+            this.logisticsField,
+          ]
         }
       ]
     },
-    this.techniciansField,
-    this.organisersField,
-    this.logisticsField,
-    this.donorField,
     this.orgField,
-    {
-      key: 'location',
-      type: 'place',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Address',
-        description: 'The address of the device',
-        placeholder: '',
-        postCode: false,
-        required: true
-      }
-    },
+    this.donorField,
     {
       key: 'attributes.pickup',
       type: 'radio',
