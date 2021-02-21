@@ -468,7 +468,21 @@ export class DonorRequestComponent {
         ],
         required: true
       }
-    }
+    },
+    {
+      key: 'donor.consent',
+      type: 'radio',
+      className: 'col-md-12',
+      templateOptions: {
+        label: 'We would like to keep in touch with you about our vital work in bridging the digital divide, as well as fundraising appeals and opportunities to support us.',
+        placeholder: '',
+        required: true,
+        options: [
+          { label: 'Yes please, I would like to receive communications via email', value: true },
+          { label: 'No thank you, I would not like to receive communications via email', value: false }
+        ]
+      }
+    },
   ];
 
 
