@@ -548,6 +548,7 @@ export class KitInfoComponent {
                   {label: 'Smart Phone', value: 'SMARTPHONE' },
                   {label: 'All In One (PC)', value: 'ALLINONE' },
                   {label: 'Desktop', value: 'DESKTOP' },
+                  {label: 'Connectivity Device', value: 'COMMSDEVICE' },
                   {label: 'Other', value: 'OTHER' }
                 ],
                 required: true
@@ -678,6 +679,10 @@ export class KitInfoComponent {
                       {label: 'I don\'t have a password set for the Computer', value: 'NO_PASSWORD'}
                     ],
                     'OTHER': [
+                      {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
+                    ],
+                    'COMMSDEVICE': [
                       {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
                       {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
                     ],
