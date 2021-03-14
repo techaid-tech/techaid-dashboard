@@ -10,6 +10,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Select } from '@ngxs/store';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
 import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
+import { CsvService } from "@app/shared/services/csv.service";
 
 const QUERY_ENTITY = gql`
 query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationWhereInput!) {
@@ -179,7 +180,8 @@ export class OrgIndexComponent {
   constructor(
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private csvService: CsvService
   ) {
 
   }
@@ -955,5 +957,10 @@ export class OrgIndexComponent {
     for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
+  }
+
+  exportToCsv(): void {
+    let csvData = JSON.parse(JSON.stringify(this.entities));
+    this.csvService.exportToCsv(csvData, "organisations.csv");
   }
 }

@@ -13,6 +13,7 @@ import { Select } from '@ngxs/store';
 import 'datatables.net-responsive';
 import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
+import { CsvService } from "@app/shared/services/csv.service";
 
 const QUERY_ENTITY = gql`
 query findAllVolunteers($page: PaginationInput,$where: VolunteerWhereInput!, $term: String) {
@@ -81,7 +82,8 @@ export class VolunteersIndexComponent {
   constructor(
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private apollo: Apollo
+    private apollo: Apollo,
+    private csvService: CsvService
   ) {
 
   }
@@ -880,5 +882,10 @@ export class VolunteersIndexComponent {
     for (const k in this.selections) {
       this.selected.push(this.selections[k]);
     }
+  }
+
+  exportToCsv(): void {
+    let csvData = JSON.parse(JSON.stringify(this.entities));
+    this.csvService.exportToCsv(csvData, "volunteers.csv");
   }
 }

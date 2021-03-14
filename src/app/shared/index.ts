@@ -6,6 +6,7 @@ import { ConfigService } from './services/config.service';
 import { TimeAgoPipe } from './pipes/timeago.pipe';
 import { AppInitialComponent } from './components/app-initial/app-initial.component';
 import { AuthenticationService } from './services/authentication.service';
+import { CsvService } from "./services/csv.service";
 
 @NgModule({
     imports: [
@@ -29,6 +30,7 @@ export class AppSharedModule {
                 AuthenticationService,
                 AuthGuard,
                 ConfigService,
+                CsvService,
             ]
         };
     }
