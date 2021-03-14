@@ -252,7 +252,8 @@ export class KitComponent {
               { label: 'Smart Phone', value: 'SMARTPHONE' },
               { label: 'All In One (PC)', value: 'ALLINONE' },
               { label: 'Desktop', value: 'DESKTOP' },
-              { label: 'Other', value: 'OTHER' },
+              { label: 'Connectivity Device', value: 'COMMSDEVICE' },
+              { label: 'Other', value: 'OTHER' }
             ],
           },
         },

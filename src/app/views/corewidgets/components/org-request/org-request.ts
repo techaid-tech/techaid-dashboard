@@ -147,6 +147,7 @@ export class OrgRequestComponent {
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
           {value: 'DESKTOPS', label: 'Desktops' },
+          {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
           {value: 'OTHER', label: 'Other' },
         ],
         required: true
@@ -259,6 +260,24 @@ export class OrgRequestComponent {
           }
         },
         {
+          key: 'attributes.request.commsDevices',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Connectivity Device',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
           key: 'attributes.request.other',
           type: 'input',
           className: 'col-6',
@@ -295,6 +314,7 @@ export class OrgRequestComponent {
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
           {value: 'DESKTOPS', label: 'Desktops' },
+          {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
           {value: 'OTHER', label: 'Other' }
         ],
         required: false
@@ -311,6 +331,7 @@ export class OrgRequestComponent {
             {value: 'TABLETS', label: 'Tablets' },
             {value: 'ALLINONES', label: 'All In Ones' },
             {value: 'DESKTOPS', label: 'Desktops' },
+            {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
             {value: 'OTHER', label: 'Other'},
           ];
           const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
@@ -419,6 +440,24 @@ export class OrgRequestComponent {
           }
         },
         {
+          key: 'attributes.alternateRequest.commsDevices',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Connectivity Devices',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
           key: 'attributes.alternateRequest.other',
           type: 'input',
           className: 'col-6',
@@ -440,7 +479,7 @@ export class OrgRequestComponent {
       ]
     },
     {
-      key: 'attributes.notes',
+      key: 'attributes.details',
       type: 'textarea',
       className: 'col-md-12',
       defaultValue: '',

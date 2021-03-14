@@ -304,6 +304,7 @@ export class KitIndexComponent {
               {label: 'Smart Phone', value: 'SMARTPHONE' },
               {label: 'All In One (PC)', value: 'ALLINONE' },
               {label: 'Desktop', value: 'DESKTOP' },
+              {label: 'Connectivity Device', value: 'COMMSDEVICE' },
               {label: 'Other', value: 'OTHER' }
             ],
           }
@@ -459,6 +460,7 @@ export class KitIndexComponent {
                   {label: 'Smart Phone', value: 'SMARTPHONE' },
                   {label: 'All In One (PC)', value: 'ALLINONE' },
                   {label: 'Desktop', value: 'DESKTOP' },
+                  {label: 'Connectivity Device', value: 'COMMSDEVICE' },
                   {label: 'Other', value: 'OTHER' }
                 ],
                 required: true
@@ -534,6 +536,10 @@ export class KitIndexComponent {
                       {label: 'Does the Computer have a password set?', value: 'PASSWORD_PROTECTED'}
                     ],
                     'OTHER': [
+                      {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
+                      {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
+                    ],
+                    'COMMSDEVICE': [
                       {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
                       {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
                     ],

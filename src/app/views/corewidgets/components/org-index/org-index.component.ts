@@ -83,6 +83,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
      }
      attributes {
         notes
+        details
         accepts
         request {
           LAPTOPS: laptops
@@ -90,6 +91,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
           ALLINONES:allInOnes
           DESKTOPS:desktops
           PHONES: phones
+          COMMSDEVICES: commsDevices
         }
         alternateAccepts
         alternateRequest {
@@ -98,6 +100,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
           ALLINONES:allInOnes
           DESKTOPS:desktops
           PHONES: phones
+          COMMSDEVICES: commsDevices
         }
      }
     }
@@ -295,6 +298,7 @@ export class OrgIndexComponent {
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
           {value: 'DESKTOPS', label: 'Desktops' },
+          {value: 'COMMSDEVICES', label: 'Connectivity Devices' }
         ],
         required: true
       },
@@ -400,6 +404,23 @@ export class OrgIndexComponent {
             required: true
           }
         },
+        {
+          key: 'attributes.request.commsDevices',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Connectivity Devices',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
       ]
     },
     {
@@ -418,6 +439,7 @@ export class OrgIndexComponent {
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
           {value: 'DESKTOPS', label: 'Desktops' },
+          {value: 'COMMSDEVICES', label: 'Connectivity Devices' }
         ],
         required: false
       },
@@ -433,6 +455,7 @@ export class OrgIndexComponent {
             {value: 'TABLETS', label: 'Tablets' },
             {value: 'ALLINONES', label: 'All In Ones' },
             {value: 'DESKTOPS', label: 'Desktops' },
+            {value: 'COMMSDEVICES', label: 'Connectivity Devices' }
           ];
           const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
           return values;
@@ -534,6 +557,23 @@ export class OrgIndexComponent {
             required: true
           }
         },
+        {
+          key: 'attributes.alternateRequest.commsDevices',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            label: 'Connectivity Devices',
+            addonLeft: {
+              class: 'fas fa-desktop'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
       ]
     },
   ];
@@ -580,7 +620,8 @@ export class OrgIndexComponent {
               {label: 'Tablet', value: 'TABLETS' },
               {label: 'Smart Phone', value: 'PHONES' },
               {label: 'All In One (PC)', value: 'ALLINONES' },
-              {label: 'Desktop', value: 'DESKTOPS' }
+              {label: 'Desktop', value: 'DESKTOPS' },
+              {label: 'Connectivity Device', value: 'COMMSDEVICES' }
             ],
           }
         },
@@ -597,7 +638,8 @@ export class OrgIndexComponent {
               {label: 'Tablet', value: 'TABLETS' },
               {label: 'Smart Phone', value: 'PHONES' },
               {label: 'All In One (PC)', value: 'ALLINONES' },
-              {label: 'Desktop', value: 'DESKTOPS' }
+              {label: 'Desktop', value: 'DESKTOPS' },
+              {label: 'Connectivity Device', value: 'COMMSDEVICES' }
             ],
           }
         },

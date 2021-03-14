@@ -43,6 +43,7 @@ query findOrganisation($id: Long!) {
      }
      attributes {
        notes
+       details
        accepts
        alternateAccepts
        request {
@@ -51,6 +52,7 @@ query findOrganisation($id: Long!) {
          phones
          allInOnes
          desktops
+         commsDevices
          other
        }
        alternateRequest {
@@ -59,6 +61,7 @@ query findOrganisation($id: Long!) {
          phones
          allInOnes
          desktops
+         commsDevices
          other
        }
      }
@@ -135,6 +138,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      }
      attributes {
        notes
+       details
        accepts
        alternateAccepts
        request {
@@ -143,6 +147,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
          phones
          allInOnes
          desktops
+         commsDevices
          other
        }
        alternateRequest {
@@ -151,6 +156,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
          phones
          allInOnes
          desktops
+         commsDevices
          other
        }
      }
@@ -336,6 +342,7 @@ export class OrgInfoComponent {
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
           {value: 'DESKTOPS', label: 'Desktops' },
+          {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
           {value: 'OTHER', label: 'Other' }
         ],
         required: true
@@ -452,7 +459,26 @@ export class OrgInfoComponent {
             min: 0,
             max: 5,
             label: 'Other',
-            description: 'Specify the other types of devies you would like in the additional details field below',
+            description: 'Specify the other types of devices you would like in the additional details field below',
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.request.commsDevices',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Connectivity Devices',
+            description: 'Specify the other types of devices you would like in the additional details field below',
             addonLeft: {
               class: 'fas fa-laptop-house'
             },
@@ -479,6 +505,7 @@ export class OrgInfoComponent {
           {value: 'TABLETS', label: 'Tablets' },
           {value: 'ALLINONES', label: 'All In Ones' },
           {value: 'DESKTOPS', label: 'Desktops' },
+          {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
           {value: 'OTHER', label: 'Other' }
         ],
         required: false
@@ -495,6 +522,7 @@ export class OrgInfoComponent {
             {value: 'TABLETS', label: 'Tablets' },
             {value: 'ALLINONES', label: 'All In Ones' },
             {value: 'DESKTOPS', label: 'Desktops' },
+            {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
             {value: 'OTHER', label: 'Other' }
           ];
           const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
@@ -610,7 +638,26 @@ export class OrgInfoComponent {
             addonLeft: {
               class: 'fas fa-laptop-house'
             },
-            description: 'Specify the other types of devies you would like in the additional details field below',
+            description: 'Specify the other types of devices you would like in the additional details field below',
+            type: 'number',
+            placeholder: '',
+            required: true
+          }
+        },
+        {
+          key: 'attributes.alternateRequest.commsDevices',
+          type: 'input',
+          className: 'col-6',
+          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+          defaultValue: 0,
+          templateOptions: {
+            min: 0,
+            max: 5,
+            label: 'Connectivity Devices',
+            addonLeft: {
+              class: 'fas fa-laptop-house'
+            },
+            description: 'Specify the other types of devices you would like in the additional details field below',
             type: 'number',
             placeholder: '',
             required: true
@@ -619,7 +666,7 @@ export class OrgInfoComponent {
       ]
     },
     {
-      key: 'attributes.notes',
+      key: 'attributes.details',
       type: 'textarea',
       className: 'col-md-12',
       defaultValue: '',
