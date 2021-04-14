@@ -213,7 +213,7 @@ export class VolunteersIndexComponent {
         <div class="col-md-12">
           <div class="border-bottom-info card mb-3 p-3">
             <p>
-            Thank you for offering to help get isolated people connected on line through Lambeth TechAid.
+            Thank you for offering to help get isolated people connected on line through Community TechAid.
             At the moment, there are hundreds of people stuck at home without a suitable device to access the
             internet – to communicate with loved ones, to download educational resources, or to even get some
             basic entertainment. It's our aim to collect your unwanted devices and deliver them to people who
@@ -326,7 +326,7 @@ export class VolunteersIndexComponent {
               type: 'radio',
               className: '',
               templateOptions: {
-                label: 'Would you like to be involved with the organisation of Lambeth TechAid?',
+                label: 'Would you like to be involved with the organisation of Community TechAid?',
                 options: [
                   {label: 'Yes', value: 'yes' },
                   {label: 'No', value: 'no' }
@@ -638,8 +638,8 @@ export class VolunteersIndexComponent {
       templateOptions: {
         label: 'Data Protection',
         options: [
-          {label: 'I consent to my data being processed by Lambeth TechAid', value: 'yes' },
-          // {label: "I do not consent to my data being processed by Lambeth TechAid", value: "no" },
+          {label: 'I consent to my data being processed by Community TechAid', value: 'yes' },
+          // {label: "I do not consent to my data being processed by Community TechAid", value: "no" },
         ],
         required: true
       },

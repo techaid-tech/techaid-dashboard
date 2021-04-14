@@ -230,7 +230,7 @@ export class VolunteerInfoComponent {
               defaultValue: 'no',
               templateOptions: {
                 label:
-                  'Would you like to be involved with the organisation of Lambeth TechAid?',
+                  'Would you like to be involved with the organisation of Community TechAid?',
                 options: [
                   { label: 'Yes', value: 'yes' },
                   { label: 'No', value: 'no' }
