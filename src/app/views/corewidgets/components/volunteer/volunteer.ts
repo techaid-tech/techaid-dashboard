@@ -41,7 +41,7 @@ export class VolunteerComponent {
         <div class="col-md-12">
           <div class="border-bottom-info card mb-3 p-3">
             <p>
-            Thank you for offering to help get isolated people connected on line through Lambeth TechAid.
+            Thank you for offering to help get isolated people connected on line through Community TechAid.
             At the moment, there are hundreds of people stuck at home without a suitable device to access the
             internet – to communicate with loved ones, to download educational resources, or to even get some
             basic entertainment. It's our aim to collect your unwanted devices and deliver them to people who
@@ -154,7 +154,7 @@ export class VolunteerComponent {
               type: 'radio',
               className: '',
               templateOptions: {
-                label: 'Would you like to be involved with the organisation of Lambeth TechAid?',
+                label: 'Would you like to be involved with the organisation of Community TechAid?',
                 options: [
                   {label: 'Yes', value: 'yes' },
                   {label: 'No', value: 'no' },
@@ -451,7 +451,7 @@ export class VolunteerComponent {
             <p>
             We promise to process your data in accordance with data protection legislation, and will not
             share your details with any third parties. You have the right to ask for your information to be
-            deleted from our records at any time - please contact covidtechaid@gmail.com if you want us to
+            deleted from our records at any time - please contact contact@communitytechaid.org.uk if you want us to
             delete your data from our records. *
             </p>
           </div>
@@ -466,8 +466,8 @@ export class VolunteerComponent {
       templateOptions: {
         label: 'Data Protection',
         options: [
-          {label: 'I consent to my data being processed by Lambeth TechAid', value: 'yes' },
-          // {label: "I do not consent to my data being processed by Lambeth TechAid", value: "no" },
+          {label: 'I consent to my data being processed by Community TechAid', value: 'yes' },
+          // {label: "I do not consent to my data being processed by Community TechAid", value: "no" },
         ],
         required: true
       },

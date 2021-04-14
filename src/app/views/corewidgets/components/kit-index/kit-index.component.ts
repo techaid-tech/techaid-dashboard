@@ -623,12 +623,12 @@ export class KitIndexComponent {
         <div class="col-md-12">
           <div class="border-bottom-warning card mb-3 p-3">
             <p>
-              In order to protect your data, Lambeth TechAid will delete any personal information
+              In order to protect your data, Community TechAid will delete any personal information
               submitted via this form as soon as it has been used for collecting and delivering your device.
               Alternatively, if we don't collect your device, we will delete your information immediately.
               We promise to process your data in accordance with data protection legislation, and will not
               share your details with any third parties. You have the right to ask for your information to be
-              deleted from our records - please contact covidtechaid@gmail.com for more information.
+              deleted from our records - please contact contact@communitytechaid.org.uk for more information.
             </p>
           </div>
         </div>
@@ -651,8 +651,8 @@ export class KitIndexComponent {
       templateOptions: {
         label: '',
         options: [
-          {label: 'I consent to my data being processed by Lambeth TechAid', value: 'yes' },
-          // {label: "I do not consent to my data being processed by Lambeth TechAid", value: "no" },
+          {label: 'I consent to my data being processed by Community TechAid', value: 'yes' },
+          // {label: "I do not consent to my data being processed by Community TechAid", value: "no" },
         ],
         required: true
       }
