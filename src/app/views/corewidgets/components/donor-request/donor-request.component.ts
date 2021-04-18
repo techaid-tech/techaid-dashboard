@@ -482,7 +482,7 @@ export class DonorRequestComponent {
           { label: 'No thank you, I would not like to receive communications via email', value: false }
         ]
       }
-    },
+    }
   ];
 
 

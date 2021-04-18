@@ -27,6 +27,7 @@ query findDonor($id: Long) {
     phoneNumber
     email
     referral
+    consent
     kits {
       id
       model
@@ -50,6 +51,7 @@ mutation updateDonor($data: UpdateDonorInput!) {
     email
     name
     referral
+    consent
     kits {
       id
       model
@@ -195,7 +197,7 @@ export class DonorInfoComponent {
     {
       key: 'referral',
       type: 'input',
-      className: 'col-md-12 border-bottom-info card pt-3 mb-3',
+      className: 'col-md-12',
       defaultValue: '',
       templateOptions: {
         label: 'How did you hear about us?',
@@ -210,6 +212,20 @@ export class DonorInfoComponent {
         'templateOptions.disabled': 'formState.disabled',
       },
     },
+    {
+      key: 'consent',
+      type: 'radio',
+      className: 'col-md-12  border-bottom-info card pt-3 mb-3',
+      templateOptions: {
+        label: 'We would like to keep in touch with you about our vital work in bridging the digital divide, as well as fundraising appeals and opportunities to support us.',
+        placeholder: '',
+        required: true,
+        options: [
+          { label: 'Yes please, I would like to receive communications via email', value: true },
+          { label: 'No thank you, I would not like to receive communications via email', value: false }
+        ]
+      }
+    }
   ];
 
   kitStatus: any = KIT_STATUS;
