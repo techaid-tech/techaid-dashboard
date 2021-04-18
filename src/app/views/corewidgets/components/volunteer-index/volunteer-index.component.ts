@@ -623,7 +623,7 @@ export class VolunteersIndexComponent {
             <p>
             We promise to process your data in accordance with data protection legislation, and will not
             share your details with any third parties. You have the right to ask for your information to be
-            deleted from our records at any time - please contact covidtechaid@gmail.com if you want us to
+            deleted from our records at any time - please contact contact@communitytechaid.org.uk if you want us to
             delete your data from our records. *
             </p>
           </div>

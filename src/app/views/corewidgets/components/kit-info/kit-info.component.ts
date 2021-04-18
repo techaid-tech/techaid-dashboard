@@ -782,7 +782,7 @@ export class KitInfoComponent {
               Alternatively, if we don't collect your device, we will delete your information immediately.
               We promise to process your data in accordance with data protection legislation, and will not
               share your details with any third parties. You have the right to ask for your information to be
-              deleted from our records - please contact covidtechaid@gmail.com for more information.
+              deleted from our records - please contact contact@communitytechaid.org.uk for more information.
             </p>
           </div>
         </div>
