@@ -130,6 +130,19 @@ export class OrgRequestComponent {
             'templateOptions.required': '!model.email.length'
           }
         },
+        {
+          key: 'address',
+          type: 'place',
+          className: 'col-md-12',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Address',
+            description: 'The address of the organisation',
+            placeholder: '',
+            postCode: false,
+            required: true
+          }
+        }
       ]
     },
     {
