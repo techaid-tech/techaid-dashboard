@@ -338,6 +338,9 @@ export class OrgInfoComponent {
             placeholder: '',
             postCode: false,
             required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.address.length'
           }
         }
       ]

@@ -141,6 +141,9 @@ export class OrgRequestComponent {
             placeholder: '',
             postCode: false,
             required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.address.length'
           }
         }
       ]
