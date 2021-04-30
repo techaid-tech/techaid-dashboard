@@ -71,6 +71,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
      contact
      name
      email
+     address
      createdAt
      updatedAt
      kitCount
@@ -283,6 +284,22 @@ export class OrgIndexComponent {
             'templateOptions.required': '!model.email.length'
           }
         },
+        {
+          key: 'address',
+          type: 'place',
+          className: 'col-md-12',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Address',
+            description: 'The address of the organisation',
+            placeholder: '',
+            postCode: false,
+            required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.address.length'
+          }
+        }
       ]
     },
     {

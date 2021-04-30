@@ -22,6 +22,7 @@ query findOrganisation($id: Long!) {
      contact
      name
      email
+     address
      createdAt
      updatedAt
      archived
@@ -117,6 +118,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      contact
      name
      email
+     address
      createdAt
      updatedAt
      archived
@@ -325,6 +327,22 @@ export class OrgInfoComponent {
             'templateOptions.required': '!model.email.length'
           }
         },
+        {
+          key: 'address',
+          type: 'place',
+          className: 'col-md-12',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Address',
+            description: 'The address of the organisation',
+            placeholder: '',
+            postCode: false,
+            required: true
+          },
+          expressionProperties: {
+            'templateOptions.required': '!model.address.length'
+          }
+        }
       ]
     },
     {

@@ -112,7 +112,11 @@ export class OrgRequestComponent {
             placeholder: '',
             required: true
           },
+          validation: {
+            show: false
+          },
           expressionProperties: {
+            'validation.show': 'model.showErrorState',
             'templateOptions.required': '!model.phoneNumber.length'
           }
         },
@@ -126,10 +130,34 @@ export class OrgRequestComponent {
             pattern: /\+?[0-9]+/,
             required: true
           },
+          validation: {
+            show: false
+          },
           expressionProperties: {
+            'validation.show': 'model.showErrorState',
             'templateOptions.required': '!model.email.length'
           }
         },
+        {
+          key: 'address',
+          type: 'place',
+          className: 'col-md-12',
+          defaultValue: '',
+          templateOptions: {
+            label: 'Address',
+            description: 'The address of the organisation',
+            placeholder: '',
+            postCode: false,
+            required: true
+          },
+          validation: {
+            show: false
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+            'templateOptions.required': '!model.address.length'
+          }
+        }
       ]
     },
     {
