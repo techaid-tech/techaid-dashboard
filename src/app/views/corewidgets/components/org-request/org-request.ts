@@ -112,7 +112,11 @@ export class OrgRequestComponent {
             placeholder: '',
             required: true
           },
+          validation: {
+            show: false
+          },
           expressionProperties: {
+            'validation.show': 'model.showErrorState',
             'templateOptions.required': '!model.phoneNumber.length'
           }
         },
@@ -126,7 +130,11 @@ export class OrgRequestComponent {
             pattern: /\+?[0-9]+/,
             required: true
           },
+          validation: {
+            show: false
+          },
           expressionProperties: {
+            'validation.show': 'model.showErrorState',
             'templateOptions.required': '!model.email.length'
           }
         },
@@ -142,7 +150,11 @@ export class OrgRequestComponent {
             postCode: false,
             required: true
           },
+          validation: {
+            show: false
+          },
           expressionProperties: {
+            'validation.show': 'model.showErrorState',
             'templateOptions.required': '!model.address.length'
           }
         }
