@@ -513,7 +513,7 @@ export class OrgRequestComponent {
       defaultValue: '',
       templateOptions: {
         label: 'Any additional details about your request?',
-        description: 'If you have any additional details you would like to specify about your request, enter them here.',
+        description: 'Please provide a brief overview of your organisation and the cohort you support (e.g. our organisation supports people with disabilities in Lambeth) along with any additional details in relation to your request (e.g. this request is being made for a young person in need of a device to partake in online classes for their college course). Please do not include any personal details such as names and addresses of the intended recipients.',
         rows: 3,
         required: false
       }
