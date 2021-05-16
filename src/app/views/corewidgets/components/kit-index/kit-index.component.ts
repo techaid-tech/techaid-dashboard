@@ -849,8 +849,6 @@ export class KitIndexComponent {
           term: params['search']['value']
         };
 
-        console.log(vars, params);
-
         queryRef.refetch(vars).then(res => {
           let data: any = {};
           if (res.data) {

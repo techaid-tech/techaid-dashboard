@@ -319,8 +319,6 @@ export class UserPermissionsComponent {
               });
             });
 
-            console.log(roles);
-
             this.entities = data.content.map(row => {
               row.mappedRoles = '';
               row.roles =  roles[row.name] || [];

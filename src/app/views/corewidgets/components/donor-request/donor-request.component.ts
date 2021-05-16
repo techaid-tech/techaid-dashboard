@@ -543,7 +543,6 @@ export class DonorRequestComponent {
     }
     this.submiting = true;
     data = this.normalizeData(data);
-    console.log('DATA', data);
 
     this.apollo.mutate({
       mutation: CREATE_ENTITY,

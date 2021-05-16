@@ -286,7 +286,6 @@ export class MapViewComponent {
 
     filter['volunteerFilter']['attributes'] = attributes;
 
-    console.log('Filter', filter);
     this.fetchData(filter);
   }
 
