@@ -369,7 +369,7 @@ export class EmailComposeComponent {
         }));
     }
 
-    ngOnDestory() {
+    ngOnDestroy() {
         if (this.sub) {
           this.sub.unsubscribe();
         }

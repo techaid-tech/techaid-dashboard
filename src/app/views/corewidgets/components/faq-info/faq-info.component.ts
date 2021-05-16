@@ -175,7 +175,7 @@ export class FaqInfoComponent {
     });
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

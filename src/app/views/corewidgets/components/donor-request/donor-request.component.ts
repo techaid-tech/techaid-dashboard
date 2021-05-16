@@ -531,7 +531,7 @@ export class DonorRequestComponent {
     });
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

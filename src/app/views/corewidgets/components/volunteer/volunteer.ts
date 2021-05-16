@@ -503,7 +503,7 @@ export class VolunteerComponent {
   ngOnInit() {
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

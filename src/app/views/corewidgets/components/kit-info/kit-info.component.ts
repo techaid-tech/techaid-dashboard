@@ -1085,7 +1085,7 @@ export class KitInfoComponent {
       .trim();
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

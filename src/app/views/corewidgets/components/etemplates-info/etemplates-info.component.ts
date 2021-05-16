@@ -163,7 +163,7 @@ export class EmailTemplatesInfoComponent {
     });
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

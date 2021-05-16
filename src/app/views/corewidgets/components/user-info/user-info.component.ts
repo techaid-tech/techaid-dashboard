@@ -89,7 +89,7 @@ export class UserInfoComponent {
     });
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

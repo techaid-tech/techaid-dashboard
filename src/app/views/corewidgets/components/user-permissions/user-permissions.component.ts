@@ -367,7 +367,7 @@ export class UserPermissionsComponent {
     return str.length > length ? str.substring(0, length) + '...' : str;
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

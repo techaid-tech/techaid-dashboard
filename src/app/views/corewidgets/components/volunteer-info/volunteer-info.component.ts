@@ -658,7 +658,7 @@ export class VolunteerInfoComponent {
     );
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

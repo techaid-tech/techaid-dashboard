@@ -195,7 +195,7 @@ export class EmailThreadsComponent {
   }
 
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }
