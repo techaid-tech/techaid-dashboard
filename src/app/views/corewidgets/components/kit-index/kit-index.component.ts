@@ -357,6 +357,7 @@ export class KitIndexComponent {
               {label: 'Accepted - No Assesment Required', value: 'ACCEPTED' },
               {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
               {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
+              {label: 'Donor drop off pending', value: 'DROPOFF_PENDING' },
               {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
               {label: 'Donation stored at the Hub', value: 'STORED' },
               {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
