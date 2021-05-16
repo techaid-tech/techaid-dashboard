@@ -339,20 +339,26 @@ export class DonorRequestComponent {
                             {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
                           ],
                           'COMMSDEVICE': [
-                            {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
-                            {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
+                            {label: 'Mobile SIM card', value: 'MOBILE_SIM'},
+                            {label: 'Data SIM card', value: 'DATA_SIM'},
+                            {label: 'Dongle with SIM', value: 'DONGLE_SIM'},
+                            {label: 'MiFi with SIM', value: 'MIFI_SIM'}
                           ],
                         };
                         let values = props[data['type']] || props['OTHER'];
                         const delta = {
-                          'CHARGER': 'NO_CHARGER',
-                          'NO_CHARGER': 'CHARGER',
-                          'PASSWORD_PROTECTED': 'NO_PASSWORD',
-                          'NO_PASSWORD': 'PASSWORD_PROTECTED'
+                          'CHARGER': ['NO_CHARGER'],
+                          'NO_CHARGER': ['CHARGER'],
+                          'PASSWORD_PROTECTED': ['NO_PASSWORD'],
+                          'NO_PASSWORD': ['PASSWORD_PROTECTED'],
+                          'MOBILE_SIM': ['DATA_SIM', 'DONGLE_SIM', 'MIFI_SIM'],
+                          'DATA_SIM': ['DONGLE_SIM', 'MIFI_SIM', 'MOBILE_SIM'],
+                          'DONGLE_SIM': ['MIFI_SIM', 'MOBILE_SIM', 'DATA_SIM'],
+                          'MIFI_SIM': ['MOBILE_SIM', 'DATA_SIM', 'DONGLE_SIM']
                         };
                         (field.formControl.value || []).forEach(val => {
                           if (delta[val]) {
-                            values = values.filter(v => v.value != delta[val]);
+                            values = values.filter(v => !delta[val].includes(v.value));
                           }
                         });
                         return values;

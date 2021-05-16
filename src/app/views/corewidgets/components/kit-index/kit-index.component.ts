@@ -543,8 +543,10 @@ export class KitIndexComponent {
                       {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
                     ],
                     'COMMSDEVICE': [
-                      {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
-                      {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
+                      {label: 'Mobile SIM card', value: 'MOBILE_SIM'},
+                      {label: 'Data SIM card', value: 'DATA_SIM'},
+                      {label: 'Dongle with SIM', value: 'DONGLE_SIM'},
+                      {label: 'MiFi with SIM', value: 'MIFI_SIM'}
                     ],
                   };
                   return props[model.type] || props['OTHER'];
