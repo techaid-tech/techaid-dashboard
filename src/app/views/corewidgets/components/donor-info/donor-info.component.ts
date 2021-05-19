@@ -283,7 +283,7 @@ export class DonorInfoComponent {
     }));
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

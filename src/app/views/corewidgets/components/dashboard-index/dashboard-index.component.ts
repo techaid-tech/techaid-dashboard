@@ -125,7 +125,7 @@ export class DashboardIndexComponent {
     this.fetchData({});
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

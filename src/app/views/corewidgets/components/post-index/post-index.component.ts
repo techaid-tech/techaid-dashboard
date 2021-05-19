@@ -261,7 +261,7 @@ export class PostIndexComponent {
     };
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

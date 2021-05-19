@@ -98,7 +98,7 @@ export class FaqListComponent {
     }));
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

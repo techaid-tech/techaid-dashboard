@@ -233,7 +233,7 @@ export class FaqIndexComponent {
     };
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

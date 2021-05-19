@@ -816,7 +816,7 @@ export class VolunteersIndexComponent {
     };
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

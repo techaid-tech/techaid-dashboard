@@ -357,6 +357,7 @@ export class KitIndexComponent {
               {label: 'Accepted - No Assesment Required', value: 'ACCEPTED' },
               {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
               {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
+              {label: 'Donor drop off pending', value: 'DROPOFF_PENDING' },
               {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
               {label: 'Donation stored at the Hub', value: 'STORED' },
               {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
@@ -542,8 +543,10 @@ export class KitIndexComponent {
                       {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
                     ],
                     'COMMSDEVICE': [
-                      {label: 'I have the charger or power cable for the device', value: 'CHARGER'},
-                      {label: 'I don\'t have the charger / power cable for the device', value: 'NO_CHARGER'},
+                      {label: 'Mobile SIM card', value: 'MOBILE_SIM'},
+                      {label: 'Data SIM card', value: 'DATA_SIM'},
+                      {label: 'Dongle with SIM', value: 'DONGLE_SIM'},
+                      {label: 'MiFi with SIM', value: 'MIFI_SIM'}
                     ],
                   };
                   return props[model.type] || props['OTHER'];
@@ -846,8 +849,6 @@ export class KitIndexComponent {
           term: params['search']['value']
         };
 
-        console.log(vars, params);
-
         queryRef.refetch(vars).then(res => {
           let data: any = {};
           if (res.data) {
@@ -920,7 +921,7 @@ export class KitIndexComponent {
   }
 
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

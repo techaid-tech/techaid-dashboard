@@ -46,7 +46,6 @@ const DASHBOARDS = [
             res.data['metabaseDashboard'].forEach(v => {
               v.url = this.sanitizer.bypassSecurityTrustResourceUrl(`${v.url}#bordered=true&titled=true`)
               ref[v.id]['payload'] = v;
-              console.log(ref[v.id], v);
             });
           }
         });
@@ -54,7 +53,7 @@ const DASHBOARDS = [
       }
 
       ngOnInit() {
-        this.fetchData(); 
+        this.fetchData();
       }
   }
 

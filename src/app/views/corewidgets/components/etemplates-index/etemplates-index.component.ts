@@ -236,7 +236,7 @@ export class EmailTemplatesIndexComponent {
     };
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

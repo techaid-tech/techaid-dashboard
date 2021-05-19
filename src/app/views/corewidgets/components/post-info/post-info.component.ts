@@ -187,7 +187,7 @@ export class PostInfoComponent {
     });
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

@@ -319,8 +319,6 @@ export class UserPermissionsComponent {
               });
             });
 
-            console.log(roles);
-
             this.entities = data.content.map(row => {
               row.mappedRoles = '';
               row.roles =  roles[row.name] || [];
@@ -369,7 +367,7 @@ export class UserPermissionsComponent {
     return str.length > length ? str.substring(0, length) + '...' : str;
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }

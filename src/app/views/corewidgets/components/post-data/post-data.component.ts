@@ -91,7 +91,7 @@ export class PostDataComponent {
     }
   }
 
-  ngOnDestory() {
+  ngOnDestroy() {
     if (this.sub) {
       this.sub.unsubscribe();
     }
