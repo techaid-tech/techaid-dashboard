@@ -33,6 +33,7 @@
                                     <th>Address</th>
                                     <th>Created</th>
                                     <th>Updated</th>
+                                    <th>Consent</th>
                                 </tr>
                             </thead>
                             <tbody *ngIf="entities?.length;">
@@ -64,6 +65,9 @@
                                     </td>
                                     <td>
                                     {{ dt.updatedAt | timeAgo }}
+                                    </td>
+                                    <td>
+                                    {{ dt.consent | yesNo }}
                                     </td>
                                 </tr>
                             </tbody>
