@@ -14,7 +14,7 @@ import * as Tablesaw from 'tablesaw';
 import 'datatables.net-responsive';
 import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
-import { CsvService } from "@app/shared/services/csv.service";
+import { CsvService } from '@app/shared/services/csv.service';
 
 const QUERY_ENTITY = gql`
 query findAllDonors($page: PaginationInput,, $term: String) {
@@ -52,6 +52,7 @@ query findAllDonors($page: PaginationInput,, $term: String) {
      kitCount
      createdAt
      updatedAt
+     consent
     }
   }
 }
@@ -264,7 +265,8 @@ export class DonorIndexComponent {
         { data: 'kitCount'},
         { data: 'postCode' },
         { data: 'createdAt' },
-        { data: 'updatedAt' }
+        { data: 'updatedAt' },
+        { data: 'consent' }
       ]
     };
   }
