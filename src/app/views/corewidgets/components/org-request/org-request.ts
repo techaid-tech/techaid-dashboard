@@ -512,8 +512,7 @@ export class OrgRequestComponent {
       className: 'col-md-12',
       defaultValue: '',
       templateOptions: {
-        label: 'Any additional details about your request?',
-        description: 'Please provide a brief overview of your organisation and the cohort you support (e.g. our organisation supports people with disabilities in Lambeth) along with any additional details in relation to your request (e.g. this request is being made for a young person in need of a device to partake in online classes for their college course). Please do not include any personal details such as names and addresses of the intended recipients.',
+        label: 'In order to support you as best as possible, please provide us with a brief overview of who this request is for, why they need a device and what they hope to do with it. Please do not include any identifiable details such as names or addresses but any background you can provide would be extremely helpful.',
         rows: 3,
         required: false
       }
