@@ -14,9 +14,9 @@ export class AuthenticationService {
   // Create an observable of Auth0 instance of client
   auth0Client$ = (from(
     createAuth0Client({
-      domain: 'lambeth-techaid.eu.auth0.com',
-      client_id: 'J1eybsZXndSX9U0FX6JX8JYxst1PVnaS',
-      audience: 'https://lambeth-techaid.ju.ma',
+      domain: 'techaid-auth.eu.auth0.com',
+      client_id: 'puJcT35DydtxJUsOfjNFVg7MBf19UDzX',
+      audience: 'https://api.communitytechaid.org.uk',
       redirect_uri: `${window.location.origin}`
     })
   ) as Observable<Auth0Client>).pipe(
@@ -127,7 +127,7 @@ export class AuthenticationService {
     this.auth0Client$.subscribe((client: Auth0Client) => {
       // Call method to log out
       client.logout({
-        client_id: 'J1eybsZXndSX9U0FX6JX8JYxst1PVnaS',
+        client_id: 'puJcT35DydtxJUsOfjNFVg7MBf19UDzX',
         returnTo: `${window.location.origin}`
       });
     });
