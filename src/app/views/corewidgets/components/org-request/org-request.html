@@ -21,17 +21,34 @@
                         <div [innerHtml]="content?.content"></div>
                     </div>
                     <form *ngIf="!submited" [formGroup]="form">
-                        <formly-form [options]="options" (ngSubmit)="form.valid && createEntity(form.value)"
-                            [form]="form" [model]="model" [fields]="fields">
-                        </formly-form>
-                        <button *ngIf="submiting" [disabled]="true" class="btn btn-info btn-sm p-2">
-                                <i class="fas fa-spinner fa-spin"></i> Saving ...
-                        </button>
-                        <button *ngIf="!submiting"  style="width: 150px" (click)="createEntity(form.value)"
-                            type="submit" class="btn btn-primary btn-sm p-2">
-                            <small>Send</small>
-                        </button>
+                      <formly-form [options]="options" (ngSubmit)="form.valid && createEntity(form.value)"
+                                   [form]="form" [model]="model" [fields]="fields">
+                      </formly-form>
+                      <button *ngIf="submiting" [disabled]="true" class="btn btn-info btn-sm p-2">
+                        <i class="fas fa-spinner fa-spin"></i> Saving ...
+                      </button>
+                      <button *ngIf="!submiting"
+                              style="width: 150px" class="btn btn-primary btn-sm p-2"
+                              (click)="form.valid && createEntity(form.value)"
+                              type="submit"
+                              [disabled]="!form.valid">
+                        <small>Send</small>
+                      </button>
                     </form>
+                    <!-- <form *ngIf="!submited" [formGroup]="form"> -->
+                    <!--   <formly-form [options]="options" (ngSubmit)="form.valid && createEntity(form.value)" -->
+                    <!--                [form]="form" [model]="model" [fields]="fields"> -->
+                    <!--   </formly-form> -->
+                    <!--   <button *ngIf="submiting" [disabled]="true" class="btn btn-info btn-sm p-2"> -->
+                    <!--     <i class="fas fa-spinner fa-spin"></i> Saving ... -->
+                    <!--   </button> -->
+                    <!--   <button *ngIf="!submiting"  style="width: 150px" -->
+                    <!--           (click)="createEntity(form.value)" -->
+                    <!--           type="submit" [disabled]="!form.valid || !(form.oneclient && form.resident)" -->
+                    <!--           class="btn btn-primary btn-sm p-2"> -->
+                    <!--     <small>Send</small> -->
+                    <!--   </button> -->
+                    <!-- </form> -->
                 </div>
             </div>
     </div>

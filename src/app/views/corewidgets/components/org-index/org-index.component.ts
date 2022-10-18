@@ -18,12 +18,6 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
     AND: {
       OR: [
         {
-          website: {
-            _contains: $term
-          }
-          AND: [$filter]
-        },
-        {
           phoneNumber: {
             _contains: $term
           }
@@ -66,7 +60,6 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
     totalElements
     content{
      id
-     website
      phoneNumber
      contact
      name
@@ -217,23 +210,23 @@ export class OrgIndexComponent {
         'validation.show': 'model.showErrorState',
       }
     },
-    {
-      key: 'website',
-      type: 'input',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Website',
-        placeholder: '',
-        required: false
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
+    // {
+    //   key: 'website',
+    //   type: 'input',
+    //   className: 'col-md-12',
+    //   defaultValue: '',
+    //   templateOptions: {
+    //     label: 'Website',
+    //     placeholder: '',
+    //     required: false
+    //   },
+    //   validation: {
+    //     show: false
+    //   },
+    //   expressionProperties: {
+    //     'validation.show': 'model.showErrorState',
+    //   }
+    // },
     {
       fieldGroupClassName: 'row',
       fieldGroup: [

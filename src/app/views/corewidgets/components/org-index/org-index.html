@@ -59,9 +59,9 @@
                                                 <div>
                                                     <a href="#" [routerLink]="['./', dt.id]">{{ dt.name }}</a>
                                                 </div>
-                                                <div>
-                                                    <a *ngIf="dt.website?.length" target="_blank" [href]="dt.website">{{dt.website}}</a>
-                                                </div>
+                                                <!-- <div> -->
+                                                <!--     <a *ngIf="dt.website?.length" target="_blank" [href]="dt.website">{{dt.website}}</a> -->
+                                                <!-- </div> -->
                                                 <div>
                                                     <span class="mr-1 mb-1" *ngFor="let g of dt.attributes?.accepts">
                                                         <span class="badge badge-primary">

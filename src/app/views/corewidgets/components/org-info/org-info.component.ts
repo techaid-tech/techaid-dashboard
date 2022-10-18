@@ -17,7 +17,6 @@ query findOrganisation($id: Long!) {
     }
   }){
      id
-     website
      phoneNumber
      contact
      name
@@ -113,7 +112,6 @@ const UPDATE_ENTITY = gql`
 mutation updateOrganisation($data: UpdateOrganisationInput!) {
   updateOrganisation(data: $data){
      id
-     website
      phoneNumber
      contact
      name
@@ -261,23 +259,23 @@ export class OrgInfoComponent {
         'validation.show': 'model.showErrorState',
       }
     },
-    {
-      key: 'website',
-      type: 'input',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Website',
-        placeholder: '',
-        required: false
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
+    // {
+    //   key: 'website',
+    //   type: 'input',
+    //   className: 'col-md-12',
+    //   defaultValue: '',
+    //   templateOptions: {
+    //     label: 'Website',
+    //     placeholder: '',
+    //     required: false
+    //   },
+    //   validation: {
+    //     show: false
+    //   },
+    //   expressionProperties: {
+    //     'validation.show': 'model.showErrorState',
+    //   }
+    // },
     {
       fieldGroupClassName: 'row',
       fieldGroup: [
