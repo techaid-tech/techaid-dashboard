@@ -58,6 +58,7 @@ export class OrgRequestComponent {
   };
   submited = false;
 
+
   //TODO: not the ideal way to refresh the form, but it'll do for now
   reloadCurrentPage() {
     window.location.reload();
@@ -203,20 +204,19 @@ export class OrgRequestComponent {
           ]
         },    
         {
-          key: 'attributes.accepts',
-          type: 'multicheckbox',
+          key: 'item1',
+          type: 'radio',
           className: '',
-          defaultValue: [],
           templateOptions: {
-            type: 'array',
-            label: 'Which of the following items does your client need?',
-            multiple: true,
+            label: 'Select the item your client needs.',
             options: [
-              {value: 'LAPTOPS', label: 'Laptop'},
-              {value: 'PHONES', label: 'Phone'},
-              {value: 'COMMSDEVICES', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-              {value: 'TABLETS', label: 'Tablet' },
-              {value: 'DESKTOPS', label: 'Desktop computer' },
+              // TODO: find some way to derive these from requestedItems so it's
+              // all defined in one place
+              {value: 'laptops', label: 'Laptop'},
+              {value: 'phones', label: 'Phone'},
+              {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
+              {value: 'tablets', label: 'Tablet' },
+              {value: 'desktops', label: 'Desktop computer' },
             ],
             required: true
           },
@@ -228,131 +228,179 @@ export class OrgRequestComponent {
           }
         },
         {
-          className: 'col-12',
-          template: `
-            <p>We normally only have the above items, but if there is something additional your client needs, email: distributions@communitytechaid.org.uk</p>
-          `
+          key: 'item2',
+          type: 'radio',
+          className: '',
+          templateOptions: {
+            label: 'If your client needs a second item, select it here.',
+            options: [
+              // TODO: find some way to derive these from requestedItems so it's
+              // all defined in one place
+              {value: 'laptops', label: 'Laptop'},
+              {value: 'phones', label: 'Phone'},
+              {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
+              {value: 'tablets', label: 'Tablet' },
+              {value: 'desktops', label: 'Desktop computer' },
+            ],
+            required: false
+          },
+          validation: {
+            show: false
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+          }
         },
         {
-          fieldGroupClassName: 'row',
-          hideExpression: '!model.attributes.accepts.length',
-          fieldGroup: [
-            {
-              className: 'col-12',
-              template: `
-            <p>How many of the following items do you require? (maximum of 3 items in total)</p>
-          `
-            },
-            {
-              key: 'attributes.request.laptops',
-              type: 'input',
-              className: 'col-6',
-              defaultValue: 0,
-              hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') < 0',
-              templateOptions: {
-                min: 0,
-                max: 3,
-                label: 'Laptops',
-                addonLeft: {
-                  class: 'fas fa-laptop'
-                },
-                type: 'number',
-                placeholder: '',
-                required: true
-              }
-            },
-            {
-              key: 'attributes.request.phones',
-              type: 'input',
-              className: 'col-6',
-              hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') < 0',
-              defaultValue: 0,
-              templateOptions: {
-                min: 0,
-                max: 3,
-                label: 'Phones',
-                addonLeft: {
-                  class: 'fas fa-mobile-alt'
-                },
-                type: 'number',
-                placeholder: '',
-                required: true
-              }
-            },
-            {
-              key: 'attributes.request.tablets',
-              type: 'input',
-              className: 'col-6',
-              defaultValue: 0,
-              hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') < 0',
-              templateOptions: {
-                min: 0,
-                max: 3,
-                label: 'Tablets',
-                addonLeft: {
-                  class: 'fas fa-tablet-alt'
-                },
-                type: 'number',
-                placeholder: '',
-                required: true
-              }
-            },
-            {
-              key: 'attributes.request.allInOnes',
-              type: 'input',
-              className: 'col-6',
-              hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') < 0',
-              defaultValue: 0,
-              templateOptions: {
-                min: 0,
-                max: 3,
-                label: 'All In Ones',
-                addonLeft: {
-                  class: 'fas fa-desktop'
-                },
-                type: 'number',
-                placeholder: '',
-                required: true
-              }
-            },
-            {
-              key: 'attributes.request.desktops',
-              type: 'input',
-              className: 'col-6',
-              hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
-              defaultValue: 0,
-              templateOptions: {
-                min: 0,
-                max: 3,
-                label: 'Desktops',
-                addonLeft: {
-                  class: 'fas fa-desktop'
-                },
-                type: 'number',
-                placeholder: '',
-                required: true
-              }
-            },
-            {
-              key: 'attributes.request.commsDevices',
-              type: 'input',
-              className: 'col-6',
-              hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
-              defaultValue: 0,
-              templateOptions: {
-                min: 0,
-                max: 3,
-                label: 'SIM cards',
-                addonLeft: {
-                  class: 'fas fa-desktop'
-                },
-                type: 'number',
-                placeholder: '',
-                required: true
-              }
-            },
-          ]
+          key: 'item3',
+          type: 'radio',
+          className: '',
+          templateOptions: {
+            label: 'If your client needs a third item, select it here.',
+            options: [
+              // TODO: find some way to derive these from requestedItems so it's
+              // all defined in one place
+              {value: 'laptops', label: 'Laptop'},
+              {value: 'phones', label: 'Phone'},
+              {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
+              {value: 'tablets', label: 'Tablet' },
+              {value: 'desktops', label: 'Desktop computer' },
+            ],
+            required: false
+          },
+          validation: {
+            show: false
+          },
+          expressionProperties: {
+            'validation.show': 'model.showErrorState',
+          }
         },
+        // {
+        //   className: 'col-12',
+        //   template: `
+        //     <p>We normally only have the above items, but if there is something additional your client needs, email: distributions@communitytechaid.org.uk</p>
+        //   `
+        // },
+        // {
+        //   fieldGroupClassName: 'row',
+        //   hideExpression: '!model.attributes.accepts.length',
+        //   fieldGroup: [
+        //     {
+        //       className: 'col-12',
+        //       template: `
+        //     <p>How many of the following items do you require? (maximum of 3 items in total)</p>
+        //   `
+        //     },
+        //     {
+        //       key: 'attributes.request.laptops',
+        //       type: 'input',
+        //       className: 'col-6',
+        //       defaultValue: 0,
+        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') < 0',
+        //       templateOptions: {
+        //         min: 0,
+        //         max: 3,
+        //         label: 'Laptops',
+        //         addonLeft: {
+        //           class: 'fas fa-laptop'
+        //         },
+        //         type: 'number',
+        //         placeholder: '',
+        //         required: true
+        //       }
+        //     },
+        //     {
+        //       key: 'attributes.request.phones',
+        //       type: 'input',
+        //       className: 'col-6',
+        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') < 0',
+        //       defaultValue: 0,
+        //       templateOptions: {
+        //         min: 0,
+        //         max: 3,
+        //         label: 'Phones',
+        //         addonLeft: {
+        //           class: 'fas fa-mobile-alt'
+        //         },
+        //         type: 'number',
+        //         placeholder: '',
+        //         required: true
+        //       }
+        //     },
+        //     {
+        //       key: 'attributes.request.tablets',
+        //       type: 'input',
+        //       className: 'col-6',
+        //       defaultValue: 0,
+        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') < 0',
+        //       templateOptions: {
+        //         min: 0,
+        //         max: 3,
+        //         label: 'Tablets',
+        //         addonLeft: {
+        //           class: 'fas fa-tablet-alt'
+        //         },
+        //         type: 'number',
+        //         placeholder: '',
+        //         required: true
+        //       }
+        //     },
+        //     {
+        //       key: 'attributes.request.allInOnes',
+        //       type: 'input',
+        //       className: 'col-6',
+        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') < 0',
+        //       defaultValue: 0,
+        //       templateOptions: {
+        //         min: 0,
+        //         max: 3,
+        //         label: 'All In Ones',
+        //         addonLeft: {
+        //           class: 'fas fa-desktop'
+        //         },
+        //         type: 'number',
+        //         placeholder: '',
+        //         required: true
+        //       }
+        //     },
+        //     {
+        //       key: 'attributes.request.desktops',
+        //       type: 'input',
+        //       className: 'col-6',
+        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
+        //       defaultValue: 0,
+        //       templateOptions: {
+        //         min: 0,
+        //         max: 3,
+        //         label: 'Desktops',
+        //         addonLeft: {
+        //           class: 'fas fa-desktop'
+        //         },
+        //         type: 'number',
+        //         placeholder: '',
+        //         required: true
+        //       }
+        //     },
+        //     {
+        //       key: 'attributes.request.commsDevices',
+        //       type: 'input',
+        //       className: 'col-6',
+        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+        //       defaultValue: 0,
+        //       templateOptions: {
+        //         min: 0,
+        //         max: 3,
+        //         label: 'SIM cards',
+        //         addonLeft: {
+        //           class: 'fas fa-desktop'
+        //         },
+        //         type: 'number',
+        //         placeholder: '',
+        //         required: true
+        //       }
+        //     },
+        //   ]
+        // },
         {
           key: 'attributes.hasInternetHome',
           type: 'radio',
@@ -453,7 +501,44 @@ export class OrgRequestComponent {
       this.sub.unsubscribe();
     }
   }
+
+
+
   createEntity(data: any) {
+    // This is for totting up how many of each have been requested
+    var requestedItems: any = {'laptops': 0, 
+                               'phones': 0, 
+                               'commsDevices': 0,
+                               'tablets': 0,
+                               'desktops': 0};
+
+    // not sure why this doesn't work (TODO: learn typescript!)
+    // var i: String;
+    // for (i in ['item1', 'item2', 'item3']) {
+    //   requestedItems[data[i]] =
+    //     requestedItems[data[i]] + 1;
+    // }
+
+    // Not pretty, but this seems to work: increment relevant value for each item 
+    var item1 = data['item1'];
+    var item2 = data['item2'];
+    var item3 = data['item3'];
+
+    requestedItems[item1] = requestedItems[item1] + 1;
+    requestedItems[item2] = requestedItems[item2] + 1;
+    requestedItems[item3] = requestedItems[item3] + 1;
+
+    data['attributes']['request'] = requestedItems;
+
+    // the accepts attribute appears to be just an upcased and de-duped array of
+    // requested items
+    data['attributes']['accepts'] =
+      Array.from(new Set([item1, item2, item3].map(i => i.toUpperCase())));
+
+    // Remove these now we don't need them
+    delete data['item1'];
+    delete data['item2'];
+    delete data['item3'];
 
     console.log(data);
 
