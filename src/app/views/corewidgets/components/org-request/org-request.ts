@@ -30,6 +30,7 @@ query findContent {
 }`;
 
 
+
 // export function threeItemsValidator (c: AbstractControl) {
 //   const vals = Object.values(c.value.attributes.request);
 //   if (vals.length > 0 && (vals.reduce((a: number, b: number) => a + b)) > 3) {
@@ -56,6 +57,11 @@ export class OrgRequestComponent {
       showErrorState: false,
   };
   submited = false;
+
+  //TODO: not the ideal way to refresh the form, but it'll do for now
+  reloadCurrentPage() {
+    window.location.reload();
+  }
 
   fields: Array<FormlyFieldConfig> = [
     {
