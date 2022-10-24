@@ -30,13 +30,13 @@ query findContent {
 }`;
 
 
-export function threeItemsValidator (c: AbstractControl) {
-  const vals = Object.values(c.value.attributes.request);
-  if (vals.length > 0 && (vals.reduce((a: number, b: number) => a + b)) > 3) {
-      return null;
-    }
-  return true;
-}
+// export function threeItemsValidator (c: AbstractControl) {
+//   const vals = Object.values(c.value.attributes.request);
+//   if (vals.length > 0 && (vals.reduce((a: number, b: number) => a + b)) > 3) {
+//       return null;
+//     }
+//   return true;
+// }
 
 
 @Component({
@@ -59,7 +59,7 @@ export class OrgRequestComponent {
 
   fields: Array<FormlyFieldConfig> = [
     {
-      key: 'oneclient',
+      key: 'attributes.isIndividual',
       type: 'radio',
       className: '',
       templateOptions: {
@@ -73,20 +73,12 @@ export class OrgRequestComponent {
       validators: {
         mustBeTrue: {
           expression: (c: AbstractControl) => c.value,
-          message: (error: any, field: FormlyFieldConfig) => 'This request must be for exactly one client.'
+          message: (error: any, field: FormlyFieldConfig) => 'This request must be for one client only.'
         }
       }
     },
     {
-      className: 'col-12',
-      hideExpression: 'model.oneclient != false',
-      template: `
-            <p>You can only make a referral for one client at a time. If you're an organisation looking for desktop computers, email: 
-<a href="mailto: distributions@communitytechaid.org.uk">distributions@communitytechaid.org.uk</a></p>
-          `
-    },
-    {
-      key: 'resident',
+      key: 'attributes.isResident',
       type: 'radio',
       className: '',
       templateOptions: {
@@ -105,15 +97,7 @@ export class OrgRequestComponent {
       }
     },
     {
-      className: 'col-12',
-      hideExpression: 'model.resident != false',
-      template: `
-            <p>Unfortunately, we are only able to support residents of Lambeth and Southwark currently.</p>
-          `
-    },
-
-    {
-      hideExpression: '!model.oneclient || !model.resident',
+      hideExpression: '!model.attributes.isIndividual || !model.attributes.isResident',
       fieldGroup: [
         {
           key: 'name',
@@ -132,23 +116,6 @@ export class OrgRequestComponent {
             'validation.show': 'model.showErrorState',
           }
         },
-        // {
-        //   key: 'website',
-        //   type: 'input',
-        //   className: 'col-md-12',
-        //   defaultValue: '',
-        //   templateOptions: {
-        //     label: 'Organisation Website',
-        //     placeholder: '',
-        //     required: false
-        //   },
-        //   validation: {
-        //     show: false
-        //   },
-        //   expressionProperties: {
-        //     'validation.show': 'model.showErrorState',
-        //   }
-        // },
         {
           fieldGroupClassName: 'row',
           fieldGroup: [
@@ -263,12 +230,6 @@ export class OrgRequestComponent {
         {
           fieldGroupClassName: 'row',
           hideExpression: '!model.attributes.accepts.length',
-          validators: {
-            maxThree: {
-              expression: (c: AbstractControl) => threeItemsValidator(c),
-              message: (error: any, field: FormlyFieldConfig) => 'Maximum of three items in total.'
-            }
-          },
           fieldGroup: [
             {
               className: 'col-12',
@@ -488,9 +449,6 @@ export class OrgRequestComponent {
   }
   createEntity(data: any) {
 
-    // These two items are just for logic, so remove from the data
-    delete data['oneclient'];
-    delete data['resident'];
     console.log(data);
 
     if (this.form.invalid) {
