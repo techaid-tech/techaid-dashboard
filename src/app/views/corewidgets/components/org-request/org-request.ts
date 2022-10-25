@@ -67,7 +67,7 @@ export class OrgRequestComponent {
   fields: Array<FormlyFieldConfig> = [
     {
       className: 'col-md-12',
-      template: `<h6 class="m-0 font-weight-bold text-primary">Check your eligibility</h6>`
+      template: '<h6 class="m-0 font-weight-bold text-primary">Check your eligibility</h6>'
     },
     {
       key: 'attributes.isIndividual',
@@ -89,6 +89,13 @@ export class OrgRequestComponent {
       }
     },
     {
+      hideExpression: 'model.attributes.isIndividual == null || model.attributes.isIndividual == true',
+      className: 'col-md-12',
+      template: `<p>This form is for requests for individuals. If your request is for an
+organisation rather than an individual, please contact <a href="mailto:
+distributions@communitytechaid.org.uk">distributions@communitytechaid.org.uk</a></p>`
+    },
+    {
       key: 'attributes.isResident',
       type: 'radio',
       className: '',
@@ -108,11 +115,17 @@ export class OrgRequestComponent {
       }
     },
     {
+      hideExpression: 'model.attributes.isResident == null || model.attributes.isResident == true',
+      className: 'col-md-12',
+      template: `<p>Unfortunately, we can only supporting people in Lambeth and Southwark currently. For information 
+about other organisations similar to ours, see [website url]</p>`
+    },
+    {
       hideExpression: '!model.attributes.isIndividual || !model.attributes.isResident',
       fieldGroup: [
         {
           className: 'col-md-12',
-          template: `<h6 class="m-0 font-weight-bold text-primary">About your organisation</h6>`
+          template: '<h6 class="m-0 font-weight-bold text-primary">About your organisation</h6>'
         },
         {
           key: 'name',
@@ -213,7 +226,7 @@ export class OrgRequestComponent {
         },    
         {
           className: 'col-md-12',
-          template: `<h6 class="m-0 font-weight-bold text-primary">Your client's needs</h6>`
+          template: '<h6 class="m-0 font-weight-bold text-primary">Your client\'s needs</h6>'
         },
         {
           key: 'item1',
