@@ -66,9 +66,13 @@ export class OrgRequestComponent {
 
   fields: Array<FormlyFieldConfig> = [
     {
+      className: 'col-md-12',
+      template: `<h6 class="m-0 font-weight-bold text-primary">Check your eligibility</h6>`
+    },
+    {
       key: 'attributes.isIndividual',
       type: 'radio',
-      className: '',
+      className: 'col-md-12',
       templateOptions: {
         label: 'Is your request for one client?',
         options: [
@@ -106,6 +110,10 @@ export class OrgRequestComponent {
     {
       hideExpression: '!model.attributes.isIndividual || !model.attributes.isResident',
       fieldGroup: [
+        {
+          className: 'col-md-12',
+          template: `<h6 class="m-0 font-weight-bold text-primary">About your organisation</h6>`
+        },
         {
           key: 'name',
           type: 'input',
@@ -204,6 +212,10 @@ export class OrgRequestComponent {
           ]
         },    
         {
+          className: 'col-md-12',
+          template: `<h6 class="m-0 font-weight-bold text-primary">Your client's needs</h6>`
+        },
+        {
           key: 'item1',
           type: 'radio',
           className: '',
@@ -228,6 +240,7 @@ export class OrgRequestComponent {
           }
         },
         {
+          hideExpression: '!model.item1',
           key: 'item2',
           type: 'radio',
           className: '',
@@ -252,6 +265,7 @@ export class OrgRequestComponent {
           }
         },
         {
+          hideExpression: '!model.item2',
           key: 'item3',
           type: 'radio',
           className: '',
@@ -275,132 +289,6 @@ export class OrgRequestComponent {
             'validation.show': 'model.showErrorState',
           }
         },
-        // {
-        //   className: 'col-12',
-        //   template: `
-        //     <p>We normally only have the above items, but if there is something additional your client needs, email: distributions@communitytechaid.org.uk</p>
-        //   `
-        // },
-        // {
-        //   fieldGroupClassName: 'row',
-        //   hideExpression: '!model.attributes.accepts.length',
-        //   fieldGroup: [
-        //     {
-        //       className: 'col-12',
-        //       template: `
-        //     <p>How many of the following items do you require? (maximum of 3 items in total)</p>
-        //   `
-        //     },
-        //     {
-        //       key: 'attributes.request.laptops',
-        //       type: 'input',
-        //       className: 'col-6',
-        //       defaultValue: 0,
-        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') < 0',
-        //       templateOptions: {
-        //         min: 0,
-        //         max: 3,
-        //         label: 'Laptops',
-        //         addonLeft: {
-        //           class: 'fas fa-laptop'
-        //         },
-        //         type: 'number',
-        //         placeholder: '',
-        //         required: true
-        //       }
-        //     },
-        //     {
-        //       key: 'attributes.request.phones',
-        //       type: 'input',
-        //       className: 'col-6',
-        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') < 0',
-        //       defaultValue: 0,
-        //       templateOptions: {
-        //         min: 0,
-        //         max: 3,
-        //         label: 'Phones',
-        //         addonLeft: {
-        //           class: 'fas fa-mobile-alt'
-        //         },
-        //         type: 'number',
-        //         placeholder: '',
-        //         required: true
-        //       }
-        //     },
-        //     {
-        //       key: 'attributes.request.tablets',
-        //       type: 'input',
-        //       className: 'col-6',
-        //       defaultValue: 0,
-        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') < 0',
-        //       templateOptions: {
-        //         min: 0,
-        //         max: 3,
-        //         label: 'Tablets',
-        //         addonLeft: {
-        //           class: 'fas fa-tablet-alt'
-        //         },
-        //         type: 'number',
-        //         placeholder: '',
-        //         required: true
-        //       }
-        //     },
-        //     {
-        //       key: 'attributes.request.allInOnes',
-        //       type: 'input',
-        //       className: 'col-6',
-        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') < 0',
-        //       defaultValue: 0,
-        //       templateOptions: {
-        //         min: 0,
-        //         max: 3,
-        //         label: 'All In Ones',
-        //         addonLeft: {
-        //           class: 'fas fa-desktop'
-        //         },
-        //         type: 'number',
-        //         placeholder: '',
-        //         required: true
-        //       }
-        //     },
-        //     {
-        //       key: 'attributes.request.desktops',
-        //       type: 'input',
-        //       className: 'col-6',
-        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
-        //       defaultValue: 0,
-        //       templateOptions: {
-        //         min: 0,
-        //         max: 3,
-        //         label: 'Desktops',
-        //         addonLeft: {
-        //           class: 'fas fa-desktop'
-        //         },
-        //         type: 'number',
-        //         placeholder: '',
-        //         required: true
-        //       }
-        //     },
-        //     {
-        //       key: 'attributes.request.commsDevices',
-        //       type: 'input',
-        //       className: 'col-6',
-        //       hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
-        //       defaultValue: 0,
-        //       templateOptions: {
-        //         min: 0,
-        //         max: 3,
-        //         label: 'SIM cards',
-        //         addonLeft: {
-        //           class: 'fas fa-desktop'
-        //         },
-        //         type: 'number',
-        //         placeholder: '',
-        //         required: true
-        //       }
-        //     },
-        //   ]
-        // },
         {
           key: 'attributes.hasInternetHome',
           type: 'radio',
@@ -415,6 +303,7 @@ export class OrgRequestComponent {
           }
         },
         {
+          hideExpression: 'model.attributes.hasInternetHome == null || model.attributes.hasInternetHome == true',
           key: 'attributes.hasInternetLocal',
           type: 'radio',
           className: '',
@@ -432,7 +321,7 @@ export class OrgRequestComponent {
           type: 'radio',
           className: '',
           templateOptions: {
-            label: 'Does your client need and Quickstart help to get started with their device and digital skills?',
+            label: 'Does your client need any Quickstart help to get started with their device and digital skills?',
             options: [
               {value: true, label: 'Yes'},
               {value: false , label: 'No'}
@@ -441,6 +330,7 @@ export class OrgRequestComponent {
           }
         },
         {
+          hideExpression: 'model.attributes.hasTrainingNeeds == null || model.attributes.hasTrainingNeeds == false',
           key: 'attributes.hasTrainingTravelNeeds',
           type: 'radio',
           className: '',
@@ -512,13 +402,6 @@ export class OrgRequestComponent {
                                'tablets': 0,
                                'desktops': 0};
 
-    // not sure why this doesn't work (TODO: learn typescript!)
-    // var i: String;
-    // for (i in ['item1', 'item2', 'item3']) {
-    //   requestedItems[data[i]] =
-    //     requestedItems[data[i]] + 1;
-    // }
-
     // Not pretty, but this seems to work: increment relevant value for each item 
     var item1 = data['item1'];
     var item2 = data['item2'];
@@ -527,14 +410,17 @@ export class OrgRequestComponent {
     requestedItems[item1] = requestedItems[item1] + 1;
     requestedItems[item2] = requestedItems[item2] + 1;
     requestedItems[item3] = requestedItems[item3] + 1;
+    // an item can be null if none was selected or undefined if it was invisible on submission
     delete requestedItems['null'];
+    delete requestedItems['undefined'];
 
     data['attributes']['request'] = requestedItems;
 
+    console.log(data);
     // the accepts attribute appears to be just an upcased and de-duped array of
     // requested items
     data['attributes']['accepts'] =
-      Array.from(new Set([item1, item2, item3].filter(i => i !== null).map(i => i.toUpperCase())));
+      Array.from(new Set([item1, item2, item3].filter(i => i !== null && i !== undefined).map(i => i.toUpperCase())));
 
     // Remove these now we don't need them
     delete data['item1'];
