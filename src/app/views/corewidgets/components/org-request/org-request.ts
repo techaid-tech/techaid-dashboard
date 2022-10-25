@@ -527,13 +527,14 @@ export class OrgRequestComponent {
     requestedItems[item1] = requestedItems[item1] + 1;
     requestedItems[item2] = requestedItems[item2] + 1;
     requestedItems[item3] = requestedItems[item3] + 1;
+    delete requestedItems['null'];
 
     data['attributes']['request'] = requestedItems;
 
     // the accepts attribute appears to be just an upcased and de-duped array of
     // requested items
     data['attributes']['accepts'] =
-      Array.from(new Set([item1, item2, item3].map(i => i.toUpperCase())));
+      Array.from(new Set([item1, item2, item3].filter(i => i !== null).map(i => i.toUpperCase())));
 
     // Remove these now we don't need them
     delete data['item1'];
