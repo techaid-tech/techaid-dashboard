@@ -91,9 +91,11 @@ export class OrgRequestComponent {
     {
       hideExpression: 'model.attributes.isIndividual == null || model.attributes.isIndividual == true',
       className: 'col-md-12',
-      template: `<p>This form is for requests for individuals. If your request is for an
+      template: `<div class="border-bottom-info card mb-3 p-3">
+<p>This form is for requests for individuals. If your request is for an
 organisation rather than an individual, please contact <a href="mailto:
-distributions@communitytechaid.org.uk">distributions@communitytechaid.org.uk</a></p>`
+distributions@communitytechaid.org.uk">distributions@communitytechaid.org.uk</a></p>
+</div>`
     },
     {
       key: 'attributes.isResident',
@@ -117,8 +119,10 @@ distributions@communitytechaid.org.uk">distributions@communitytechaid.org.uk</a>
     {
       hideExpression: 'model.attributes.isResident == null || model.attributes.isResident == true',
       className: 'col-md-12',
-      template: `<p>Unfortunately, we can only support people in Lambeth and Southwark currently. For information 
-about other organisations similar to ours, see [website url]</p>`
+      template: `<div class="border-bottom-info card mb-3 p-3">
+<p>Unfortunately, we can only support people in Lambeth and Southwark currently. For information 
+about other organisations similar to ours, see [website url]</p>
+</div>`
     },
     {
       hideExpression: '!model.attributes.isIndividual || !model.attributes.isResident',
