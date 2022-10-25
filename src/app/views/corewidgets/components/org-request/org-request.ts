@@ -117,7 +117,7 @@ distributions@communitytechaid.org.uk">distributions@communitytechaid.org.uk</a>
     {
       hideExpression: 'model.attributes.isResident == null || model.attributes.isResident == true',
       className: 'col-md-12',
-      template: `<p>Unfortunately, we can only supporting people in Lambeth and Southwark currently. For information 
+      template: `<p>Unfortunately, we can only support people in Lambeth and Southwark currently. For information 
 about other organisations similar to ours, see [website url]</p>`
     },
     {
