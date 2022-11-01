@@ -238,6 +238,7 @@ about other organisations similar to ours, see [website url]</p>
           defaultValue: [{}],
           templateOptions: {
             addText: 'Request another item',
+            removeText: 'Remove this item',
             required: true,
             min: 1,
             maxItems: 3
@@ -269,57 +270,6 @@ about other organisations similar to ours, see [website url]</p>
             // ]
           }
         },
-        //   {
-        //   hideExpression: '!model.item1',
-        //   key: 'item2',
-        //   type: 'radio',
-        //   className: '',
-        //   templateOptions: {
-        //     label: 'If your client needs a second item, select it here.',
-        //     options: [
-        //       // TODO: find some way to derive these from requestedItems so it's
-        //       // all defined in one place
-        //       {value: 'laptops', label: 'Laptop'},
-        //       {value: 'phones', label: 'Phone'},
-        //       {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-        //       {value: 'tablets', label: 'Tablet' },
-        //       {value: 'desktops', label: 'Desktop computer' },
-        //     ],
-        //     required: false
-        //   },
-        //   validation: {
-        //     show: false
-        //   },
-        //   expressionProperties: {
-        //     'validation.show': 'model.showErrorState',
-        //   }
-        // },
-        // {
-        //   hideExpression: '!model.item2',
-        //   key: 'item3',
-        //   type: 'radio',
-        //   className: '',
-        //   templateOptions: {
-        //     label: 'If your client needs a third item, select it here.',
-        //     options: [
-        //       // TODO: find some way to derive these from requestedItems so it's
-        //       // all defined in one place
-        //       {value: 'laptops', label: 'Laptop'},
-        //       {value: 'phones', label: 'Phone'},
-        //       {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-        //       {value: 'tablets', label: 'Tablet' },
-        //       {value: 'desktops', label: 'Desktop computer' },
-        //     ],
-        //     required: false
-        //   },
-        //   validation: {
-        //     show: false
-        //   },
-        //   expressionProperties: {
-        //     'validation.show': 'model.showErrorState',
-        //   }
-        // }
-        // ,
         {
           key: 'attributes.hasInternetHome',
           type: 'radio',
@@ -407,36 +357,22 @@ about other organisations similar to ours, see [website url]</p>
 
   }
   private normalizeData(data: any) {
-        // This is for totting up how many of each have been requested
-    var requestedItems: any = {'laptops': 0, 
+    data.attributes.request = {'laptops': 0, 
                                'phones': 0, 
                                'commsDevices': 0,
                                'tablets': 0,
                                'desktops': 0};
-
-    // Not pretty, but this seems to work: increment relevant value for each item 
-    var item1 = data['item1'];
-    var item2 = data['item2'];
-    var item3 = data['item3'];
-
-    requestedItems[item1] = requestedItems[item1] + 1;
-    requestedItems[item2] = requestedItems[item2] + 1;
-    requestedItems[item3] = requestedItems[item3] + 1;
-    // an item can be null if none was selected or undefined if it was invisible on submission
-    delete requestedItems['null'];
-    delete requestedItems['undefined'];
-
-    data['attributes']['request'] = requestedItems;
+    data.items.forEach(i => {
+      data.attributes.request[i] = data.attributes.request[i] + 1;
+    });
 
     // the accepts attribute appears to be just an upcased and de-duped array of
     // requested items
-    data['attributes']['accepts'] =
-      Array.from(new Set([item1, item2, item3].filter(i => i !== null && i !== undefined).map(i => i.toUpperCase())));
-
-    // Remove these now we don't need them
-    delete data['item1'];
-    delete data['item2'];
-    delete data['item3'];
+    data.attributes.accepts =
+      Array.from(new Set(data.items.map(i => i.toUpperCase())));
+    
+    // Remove items array now it's done its job
+    delete data.items;
     
     return data;
   }
@@ -459,29 +395,29 @@ about other organisations similar to ours, see [website url]</p>
 
 
   createEntity(data: any) {
-    console.log(data);
-    // data = this.normalizeData(data);
-    
-    // if (this.form.invalid) {
-    //   this.model.showErrorState = true;
-    //   return false;
-    // }
-    // this.submiting = true;
-    // this.apollo.mutate({
-    //   mutation: CREATE_ENTITY,
-    //   variables: { data }
-    // }).subscribe(data => {
-    //   this.submited = true;
-    //   this.submiting = false;
-    //   this.model = {};
-    // }, err => {
-    //   this.submiting = false;
-    //   this.toastr.error(`
-    //   <small>${err.message}</small>
-    //   `, 'Create Organisation Error', {
-    //       enableHtml: true,
-    //       timeOut: 15000
-    //     });
-    // });
+
+    data = this.normalizeData(data);
+
+    if (this.form.invalid) {
+      this.model.showErrorState = true;
+      return false;
+    }
+    this.submiting = true;
+    this.apollo.mutate({
+      mutation: CREATE_ENTITY,
+      variables: { data }
+    }).subscribe(data => {
+      this.submited = true;
+      this.submiting = false;
+      this.model = {};
+    }, err => {
+      this.submiting = false;
+      this.toastr.error(`
+      <small>${err.message}</small>
+      `, 'Create Organisation Error', {
+          enableHtml: true,
+          timeOut: 15000
+        });
+    });
   }
 }
