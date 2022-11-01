@@ -392,27 +392,8 @@ about other organisations similar to ours, see [website url]</p>
   ) {
 
   }
-
-  ngOnInit() {
-    this.apollo.query({
-      query: QUERY_CONTENT
-    }).toPromise().then(res => {
-      if (res.data) {
-        this.content = res.data['post'];
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
-  }
-
-
-
-  createEntity(data: any) {
-    // This is for totting up how many of each have been requested
+  private normalizeData(data: any) {
+        // This is for totting up how many of each have been requested
     var requestedItems: any = {'laptops': 0, 
                                'phones': 0, 
                                'commsDevices': 0,
@@ -433,7 +414,6 @@ about other organisations similar to ours, see [website url]</p>
 
     data['attributes']['request'] = requestedItems;
 
-    console.log(data);
     // the accepts attribute appears to be just an upcased and de-duped array of
     // requested items
     data['attributes']['accepts'] =
@@ -443,8 +423,29 @@ about other organisations similar to ours, see [website url]</p>
     delete data['item1'];
     delete data['item2'];
     delete data['item3'];
+    
+    return data;
+  }
 
-    console.log(data);
+  ngOnInit() {
+    this.apollo.query({
+      query: QUERY_CONTENT
+    }).toPromise().then(res => {
+      if (res.data) {
+        this.content = res.data['post'];
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
+
+
+  createEntity(data: any) {
+    data = this.normalizeData(data);
 
     if (this.form.invalid) {
       this.model.showErrorState = true;
