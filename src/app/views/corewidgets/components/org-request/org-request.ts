@@ -233,79 +233,93 @@ about other organisations similar to ours, see [website url]</p>
           template: '<h6 class="m-0 font-weight-bold text-primary">Your client\'s needs</h6>'
         },
         {
-          key: 'item1',
-          type: 'radio',
-          className: '',
+          key: 'items',
+          type: 'repeat',
+          defaultValue: [{}],
           templateOptions: {
-            label: 'Select the item your client needs.',
-            options: [
-              // TODO: find some way to derive these from requestedItems so it's
-              // all defined in one place
-              {value: 'laptops', label: 'Laptop'},
-              {value: 'phones', label: 'Phone'},
-              {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-              {value: 'tablets', label: 'Tablet' },
-              {value: 'desktops', label: 'Desktop computer' },
-            ],
-            required: true
+            addText: 'Request another item',
+            required: true,
+            min: 1,
+            maxItems: 3
           },
-          validation: {
-            show: false
-          },
-          expressionProperties: {
-            'validation.show': 'model.showErrorState',
+          fieldArray: {
+            key: 'item',
+            type: 'radio',
+            className: '',
+            templateOptions: {
+              label: 'Select the item your client needs.',
+              options: [
+                // TODO: find some way to derive these from requestedItems so it's
+                // all defined in one place
+                {value: 'laptops', label: 'Laptop'},
+                {value: 'phones', label: 'Phone'},
+                {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
+                {value: 'tablets', label: 'Tablet' },
+                {value: 'desktops', label: 'Desktop computer' },
+              ],
+              required: true
+            },
+                // // validation: {
+                //   show: false
+                // },
+                // expressionProperties: {
+                //   'validation.show': 'model.showErrorState',
+                // }              
+            //   }
+            // ]
           }
         },
-        {
-          hideExpression: '!model.item1',
-          key: 'item2',
-          type: 'radio',
-          className: '',
-          templateOptions: {
-            label: 'If your client needs a second item, select it here.',
-            options: [
-              // TODO: find some way to derive these from requestedItems so it's
-              // all defined in one place
-              {value: 'laptops', label: 'Laptop'},
-              {value: 'phones', label: 'Phone'},
-              {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-              {value: 'tablets', label: 'Tablet' },
-              {value: 'desktops', label: 'Desktop computer' },
-            ],
-            required: false
-          },
-          validation: {
-            show: false
-          },
-          expressionProperties: {
-            'validation.show': 'model.showErrorState',
-          }
-        },
-        {
-          hideExpression: '!model.item2',
-          key: 'item3',
-          type: 'radio',
-          className: '',
-          templateOptions: {
-            label: 'If your client needs a third item, select it here.',
-            options: [
-              // TODO: find some way to derive these from requestedItems so it's
-              // all defined in one place
-              {value: 'laptops', label: 'Laptop'},
-              {value: 'phones', label: 'Phone'},
-              {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-              {value: 'tablets', label: 'Tablet' },
-              {value: 'desktops', label: 'Desktop computer' },
-            ],
-            required: false
-          },
-          validation: {
-            show: false
-          },
-          expressionProperties: {
-            'validation.show': 'model.showErrorState',
-          }
-        },
+        //   {
+        //   hideExpression: '!model.item1',
+        //   key: 'item2',
+        //   type: 'radio',
+        //   className: '',
+        //   templateOptions: {
+        //     label: 'If your client needs a second item, select it here.',
+        //     options: [
+        //       // TODO: find some way to derive these from requestedItems so it's
+        //       // all defined in one place
+        //       {value: 'laptops', label: 'Laptop'},
+        //       {value: 'phones', label: 'Phone'},
+        //       {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
+        //       {value: 'tablets', label: 'Tablet' },
+        //       {value: 'desktops', label: 'Desktop computer' },
+        //     ],
+        //     required: false
+        //   },
+        //   validation: {
+        //     show: false
+        //   },
+        //   expressionProperties: {
+        //     'validation.show': 'model.showErrorState',
+        //   }
+        // },
+        // {
+        //   hideExpression: '!model.item2',
+        //   key: 'item3',
+        //   type: 'radio',
+        //   className: '',
+        //   templateOptions: {
+        //     label: 'If your client needs a third item, select it here.',
+        //     options: [
+        //       // TODO: find some way to derive these from requestedItems so it's
+        //       // all defined in one place
+        //       {value: 'laptops', label: 'Laptop'},
+        //       {value: 'phones', label: 'Phone'},
+        //       {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
+        //       {value: 'tablets', label: 'Tablet' },
+        //       {value: 'desktops', label: 'Desktop computer' },
+        //     ],
+        //     required: false
+        //   },
+        //   validation: {
+        //     show: false
+        //   },
+        //   expressionProperties: {
+        //     'validation.show': 'model.showErrorState',
+        //   }
+        // }
+        // ,
         {
           key: 'attributes.hasInternetHome',
           type: 'radio',
@@ -445,28 +459,29 @@ about other organisations similar to ours, see [website url]</p>
 
 
   createEntity(data: any) {
-    data = this.normalizeData(data);
-
-    if (this.form.invalid) {
-      this.model.showErrorState = true;
-      return false;
-    }
-    this.submiting = true;
-    this.apollo.mutate({
-      mutation: CREATE_ENTITY,
-      variables: { data }
-    }).subscribe(data => {
-      this.submited = true;
-      this.submiting = false;
-      this.model = {};
-    }, err => {
-      this.submiting = false;
-      this.toastr.error(`
-      <small>${err.message}</small>
-      `, 'Create Organisation Error', {
-          enableHtml: true,
-          timeOut: 15000
-        });
-    });
+    console.log(data);
+    // data = this.normalizeData(data);
+    
+    // if (this.form.invalid) {
+    //   this.model.showErrorState = true;
+    //   return false;
+    // }
+    // this.submiting = true;
+    // this.apollo.mutate({
+    //   mutation: CREATE_ENTITY,
+    //   variables: { data }
+    // }).subscribe(data => {
+    //   this.submited = true;
+    //   this.submiting = false;
+    //   this.model = {};
+    // }, err => {
+    //   this.submiting = false;
+    //   this.toastr.error(`
+    //   <small>${err.message}</small>
+    //   `, 'Create Organisation Error', {
+    //       enableHtml: true,
+    //       timeOut: 15000
+    //     });
+    // });
   }
 }

@@ -26,7 +26,7 @@ import { FieldArrayType } from '@ngx-formly/core';
             </div>
         </div>
       </div>
-      <div class="d-flex justify-content-between mt-3 mb-3">
+      <div class="d-flex justify-content-between mt-3 mb-3" *ngIf="!to.maxItems || size != to.maxItems">
         <span class="text-muted mr-1">{{to.description}}</span>
         <button class="btn btn-primary btn-sm" type="button" (click)="add()"><i class="fas fa-plus-circle"></i> {{ to.addText }}</button>
       </div>
