@@ -10,7 +10,7 @@ import { FieldArrayType } from '@ngx-formly/core';
                 <div class="w-100 d-flex justify-content-end">
                     <button *ngIf="!state.remove[i]" class="btn btn-sm btn-danger" type="button" (click)="markRemove(i)">
                         <i class="fas fa-trash-alt"></i>
-                        Remove
+                        {{ to.removeText }}
                     </button>
                     <div *ngIf="state.remove[i]" class="">
                         <button class="btn btn-sm btn-danger mr-1" type="button" (click)="delete(i)">
