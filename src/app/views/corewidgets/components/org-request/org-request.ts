@@ -238,6 +238,7 @@ about other organisations similar to ours, see [website url]</p>
           className: '',
           defaultValue: [{}],
           templateOptions: {
+            description: 'If your client needs another item, click on the Request another item button ➜',
             addText: 'Request another item',
             removeText: 'Remove this item',
             required: true,
