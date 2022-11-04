@@ -235,6 +235,7 @@ about other organisations similar to ours, see [website url]</p>
         {
           key: 'items',
           type: 'repeat',
+          className: '',
           defaultValue: [{}],
           templateOptions: {
             addText: 'Request another item',
@@ -277,24 +278,26 @@ about other organisations similar to ours, see [website url]</p>
           templateOptions: {
             label: 'Does your client have access to the internet at home?',
             options: [
-              {value: true, label: 'Yes'},
-              {value: false , label: 'No'}
+              {value: 'yes', label: 'Yes'},
+              {value: 'no' , label: 'No'},
+              {value: 'dk', label: 'Don\'t know'}
             ],
-            required: false
+            required: true
           }
         },
         {
-          hideExpression: 'model.attributes.hasInternetHome == null || model.attributes.hasInternetHome == true',
+          hideExpression: `model.attributes.hasInternetHome == null || model.attributes.hasInternetHome == 'yes'`,
           key: 'attributes.hasInternetLocal',
           type: 'radio',
           className: '',
           templateOptions: {
             label: 'Is your client able to travel locally to access the internet (to a local library, for example)?',
             options: [
-              {value: true, label: 'Yes'},
-              {value: false , label: 'No'}
+              {value: 'yes', label: 'Yes'},
+              {value: 'no' , label: 'No'},
+              {value: 'dk', label: 'Don\'t know'}
             ],
-            required: false
+            required: true
           }
         },
         {
@@ -304,24 +307,26 @@ about other organisations similar to ours, see [website url]</p>
           templateOptions: {
             label: 'Does your client need any Quickstart help to get started with their device and digital skills?',
             options: [
-              {value: true, label: 'Yes'},
-              {value: false , label: 'No'}
+              {value: 'yes', label: 'Yes'},
+              {value: 'no' , label: 'No'},
+              {value: 'dk', label: 'Don\'t know'}
             ],
-            required: false
+            required: true
           }
         },
         {
-          hideExpression: 'model.attributes.hasTrainingNeeds == null || model.attributes.hasTrainingNeeds == false',
+          hideExpression: `model.attributes.hasTrainingNeeds == null || model.attributes.hasTrainingNeeds == 'no'`,
           key: 'attributes.hasTrainingTravelNeeds',
           type: 'radio',
           className: '',
           templateOptions: {
             label: 'Is your client able to travel locally for a Quickstart session to help with their digital skills?',
             options: [
-              {value: true, label: 'Yes'},
-              {value: false , label: 'No'}
+              {value: 'yes', label: 'Yes'},
+              {value: 'no' , label: 'No'},
+              {value: 'dk', label: 'Don\'t know'}
             ],
-            required: false
+            required: true
           }
         },
         {
@@ -373,7 +378,7 @@ about other organisations similar to ours, see [website url]</p>
     
     // Remove items array now it's done its job
     delete data.items;
-    
+   
     return data;
   }
 
@@ -397,7 +402,7 @@ about other organisations similar to ours, see [website url]</p>
   createEntity(data: any) {
 
     data = this.normalizeData(data);
-
+//    console.log(data);
     if (this.form.invalid) {
       this.model.showErrorState = true;
       return false;
