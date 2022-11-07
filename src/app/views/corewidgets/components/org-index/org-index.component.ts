@@ -79,6 +79,9 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
      attributes {
         notes
         details
+        hasInternetHome
+        hasMobilityNeeds
+        hasTrainingNeeds     
         accepts
         request {
           LAPTOPS: laptops
@@ -634,27 +637,42 @@ export class OrgIndexComponent {
               {label: 'All In One (PC)', value: 'ALLINONES' },
               {label: 'Desktop', value: 'DESKTOPS' },
               {label: 'Connectivity Device', value: 'COMMSDEVICES' }
-            ],
+            ]
           }
         },
         {
-          key: 'alternateAccepts',
+          key: 'hasInternetHome',
           type: 'multicheckbox',
           className: 'col-sm-4',
           defaultValue: [],
           templateOptions: {
-            label: 'Alternate Accepts',
+            label: 'Has home internet',
             type: 'array',
             options: [
-              {label: 'Laptop', value: 'LAPTOPS' },
-              {label: 'Tablet', value: 'TABLETS' },
-              {label: 'Smart Phone', value: 'PHONES' },
-              {label: 'All In One (PC)', value: 'ALLINONES' },
-              {label: 'Desktop', value: 'DESKTOPS' },
-              {label: 'Connectivity Device', value: 'COMMSDEVICES' }
-            ],
+              {value: 'yes', label: 'Yes'},
+              {value: 'no' , label: 'No'},
+              {value: 'dk', label: 'Don\'t know'}
+            ]
           }
         },
+        // {
+        //   key: 'alternateAccepts',
+        //   type: 'multicheckbox',
+        //   className: 'col-sm-4',
+        //   defaultValue: [],
+        //   templateOptions: {
+        //     label: 'Alternate Accepts',
+        //     type: 'array',
+        //     options: [
+        //       {label: 'Laptop', value: 'LAPTOPS' },
+        //       {label: 'Tablet', value: 'TABLETS' },
+        //       {label: 'Smart Phone', value: 'PHONES' },
+        //       {label: 'All In One (PC)', value: 'ALLINONES' },
+        //       {label: 'Desktop', value: 'DESKTOPS' },
+        //       {label: 'Connectivity Device', value: 'COMMSDEVICES' }
+        //     ],
+        //   }
+        // },
         {
           key: 'archived',
           type: 'multicheckbox',
@@ -697,6 +715,22 @@ export class OrgIndexComponent {
       filter['AND'].push(filt);
     }
 
+    if (data.hasInternetHome && data.hasInternetHome.length) {
+    console.log(data.hasInternetHome);      
+      count = count + data.hasInternetHome.length;
+      const filt = {
+        attributes: {
+          filters: [
+            {
+              key: 'hasInternetHome',
+              _in: data.hasInternetHome
+            }
+          ]
+        }
+      };
+      filter['AND'].push(filt);
+    }
+
     if (data.alternateAccepts && data.alternateAccepts.length) {
       count = count + data.alternateAccepts.length;
       const filt = {
@@ -727,6 +761,7 @@ export class OrgIndexComponent {
     this.filterCount = count;
     this.filterModel = data;
     this.table.ajax.reload(null, false);
+    console.log(this.filter)
   }
 
   modal(content) {
