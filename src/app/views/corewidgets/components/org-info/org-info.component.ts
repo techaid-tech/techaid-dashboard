@@ -359,6 +359,21 @@ export class OrgInfoComponent {
               expressionProperties: {
                 'validation.show': 'model.showErrorState',
               }
+            },
+            {
+              key: 'archived',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                type: 'array',
+                label: 'Archived?',
+                description: 'Archived requests are hidden from view',
+                options: [
+                  {label: 'Request active and visible', value: false },
+                  {label: 'Archive and hide this request', value: true },
+                ],
+                required: true,
+              }
             }
           ]
         },
