@@ -285,14 +285,13 @@ about other organisations similar to ours, see [website url]</p>
             ],
             required: true
           }
-        },
+        },        
         {
-          hideExpression: `model.attributes.hasInternetHome == null || model.attributes.hasInternetHome == 'yes'`,
-          key: 'attributes.hasInternetLocal',
+          key: 'attributes.hasMobilityNeeds',
           type: 'radio',
           className: '',
           templateOptions: {
-            label: 'Is your client able to travel locally to access the internet (to a local library, for example)?',
+            label: 'Does your client have mobility issues, such as not being able to leave their home, or finding it difficult to do so?',
             options: [
               {value: 'yes', label: 'Yes'},
               {value: 'no' , label: 'No'},
@@ -306,22 +305,7 @@ about other organisations similar to ours, see [website url]</p>
           type: 'radio',
           className: '',
           templateOptions: {
-            label: 'Does your client need any Quickstart help to get started with their device and digital skills?',
-            options: [
-              {value: 'yes', label: 'Yes'},
-              {value: 'no' , label: 'No'},
-              {value: 'dk', label: 'Don\'t know'}
-            ],
-            required: true
-          }
-        },
-        {
-          hideExpression: `model.attributes.hasTrainingNeeds == null || model.attributes.hasTrainingNeeds == 'no'`,
-          key: 'attributes.hasTrainingTravelNeeds',
-          type: 'radio',
-          className: '',
-          templateOptions: {
-            label: 'Is your client able to travel locally for a Quickstart session to help with their digital skills?',
+            label: 'Does your client need a Quickstart session or other training in basic use of a computer, phone, or tablet?',
             options: [
               {value: 'yes', label: 'Yes'},
               {value: 'no' , label: 'No'},
