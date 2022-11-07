@@ -356,67 +356,7 @@ export class OrgInfoComponent {
                 required: false
               }
             },
-            {
-              key: 'attributes.hasInternetHome',
-              type: 'radio',
-              className: '',
-              templateOptions: {
-                label: 'Has home internet',
-                options: [
-                  {value: 'yes', label: 'Yes'},
-                  {value: 'no' , label: 'No'},
-                  {value: 'dk', label: 'Don\'t know'}
-                ],
-                required: true
-              }
-            },        
-            {
-              key: 'attributes.hasMobilityNeeds',
-              type: 'radio',
-              className: '',
-              templateOptions: {
-                label: 'Has mobility issues',
-                options: [
-                  {value: 'yes', label: 'Yes'},
-                  {value: 'no' , label: 'No'},
-                  {value: 'dk', label: 'Don\'t know'}
-                ],
-                required: true
-              }
-            },
-            {
-              key: 'attributes.hasTrainingNeeds',
-              type: 'radio',
-              className: '',
-              templateOptions: {
-                label: 'Has training needs',
-                options: [
-                  {value: 'yes', label: 'Yes'},
-                  {value: 'no' , label: 'No'},
-                  {value: 'dk', label: 'Don\'t know'}
-                ],
-                required: true
-              }
-            }
-          ]
-        },
-        {
-          fieldGroupClassName: 'd-flex flex-column justify-content-between',
-          className: 'col-md-4',
-          //column 3
-          fieldGroup: [
-            {
-              key: 'attributes.notes',
-              type: 'textarea',
-              className: '',
-              defaultValue: '',
-              templateOptions: {
-                label: 'Request fulfilment notes',
-                rows: 4,
-                required: false
-              }
-            },
-            {
+{
               key: 'attributes.accepts',
               type: 'multicheckbox',
               className: '',
@@ -576,6 +516,66 @@ export class OrgInfoComponent {
                     }
                   }
               ]
+            }
+          ]
+        },
+        {
+          fieldGroupClassName: 'd-flex flex-column justify-content-between',
+          className: 'col-md-4',
+          //column 3
+          fieldGroup: [
+            {
+              key: 'attributes.notes',
+              type: 'textarea',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Request fulfilment notes',
+                rows: 4,
+                required: false
+              }
+            },
+            {
+              key: 'attributes.hasInternetHome',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                label: 'Has home internet',
+                options: [
+                  {value: 'yes', label: 'Yes'},
+                  {value: 'no' , label: 'No'},
+                  {value: 'dk', label: 'Don\'t know'}
+                ],
+                required: true
+              }
+            },        
+            {
+              key: 'attributes.hasMobilityNeeds',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                label: 'Has mobility issues',
+                options: [
+                  {value: 'yes', label: 'Yes'},
+                  {value: 'no' , label: 'No'},
+                  {value: 'dk', label: 'Don\'t know'}
+                ],
+                required: true
+              }
+            },
+            {
+              key: 'attributes.hasTrainingNeeds',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                label: 'Has training needs',
+                options: [
+                  {value: 'yes', label: 'Yes'},
+                  {value: 'no' , label: 'No'},
+                  {value: 'dk', label: 'Don\'t know'}
+                ],
+                required: true
+              }
             }
           ]
         }
