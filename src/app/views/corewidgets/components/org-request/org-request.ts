@@ -343,7 +343,7 @@ about other organisations similar to ours, see [website url]</p>
         },
         {
           key: 'attributes.clientRef',
-          type: 'textarea',
+          type: 'input',
           className: 'col-md-3',
           defaultValue: '',
           templateOptions: {
