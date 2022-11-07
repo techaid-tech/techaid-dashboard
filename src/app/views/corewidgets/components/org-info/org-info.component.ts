@@ -44,6 +44,9 @@ query findOrganisation($id: Long!) {
      attributes {
        notes
        details
+       hasInternetHome
+       hasMobilityNeeds
+       hasTrainingNeeds
        accepts
        alternateAccepts
        request {
@@ -139,6 +142,9 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      attributes {
        notes
        details
+       hasInternetHome
+       hasMobilityNeeds
+       hasTrainingNeeds
        accepts
        alternateAccepts
        request {
@@ -229,7 +235,8 @@ export class OrgInfoComponent {
               className: '',
               defaultValue: '',
               templateOptions: {
-                label: 'Name',
+                label: 'Organisation name',
+//                description: 'The name of the organisation',
                 placeholder: '',
                 required: true
               },
@@ -310,12 +317,27 @@ export class OrgInfoComponent {
               templateOptions: {
                 label: 'Organisation\'s client reference',
                 // TODO: should this be required
-                description: '',
+                description: 'An organisation\'s internal reference for their client',
                 required: false
+              }
+            },
+            {
+              key: 'archived',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                type: 'array',
+                label: 'Archived?',
+                description: 'Archived requests are hidden from view',
+                options: [
+                  {label: 'Request active and visible', value: false },
+                  {label: 'Archive and hide this request', value: true },
+                ],
+                required: true,
               }
             }
           ]
-        },
+        },        
         {
           fieldGroupClassName: 'd-flex flex-column justify-content-between',
           className: 'col-md-4', 
@@ -329,6 +351,66 @@ export class OrgInfoComponent {
               templateOptions: {
                 label: 'Referring organisation\'s details about the client',
                 description: '',
+                rows: 4,
+                required: false
+              }
+            },
+            {
+              key: 'attributes.hasInternetHome',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                label: 'Has home internet',
+                options: [
+                  {value: 'yes', label: 'Yes'},
+                  {value: 'no' , label: 'No'},
+                  {value: 'dk', label: 'Don\'t know'}
+                ],
+                required: true
+              }
+            },        
+            {
+              key: 'attributes.hasMobilityNeeds',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                label: 'Has mobility issues',
+                options: [
+                  {value: 'yes', label: 'Yes'},
+                  {value: 'no' , label: 'No'},
+                  {value: 'dk', label: 'Don\'t know'}
+                ],
+                required: true
+              }
+            },
+            {
+              key: 'attributes.hasTrainingNeeds',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                label: 'Has training needs',
+                options: [
+                  {value: 'yes', label: 'Yes'},
+                  {value: 'no' , label: 'No'},
+                  {value: 'dk', label: 'Don\'t know'}
+                ],
+                required: true
+              }
+            }
+          ]
+        },
+        {
+          fieldGroupClassName: 'd-flex flex-column justify-content-between',
+          className: 'col-md-4',
+          //column 3
+          fieldGroup: [
+            {
+              key: 'attributes.notes',
+              type: 'textarea',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Request fulfilment notes',
                 rows: 4,
                 required: false
               }
@@ -358,39 +440,6 @@ export class OrgInfoComponent {
               },
               expressionProperties: {
                 'validation.show': 'model.showErrorState',
-              }
-            },
-            {
-              key: 'archived',
-              type: 'radio',
-              className: '',
-              templateOptions: {
-                type: 'array',
-                label: 'Archived?',
-                description: 'Archived requests are hidden from view',
-                options: [
-                  {label: 'Request active and visible', value: false },
-                  {label: 'Archive and hide this request', value: true },
-                ],
-                required: true,
-              }
-            }
-          ]
-        },
-        {
-          fieldGroupClassName: 'd-flex flex-column justify-content-between',
-          className: 'col-md-4',
-          //column 3
-          fieldGroup: [
-            {
-              key: 'attributes.notes',
-              type: 'textarea',
-              className: '',
-              defaultValue: '',
-              templateOptions: {
-                label: 'Request fulfilment notes',
-                rows: 4,
-                required: false
               }
             },
             {
@@ -1000,7 +1049,7 @@ export class OrgInfoComponent {
       this.entityName = this.model['name'];
       this.toastr.info(`
       <small>Successfully updated organisation ${this.entityName}</small>
-      `, 'Updated Template', {
+      `, 'Updated request', {
           enableHtml: true
         });
     }, err => {
