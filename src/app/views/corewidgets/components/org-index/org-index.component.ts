@@ -79,9 +79,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
      attributes {
         notes
         details
-        hasInternetHome
-        hasMobilityNeeds
-        hasTrainingNeeds     
+        needs
         accepts
         request {
           LAPTOPS: laptops
@@ -213,23 +211,6 @@ export class OrgIndexComponent {
         'validation.show': 'model.showErrorState',
       }
     },
-    // {
-    //   key: 'website',
-    //   type: 'input',
-    //   className: 'col-md-12',
-    //   defaultValue: '',
-    //   templateOptions: {
-    //     label: 'Website',
-    //     placeholder: '',
-    //     required: false
-    //   },
-    //   validation: {
-    //     show: false
-    //   },
-    //   expressionProperties: {
-    //     'validation.show': 'model.showErrorState',
-    //   }
-    // },
     {
       fieldGroupClassName: 'row',
       fieldGroup: [
@@ -641,38 +622,20 @@ export class OrgIndexComponent {
           }
         },
         {
-          key: 'hasInternetHome',
+          key: 'needs',
           type: 'multicheckbox',
           className: 'col-sm-4',
           defaultValue: [],
           templateOptions: {
-            label: 'Has home internet',
+            label: 'Client needs',
             type: 'array',
             options: [
-              {value: 'yes', label: 'Yes'},
-              {value: 'no' , label: 'No'},
-              {value: 'dk', label: 'Don\'t know'}
+              {value: 'internet', label: 'No home internet'},
+              {value: 'mobility' , label: 'Mobility issues'},
+              {value: 'training', label: 'Training needs'}
             ]
           }
         },
-        // {
-        //   key: 'alternateAccepts',
-        //   type: 'multicheckbox',
-        //   className: 'col-sm-4',
-        //   defaultValue: [],
-        //   templateOptions: {
-        //     label: 'Alternate Accepts',
-        //     type: 'array',
-        //     options: [
-        //       {label: 'Laptop', value: 'LAPTOPS' },
-        //       {label: 'Tablet', value: 'TABLETS' },
-        //       {label: 'Smart Phone', value: 'PHONES' },
-        //       {label: 'All In One (PC)', value: 'ALLINONES' },
-        //       {label: 'Desktop', value: 'DESKTOPS' },
-        //       {label: 'Connectivity Device', value: 'COMMSDEVICES' }
-        //     ],
-        //   }
-        // },
         {
           key: 'archived',
           type: 'multicheckbox',
@@ -714,16 +677,15 @@ export class OrgIndexComponent {
       };
       filter['AND'].push(filt);
     }
-
-    if (data.hasInternetHome && data.hasInternetHome.length) {
-    console.log(data.hasInternetHome);      
-      count = count + data.hasInternetHome.length;
+    
+    if (data.needs && data.needs.length) {
+      count = count + data.needs.length;
       const filt = {
         attributes: {
           filters: [
             {
-              key: 'hasInternetHome',
-              _in: data.hasInternetHome
+              key: 'needs',
+              _in: data.needs
             }
           ]
         }
@@ -917,7 +879,7 @@ export class OrgIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false },
         { data: 'name' },
-        { data: 'volunteer.name'},
+        {data: 'needs'},
         { data: 'kitCount'},
         { data: 'contact' },
         { data: 'email' },

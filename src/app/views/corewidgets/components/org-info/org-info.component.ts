@@ -45,9 +45,7 @@ query findOrganisation($id: Long!) {
      attributes {
        notes
        details
-       hasInternetHome
-       hasMobilityNeeds
-       hasTrainingNeeds
+       needs
        accepts
        alternateAccepts
        request {
@@ -143,9 +141,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
      attributes {
        notes
        details
-       hasInternetHome
-       hasMobilityNeeds
-       hasTrainingNeeds
+       needs
        accepts
        alternateAccepts
        request {
@@ -356,7 +352,7 @@ export class OrgInfoComponent {
                 required: false
               }
             },
-{
+            {
               key: 'attributes.accepts',
               type: 'multicheckbox',
               className: '',
@@ -536,47 +532,22 @@ export class OrgInfoComponent {
               }
             },
             {
-              key: 'attributes.hasInternetHome',
-              type: 'radio',
+              key: 'attributes.needs',
+              type: 'multicheckbox',
               className: '',
+              defaultValue: [],
               templateOptions: {
-                label: 'Has home internet',
+                type: 'array',
+                multiple: true,
+                label: 'Client needs',
                 options: [
-                  {value: 'yes', label: 'Yes'},
-                  {value: 'no' , label: 'No'},
-                  {value: 'dk', label: 'Don\'t know'}
+                  {value: 'internet', label: 'No home internet'},
+                  {value: 'mobility', label: 'Mobility issues'},
+                  {value: 'training', label: 'Training needs'}
                 ],
-                required: true
-              }
-            },        
-            {
-              key: 'attributes.hasMobilityNeeds',
-              type: 'radio',
-              className: '',
-              templateOptions: {
-                label: 'Has mobility issues',
-                options: [
-                  {value: 'yes', label: 'Yes'},
-                  {value: 'no' , label: 'No'},
-                  {value: 'dk', label: 'Don\'t know'}
-                ],
-                required: true
-              }
+                required: false
+             }
             },
-            {
-              key: 'attributes.hasTrainingNeeds',
-              type: 'radio',
-              className: '',
-              templateOptions: {
-                label: 'Has training needs',
-                options: [
-                  {value: 'yes', label: 'Yes'},
-                  {value: 'no' , label: 'No'},
-                  {value: 'dk', label: 'Don\'t know'}
-                ],
-                required: true
-              }
-            }
           ]
         }
       ]
