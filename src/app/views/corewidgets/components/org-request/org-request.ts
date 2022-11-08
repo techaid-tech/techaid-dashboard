@@ -233,44 +233,49 @@ about other organisations similar to ours, see [website url]</p>
           template: '<h6 class="m-0 font-weight-bold text-primary">Your client\'s needs</h6>'
         },
         {
-          key: 'items',
-          type: 'repeat',
-          className: '',
-          defaultValue: [{}],
-          templateOptions: {
-            description: 'If your client needs another item, click on the Request another item button ➜',
-            addText: 'Request another item',
-            removeText: 'Remove this item',
-            required: true,
-            min: 1,
-            maxItems: 3
-          },
-          fieldArray: {
-            key: 'item',
-            type: 'radio',
-            className: '',
-            templateOptions: {
-              label: 'Select the item your client needs.',
-              options: [
-                // TODO: find some way to derive these from requestedItems so it's
-                // all defined in one place
-                {value: 'laptops', label: 'Laptop'},
-                {value: 'phones', label: 'Phone'},
-                {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-                {value: 'tablets', label: 'Tablet' },
-                {value: 'desktops', label: 'Desktop computer' },
-              ],
-              required: true
-            },
+          fieldGroupClassName: 'row',
+          fieldGroup: [
+            {
+              key: 'items',
+              type: 'repeat',
+              className: 'col-md-6',
+              defaultValue: [{}],
+              templateOptions: {
+                description: 'If your client needs another item, use this button  ➜',
+                addText: 'Request another item',
+                removeText: 'Remove this item',
+                required: true,
+                min: 1,
+                maxItems: 3
+              },
+              fieldArray: {
+                key: 'item',
+                type: 'radio',
+                className: '',
+                templateOptions: {
+                  label: 'Select the item your client needs.',
+                  options: [
+                    // TODO: find some way to derive these from requestedItems so it's
+                    // all defined in one place
+                    {value: 'laptops', label: 'Laptop'},
+                    {value: 'phones', label: 'Phone'},
+                    {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
+                    {value: 'tablets', label: 'Tablet' },
+                    {value: 'desktops', label: 'Desktop computer' },
+                  ],
+                  required: true
+                },
                 // // validation: {
                 //   show: false
                 // },
                 // expressionProperties: {
                 //   'validation.show': 'model.showErrorState',
                 // }              
-            //   }
-            // ]
-          }
+                //   }
+                // ]
+              }
+            }
+          ]
         },
         {
           key: 'hasInternetHome',
