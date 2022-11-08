@@ -273,7 +273,7 @@ about other organisations similar to ours, see [website url]</p>
           }
         },
         {
-          key: 'attributes.hasInternetHome',
+          key: 'hasInternetHome',
           type: 'radio',
           className: '',
           templateOptions: {
@@ -287,7 +287,7 @@ about other organisations similar to ours, see [website url]</p>
           }
         },        
         {
-          key: 'attributes.hasMobilityNeeds',
+          key: 'hasMobilityNeeds',
           type: 'radio',
           className: '',
           templateOptions: {
@@ -301,7 +301,7 @@ about other organisations similar to ours, see [website url]</p>
           }
         },
         {
-          key: 'attributes.hasTrainingNeeds',
+          key: 'hasTrainingNeeds',
           type: 'radio',
           className: '',
           templateOptions: {
@@ -360,10 +360,27 @@ about other organisations similar to ours, see [website url]</p>
     // requested items
     data.attributes.accepts =
       Array.from(new Set(data.items.map(i => i.toUpperCase())));
-    
-    // Remove items array now it's done its job
     delete data.items;
-   
+
+    // This is a bit kludgey, but it turns out to be far easier to deal with
+    // clients' needs as a list of needs rather than yes/know/don't know for each
+    // item (mainly because of the don't know), but at the same time we want to
+    // make it a mandatory field. So we transform the individual items:
+    var needs = [];
+    if (data.hasInternetHome == 'no') {
+      needs.push('internet');
+    }
+    if (data.hasMobilityNeeds == 'yes') {
+      needs.push('mobility');
+    }
+    if (data.hasTrainingNeeds == 'yes') {
+      needs.push('training');
+    }
+    data.attributes.needs = needs;
+    delete data.hasInternetHome;
+    delete data.hasMobilityNeeds;
+    delete data.hasTrainingNeeds;
+
     return data;
   }
 
@@ -384,10 +401,10 @@ about other organisations similar to ours, see [website url]</p>
   }
 
 
-  createEntity(data: any) {
-
+  createEntity(data: any) {        
     data = this.normalizeData(data);
 //    console.log(data);
+
     if (this.form.invalid) {
       this.model.showErrorState = true;
       return false;
