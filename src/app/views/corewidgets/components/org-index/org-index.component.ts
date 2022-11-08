@@ -630,7 +630,7 @@ export class OrgIndexComponent {
             label: 'Client needs',
             type: 'array',
             options: [
-              {value: 'internet', label: 'No home internet'},
+              {value: 'internet', label: 'Has no home internet'},
               {value: 'mobility' , label: 'Mobility issues'},
               {value: 'training', label: 'Training needs'}
             ]

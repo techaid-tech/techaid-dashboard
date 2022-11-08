@@ -541,7 +541,7 @@ export class OrgInfoComponent {
                 multiple: true,
                 label: 'Client needs',
                 options: [
-                  {value: 'internet', label: 'No home internet'},
+                  {value: 'internet', label: 'Has no home internet'},
                   {value: 'mobility', label: 'Mobility issues'},
                   {value: 'training', label: 'Training needs'}
                 ],
