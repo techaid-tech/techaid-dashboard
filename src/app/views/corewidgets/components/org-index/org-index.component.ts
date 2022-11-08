@@ -49,6 +49,12 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
                 _text: {
                   _contains: $term
                 }
+              },
+              {
+                key: "clientRef",
+                _text: {
+                  _contains: $term
+                }
               }
             ]
           }

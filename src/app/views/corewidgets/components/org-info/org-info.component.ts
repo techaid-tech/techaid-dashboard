@@ -43,6 +43,7 @@ query findOrganisation($id: Long!) {
          phoneNumber
      }
      attributes {
+       clientRef
        notes
        details
        needs
@@ -139,6 +140,7 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
       createdAt
      }
      attributes {
+       clientRef
        notes
        details
        needs
