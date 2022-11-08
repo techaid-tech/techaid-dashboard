@@ -241,7 +241,7 @@ about other organisations similar to ours, see [website url]</p>
               className: 'col-md-6',
               defaultValue: [{}],
               templateOptions: {
-                description: 'If your client needs another item, use this button  ➜',
+                description: 'If your client needs another item, use this button ➜',
                 addText: 'Request another item',
                 removeText: 'Remove this item',
                 required: true,
