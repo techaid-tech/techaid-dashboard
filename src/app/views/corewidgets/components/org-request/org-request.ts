@@ -253,13 +253,14 @@ distributions@communitytechaid.org.uk">distributions@communitytechaid.org.uk</a>
                 className: '',
                 templateOptions: {
                   label: 'Select the item your client needs.',
+                  description: 'We currently have no phones or tablets. When we do, we will re-open requests for them.',
                   options: [
                     // TODO: find some way to derive these from requestedItems so it's
                     // all defined in one place
                     {value: 'laptops', label: 'Laptop'},
-                    {value: 'phones', label: 'Phone'},
+                    // {value: 'phones', label: 'Phone'},
                     {value: 'commsDevices', label: 'SIM card (6 months, 20GB data, unlimited UK calls)' },
-                    {value: 'tablets', label: 'Tablet' },
+                    // {value: 'tablets', label: 'Tablet' },
                     {value: 'desktops', label: 'Desktop computer' },
                   ],
                   required: true
