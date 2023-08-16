@@ -13,7 +13,7 @@ export const environment: ConfigParams = {
   graphql_endpoint: 'https://api.testing.communitytechaid.org.uk/graphql',
   version: APP_VERSION,
   auth_endpoint: 'https://api.testing.communitytechaid.org.uk/auth/user',
-  auth_audience: 'https://api.testing.communitytechaid.org.uk',
+  auth_audience: 'https://api.communitytechaid.org.uk',
   auth_enabled: true,
   remote_config: false,
 };

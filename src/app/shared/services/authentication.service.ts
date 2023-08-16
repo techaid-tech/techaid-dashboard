@@ -16,7 +16,7 @@ export class AuthenticationService {
     createAuth0Client({
       domain: 'techaid-auth.eu.auth0.com',
       client_id: 'puJcT35DydtxJUsOfjNFVg7MBf19UDzX',
-      audience: 'https://api.testing.communitytechaid.org.uk',
+      audience: 'https://api.communitytechaid.org.uk',
       redirect_uri: `${window.location.origin}`
     })
   ) as Observable<Auth0Client>).pipe(
