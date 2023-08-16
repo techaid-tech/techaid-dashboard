@@ -315,7 +315,8 @@ export class KitComponent {
               {label: 'Quality check completed', value: 'ALLOCATION_QC_COMPLETED'},
               {label: 'Collection/drop off to beneficiary arranged', value: 'ALLOCATION_DELIVERY_ARRANGED'},
               {label: 'Device received by beneficiary', value: 'DISTRIBUTION_DELIVERED'},
-              {label: 'Device recycled', value: 'DISTRIBUTION_RECYCLED'}
+              {label: 'Device recycled', value: 'DISTRIBUTION_RECYCLED'},
+              {label: 'Device in for repair', value: 'DISTRIBUTION_REPAIR_RETURN'}
             ],
             multiple: true,
             required: false,
