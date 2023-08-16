@@ -13,6 +13,7 @@ export const environment: ConfigParams = {
   graphql_endpoint: '/api/graphql',
   version: APP_VERSION,
   auth_endpoint: 'http://localhost:8080/auth/user',
+  auth_audience: 'https://localhost:8080',
   auth_enabled: true,
   remote_config: false
 };
