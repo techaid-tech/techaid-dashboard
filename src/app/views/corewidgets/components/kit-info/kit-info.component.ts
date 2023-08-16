@@ -35,7 +35,8 @@ export const KIT_STATUS = {
   'ALLOCATION_QC_COMPLETED': 'Quality check completed',
   'ALLOCATION_DELIVERY_ARRANGED': 'Collection/drop off to beneficiary arranged',
   'DISTRIBUTION_DELIVERED': 'Device received by beneficiary',
-  'DISTRIBUTION_RECYCLED': 'Device recycled'
+  'DISTRIBUTION_RECYCLED': 'Device recycled',
+  'DISTRIBUTION_REPAIR_RETURN':'Device in for repair'
 };
 
 const QUERY_ENTITY = gql`
@@ -415,7 +416,8 @@ export class KitInfoComponent {
               {label: 'Quality check completed', value: 'ALLOCATION_QC_COMPLETED'},
               {label: 'Collection/drop off to beneficiary arranged', value: 'ALLOCATION_DELIVERY_ARRANGED'},
               {label: 'Device received by beneficiary', value: 'DISTRIBUTION_DELIVERED'},
-              {label: 'Device recycled', value: 'DISTRIBUTION_RECYCLED'}
+              {label: 'Device recycled', value: 'DISTRIBUTION_RECYCLED'},
+              {label: 'Device in for repair', value: 'DISTRIBUTION_REPAIR_RETURN'}
             ],
             required: true
           }
