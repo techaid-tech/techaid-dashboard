@@ -14,7 +14,7 @@ import 'datatables.net-responsive';
 import 'datatables.net-rowreorder';
 import { CoreWidgetState } from '@views/corewidgets/state/corewidgets.state';
 import { HashUtils } from '@app/shared/utils';
-import { KIT_STATUS } from '../kit-info/kit-info.component';
+import { KIT_STATUS, KIT_STATUS_LABELS } from '../kit-info/kit-info.component';
 import { CsvService } from "@app/shared/services/csv.service";
 
 const QUERY_ENTITY = gql`
@@ -350,28 +350,7 @@ export class KitIndexComponent {
           className: 'col-md-12',
           templateOptions: {
             label: 'Status of the device',
-            items: [
-              {label: 'New device registered', value: 'DONATION_NEW'},
-              {label: 'Device declined', value: 'DONATION_DECLINED'},
-              {label: 'Donor contacted', value: 'DONATION_ACCEPTED'},
-              {label: 'No response from donor', value: 'DONATION_NO_RESPONSE'},
-              {label: 'Device drop off scheduled by donor', value: 'DONATION_ARRANGED'},
-              {label: 'Device received into CTA', value: 'PROCESSING_START'},
-              {label: 'Device wiped', value: 'PROCESSING_WIPED '},
-              {label: 'Device wipe failed', value: 'PROCESSING_FAILED_WIPE'},
-              {label: 'OS installed', value: 'PROCESSING_OS_INSTALLED'},
-              {label: 'OS installation failed', value: 'PROCESSING_FAILED_INSTALLATION'},
-              {label: 'Device needs further investigation', value: 'PROCESSING_WITH_TECHIE'},
-              {label: 'Device needs spare part', value: 'PROCESSING_MISSING_PART'},
-              {label: 'Device stored', value: 'PROCESSING_STORED'},
-              {label: 'Assessment check completed', value: 'ALLOCATION_ASSESSMENT'},
-              {label: 'Device ready for allocation to beneficiary', value: 'ALLOCATION_READY'},
-              {label: 'Quality check completed', value: 'ALLOCATION_QC_COMPLETED'},
-              {label: 'Collection/drop off to beneficiary arranged', value: 'ALLOCATION_DELIVERY_ARRANGED'},
-              {label: 'Device received by beneficiary', value: 'DISTRIBUTION_DELIVERED'},
-              {label: 'Device recycled', value: 'DISTRIBUTION_RECYCLED'},
-              {label: 'Device in for repair', value: 'DISTRIBUTION_REPAIR_RETURN'}
-            ],
+            items: KIT_STATUS_LABELS,
             multiple: true,
             required: false
           }
