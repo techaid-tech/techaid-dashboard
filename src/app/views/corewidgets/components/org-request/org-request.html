@@ -25,6 +25,7 @@
                     <div *ngIf="content?.content" class="row">
                         <div [innerHtml]="content?.content"></div>
                     </div>
+                    <!--
                     <form *ngIf="!submited" [formGroup]="form">
                       <formly-form [options]="options" (ngSubmit)="form.valid && createEntity(form.value)"
                                    [form]="form" [model]="model" [fields]="fields">
@@ -40,6 +41,7 @@
                         <small>Send</small>
                       </button>
                     </form>
+                    -->
                 </div>
             </div>
     </div>
