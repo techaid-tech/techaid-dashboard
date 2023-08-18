@@ -5,6 +5,7 @@ export interface ConfigParams {
     auth_enabled: boolean;
     remote_config: boolean;
     auth_endpoint?: string;
+    auth_audience: string;
     version: any;
     pusher?: any;
 }

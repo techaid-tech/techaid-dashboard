@@ -7,7 +7,7 @@ import { FormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { KIT_STATUS } from '../kit-info/kit-info.component';
+import { KIT_STATUS, KIT_STATUS_LABELS } from '../kit-info/kit-info.component';
 
 const QUERY_ENTITY = gql`
 query find($kitFilter: KitWhereInput!, $volunteerFilter: VolunteerWhereInput!) {
@@ -87,24 +87,7 @@ export class MapViewComponent {
           className: 'col-md-6',
           templateOptions: {
             label: 'Status of the device',
-            items: [
-              {label: 'New - Donation Registered', value: 'NEW' },
-              {label: 'Declined - Not Suitable', value: 'DECLINED' },
-              {label: 'Accepted - Assesment Needed', value: 'ASSESSMENT_NEEDED' },
-              {label: 'Accepted - No Assesment Required', value: 'ACCEPTED' },
-              {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
-              {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
-              {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
-              {label: 'Donation stored at the Hub', value: 'STORED' },
-              {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
-              {label: 'Donation updated - arrange collection', value: 'READY' },
-              {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
-              {label: 'Device kitting complete', value: 'COMPLETED' },
-              {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
-              {label: 'Device received by organisation', value: 'DELIVERED' },
-              {label: 'Ready but missing component', value: 'INCOMPLETE'},
-              {label: 'Recycled' , value: 'RECYCLED'}
-            ],
+            items: KIT_STATUS_LABELS,
             multiple: true,
             required: false
           }

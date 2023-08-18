@@ -17,24 +17,50 @@ import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from '
 import { HashUtils } from '@app/shared/utils';
 
 export const KIT_STATUS = {
-  'NEW': 'New - Donation Registered',
-  'DECLINED': 'Declined - Not Suitable',
-  'ASSESSMENT_NEEDED': 'Accepted - Assesment Needed',
-  'ACCEPTED': 'Accepted - No Assesment Required',
-  'PICKUP_SCHEDULED': 'Collection from donor scheduled',
-  'DROPOFF_AGGREED': 'Donor drop off agreed',
-  'DROPOFF_PENDING': 'Donor drop off pending',
-  'WITH_TECHIE': 'Donation received by Tech Team',
-  'STORED': 'Donation stored at the Hub',
-  'UPDATE_FAILED': 'Donation faulty - collect for recycling',
-  'READY': 'Donation updated - arrange collection',
-  'INCOMPLETE': 'Ready but missing component',
-  'ALLOCATED': 'Device allocated to referring organisation',
-  'COMPLETED': 'Device kitting complete',
-  'DELIVERY_ARRANGED': 'Collection / drop off to referring organisation agreed',
-  'DELIVERED': 'Device received by organisation',
-  'RECYCLED': 'Recycled'
+  'DONATION_NEW': 'New device registered',
+  'DONATION_DECLINED': 'Device declined',
+  'DONATION_ACCEPTED': 'Donor contacted',
+  'DONATION_NO_RESPONSE': 'No response from donor',
+  'DONATION_ARRANGED': 'Device drop off scheduled by donor',
+  'PROCESSING_START': 'Device received into CTA',
+  'PROCESSING_WIPED ': 'Device wiped',
+  'PROCESSING_FAILED_WIPE': 'Device wipe failed',
+  'PROCESSING_OS_INSTALLED': 'OS installed',
+  'PROCESSING_FAILED_INSTALLATION': 'OS installation failed',
+  'PROCESSING_WITH_TECHIE': 'Device needs further investigation',
+  'PROCESSING_MISSING_PART': 'Device needs spare part',
+  'PROCESSING_STORED': 'Device stored',
+  'ALLOCATION_ASSESSMENT': 'Assessment check completed',
+  'ALLOCATION_READY': 'Device ready for allocation to beneficiary',
+  'ALLOCATION_QC_COMPLETED': 'Quality check completed',
+  'ALLOCATION_DELIVERY_ARRANGED': 'Collection/drop off to beneficiary arranged',
+  'DISTRIBUTION_DELIVERED': 'Device received by beneficiary',
+  'DISTRIBUTION_RECYCLED': 'Device recycled',
+  'DISTRIBUTION_REPAIR_RETURN':'Device in for repair'
 };
+
+export const KIT_STATUS_LABELS = [
+  {label: 'New device registered', value: 'DONATION_NEW'},
+  {label: 'Device declined', value: 'DONATION_DECLINED'},
+  {label: 'Donor contacted', value: 'DONATION_ACCEPTED'},
+  {label: 'No response from donor', value: 'DONATION_NO_RESPONSE'},
+  {label: 'Device drop off scheduled by donor', value: 'DONATION_ARRANGED'},
+  {label: 'Device received into CTA', value: 'PROCESSING_START'},
+  {label: 'Device wiped', value: 'PROCESSING_WIPED '},
+  {label: 'Device wipe failed', value: 'PROCESSING_FAILED_WIPE'},
+  {label: 'OS installed', value: 'PROCESSING_OS_INSTALLED'},
+  {label: 'OS installation failed', value: 'PROCESSING_FAILED_INSTALLATION'},
+  {label: 'Device needs further investigation', value: 'PROCESSING_WITH_TECHIE'},
+  {label: 'Device needs spare part', value: 'PROCESSING_MISSING_PART'},
+  {label: 'Device stored', value: 'PROCESSING_STORED'},
+  {label: 'Assessment check completed', value: 'ALLOCATION_ASSESSMENT'},
+  {label: 'Device ready for allocation to beneficiary', value: 'ALLOCATION_READY'},
+  {label: 'Quality check completed', value: 'ALLOCATION_QC_COMPLETED'},
+  {label: 'Collection/drop off to beneficiary arranged', value: 'ALLOCATION_DELIVERY_ARRANGED'},
+  {label: 'Device received by beneficiary', value: 'DISTRIBUTION_DELIVERED'},
+  {label: 'Device recycled', value: 'DISTRIBUTION_RECYCLED'},
+  {label: 'Device in for repair', value: 'DISTRIBUTION_REPAIR_RETURN'}
+];
 
 const QUERY_ENTITY = gql`
 query findKit($id: Long) {
@@ -386,28 +412,10 @@ export class KitInfoComponent {
           key: 'status',
           type: 'radio',
           className: 'col-md-4 kit-status',
-          defaultValue: 'REGISTERED',
+          defaultValue: 'NEW',
           templateOptions: {
             label: 'Status of the device',
-            options: [
-              {label: 'New - Donation Registered', value: 'NEW' },
-              {label: 'Declined - Not Suitable', value: 'DECLINED' },
-              {label: 'Accepted - Assesment Needed', value: 'ASSESSMENT_NEEDED' },
-              {label: 'Accepted - No Assesment Required', value: 'ACCEPTED' },
-              {label: 'Collection from donor scheduled', value: 'PICKUP_SCHEDULED' },
-              {label: 'Donor drop off agreed', value: 'DROPOFF_AGGREED' },
-              {label: 'Donor drop off pending', value:  'DROPOFF_PENDING'},
-              {label: 'Donation received by Tech Team', value: 'WITH_TECHIE' },
-              {label: 'Donation stored at the Hub', value: 'STORED' },
-              {label: 'Donation faulty - collect for recycling', value: 'UPDATE_FAILED' },
-              {label: 'Donation updated - arrange collection', value: 'READY' },
-              {label: 'Ready but missing component', value: 'INCOMPLETE'},
-              {label: 'Device allocated to referring organisation', value: 'ALLOCATED' },
-              {label: 'Device kitting complete', value: 'COMPLETED' },
-              {label: 'Collection / drop off to referring organisation agreed', value: 'DELIVERY_ARRANGED' },
-              {label: 'Device received by organisation', value: 'DELIVERED' },
-              {label: 'Recycled' , value: 'RECYCLED'}
-            ],
+            options: KIT_STATUS_LABELS,
             required: true
           }
         },

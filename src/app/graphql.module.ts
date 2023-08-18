@@ -18,7 +18,7 @@ export function createApollo(httpLink: HttpLink, config: ConfigService, authServ
 
 
   const asyncAuthLink = setContext((request, previous) =>  new Promise((success, fail) => {
-      authService.getTokenSilently$({audience: 'https://api.communitytechaid.org.uk'}).subscribe(
+      authService.getTokenSilently$({audience: config.environment.auth_audience}).subscribe(
       token => {
         success({headers: {  'Authorization': `Bearer ${token}`}});
       },
