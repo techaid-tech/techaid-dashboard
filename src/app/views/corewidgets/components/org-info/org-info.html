@@ -11,14 +11,7 @@
             </ol>
         </nav>
 
-        <ngb-tabset [destroyOnHide]="false">
-            <ngb-tab title="Devices">
-                <ng-template ngbTabContent>
-                    <div class="mt-2">
-                        <kit-component *ngIf="model?.id" [where]="{organisation: {id: {_eq: model.id}}}" [tableId]="'org-index-' + model.id"></kit-component>
-                    </div>
-                </ng-template>
-            </ngb-tab>
+        <ngb-tabset [destroyOnHide]="false">          
             <ngb-tab title="Details">
                 <ng-template ngbTabContent>
                     <div class="card shadow mb-4 mt-1">
@@ -61,18 +54,26 @@
                     </div>
                 </ng-template>
             </ngb-tab>
-            <ngb-tab title="Emails" *ngIf="model?.email?.length">
-                <ng-template ngbTabContent>
-                    <email-threads [email]="model.email"></email-threads>
-                </ng-template>
-             </ngb-tab> 
-             <ngb-tab title="Comments">
-                <ng-template ngbTabContent>
-                    <div class="pt-3">
-                        <ngx-commento></ngx-commento>
-                    </div>
-                </ng-template>
-            </ngb-tab> 
+            <ngb-tab title="Devices">
+              <ng-template ngbTabContent>
+                <div class="mt-2">
+                  <kit-component *ngIf="model?.id" [where]="{organisation: {id: {_eq: model.id}}}" [tableId]="'org-index-' + model.id">
+                  </kit-component>
+                </div>
+              </ng-template>
+            </ngb-tab>
+            <!-- <ngb-tab title="Emails" *ngIf="model?.email?.length"> -->
+            <!--     <ng-template ngbTabContent> -->
+            <!--         <email-threads [email]="model.email"></email-threads> -->
+            <!--     </ng-template> -->
+            <!--  </ngb-tab>  -->
+            <!--  <ngb-tab title="Comments"> -->
+            <!--     <ng-template ngbTabContent> -->
+            <!--         <div class="pt-3"> -->
+            <!--             <ngx-commento></ngx-commento> -->
+            <!--         </div> -->
+            <!--     </ng-template> -->
+            <!-- </ngb-tab>  -->
         </ngb-tabset>
     </div>
 </div>

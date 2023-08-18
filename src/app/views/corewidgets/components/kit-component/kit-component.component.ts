@@ -89,7 +89,6 @@ const AUTOCOMPLETE_ORGS = gql`
           { phoneNumber: { _contains: $term } }
           { contact: { _contains: $term } }
           { email: { _contains: $term } }
-          { website: { _contains: $term } }
         ]
       }
     ) {

@@ -9,6 +9,7 @@ import { FormlyFormOptions, FormlyFieldConfig } from '@ngx-formly/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, tap, switchMap, catchError } from 'rxjs/operators';
 
+// TODO: remove vestigial alternate accepts code
 const QUERY_ENTITY = gql`
 query findOrganisation($id: Long!) {
   organisation(where: {
@@ -17,7 +18,6 @@ query findOrganisation($id: Long!) {
     }
   }){
      id
-     website
      phoneNumber
      contact
      name
@@ -43,8 +43,10 @@ query findOrganisation($id: Long!) {
          phoneNumber
      }
      attributes {
+       clientRef
        notes
        details
+       needs
        accepts
        alternateAccepts
        request {
@@ -113,7 +115,6 @@ const UPDATE_ENTITY = gql`
 mutation updateOrganisation($data: UpdateOrganisationInput!) {
   updateOrganisation(data: $data){
      id
-     website
      phoneNumber
      contact
      name
@@ -139,8 +140,10 @@ mutation updateOrganisation($data: UpdateOrganisationInput!) {
       createdAt
      }
      attributes {
+       clientRef
        notes
        details
+       needs
        accepts
        alternateAccepts
        request {
@@ -202,10 +205,10 @@ export class OrgInfoComponent {
   ownerField: FormlyFieldConfig = {
     key: 'volunteerId',
     type: 'choice',
-    className: 'col-md-12',
+    className: 'col-md-4',
     templateOptions: {
       label: 'Organising Volunteer',
-      description: 'The organising volunteer this organisation is currently assigned to.',
+      description: '',
       loading: this.ownerLoading,
       typeahead: this.ownerInput$,
       placeholder: 'Assign device to Organiser Volunteers',
@@ -218,483 +221,339 @@ export class OrgInfoComponent {
 
   fields: Array<FormlyFieldConfig> = [
     {
-      key: 'archived',
-      type: 'radio',
-      className: 'col-md-12',
-      templateOptions: {
-        type: 'array',
-        label: 'Archived?',
-        description: 'Archived requests are hidden from view',
-        options: [
-          {label: 'Request Active and Visible', value: false },
-          {label: 'Archive and Hide this Request', value: true },
-        ],
-        required: true,
-      }
-    },
-    {
-      key: 'attributes.notes',
-      type: 'textarea',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Notes about the organisation',
-        rows: 5,
-        required: false
-      }
-    },
-    this.ownerField,
-    {
-      key: 'name',
-      type: 'input',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Name',
-        placeholder: '',
-        required: true
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
-    {
-      key: 'website',
-      type: 'input',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Website',
-        placeholder: '',
-        required: false
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
-    {
       fieldGroupClassName: 'row',
       fieldGroup: [
         {
-          key: 'contact',
-          type: 'input',
-          className: 'col-md-12',
-          defaultValue: '',
-          templateOptions: {
-            label: 'Primary Contact Name',
-            placeholder: '',
-            required: true
-          },
-          validation: {
-            show: false
-          },
-          expressionProperties: {
-            'validation.show': 'model.showErrorState',
-          }
+          // column 1
+          fieldGroupClassName: 'd-flex flex-column justify-content-between',
+          className: 'col-md-4',
+          fieldGroup: [
+            {
+              key: 'name',
+              type: 'input',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Organisation name',
+//                description: 'The name of the organisation',
+                placeholder: '',
+                required: true
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              }
+            },
+            {
+              key: 'contact',
+              type: 'input',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Primary contact name',
+                placeholder: '',
+                required: true
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              }
+            },
+            {
+              key: 'email',
+              type: 'input',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Primary contact email',
+                type: 'email',
+                pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                placeholder: '',
+                required: true
+              },
+              expressionProperties: {
+                'templateOptions.required': '!model.phoneNumber.length'
+              }
+            },
+            {
+              key: 'phoneNumber',
+              type: 'input',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Primary contact phone number',
+                required: true
+              },
+              expressionProperties: {
+                'templateOptions.required': '!model.email.length'
+              }
+            },
+            {
+              key: 'address',
+              type: 'place',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Address',
+                description: 'The address of the organisation',
+                placeholder: '',
+                postCode: false,
+                required: true
+              },
+              expressionProperties: {
+                'templateOptions.required': '!model.address.length'
+              }
+            },
+            {
+              key: 'attributes.clientRef',
+              type: 'input',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Organisation\'s client reference',
+                // TODO: should this be required
+                description: 'An organisation\'s internal reference for their client',
+                required: false
+              }
+            },
+            {
+              key: 'archived',
+              type: 'radio',
+              className: '',
+              templateOptions: {
+                type: 'array',
+                label: 'Archived?',
+                description: 'Archived requests are hidden from view',
+                options: [
+                  {label: 'Request active and visible', value: false },
+                  {label: 'Archive and hide this request', value: true },
+                ],
+                required: true,
+              }
+            }
+          ]
+        },        
+        {
+          fieldGroupClassName: 'd-flex flex-column justify-content-between',
+          className: 'col-md-4', 
+          // column 2
+          fieldGroup: [
+            {
+              key: 'attributes.details',
+              type: 'textarea',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Referring organisation\'s details about the client',
+                description: '',
+                rows: 4,
+                required: false
+              }
+            },
+            {
+              key: 'attributes.accepts',
+              type: 'multicheckbox',
+              className: '',
+              defaultValue: [],
+              templateOptions: {
+                type: 'array',
+                label: 'Device types requested',
+                multiple: true,
+                options: [
+                  {value: 'LAPTOPS', label: 'Laptops'},
+                  {value: 'PHONES', label: 'Phones'},
+                  {value: 'TABLETS', label: 'Tablets' },
+                  {value: 'ALLINONES', label: 'All In Ones' },
+                  {value: 'DESKTOPS', label: 'Desktops' },
+                  {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
+                  {value: 'OTHER', label: 'Other' }
+                ],
+                required: true
+              },
+              validation: {
+                show: false
+              },
+              expressionProperties: {
+                'validation.show': 'model.showErrorState',
+              }
+            },
+            {
+              hideExpression: '!model.attributes.accepts.length',
+              fieldGroup: [
+                //       {
+                //         className: '',
+                //         template: `
+                //   <p>How many of the following items can you currently take</p>
+                // `
+                //       },
+                {
+                  key: 'attributes.request.laptops',
+                  type: 'input',
+                  className: '',
+                  defaultValue: 0,
+                  hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') < 0',
+                  templateOptions: {
+                    min: 0,
+                    label: 'Laptops',
+                    addonLeft: {
+                      class: 'fas fa-laptop'
+                    },
+                    type: 'number',
+                    placeholder: '',
+                    required: true
+                  }
+                },
+                  {
+                    key: 'attributes.request.phones',
+                    type: 'input',
+                    className: '',
+                    hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') < 0',
+                    defaultValue: 0,
+                    templateOptions: {
+                      min: 0,
+                      label: 'Phones',
+                      addonLeft: {
+                        class: 'fas fa-mobile-alt'
+                      },
+                      type: 'number',
+                      placeholder: '',
+                      required: true
+                    }
+                  },
+                  {
+                    key: 'attributes.request.tablets',
+                    type: 'input',
+                    className: '',
+                    defaultValue: 0,
+                    hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') < 0',
+                    templateOptions: {
+                      min: 0,
+                      label: 'Tablets',
+                      addonLeft: {
+                        class: 'fas fa-tablet-alt'
+                      },
+                      type: 'number',
+                      placeholder: '',
+                      required: true
+                    }
+                  },
+                  {
+                    key: 'attributes.request.allInOnes',
+                    type: 'input',
+                    className: '',
+                    hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') < 0',
+                    defaultValue: 0,
+                    templateOptions: {
+                      min: 0,
+                      label: 'All In Ones',
+                      addonLeft: {
+                        class: 'fas fa-desktop'
+                      },
+                      type: 'number',
+                      placeholder: '',
+                      required: true
+                    }
+                  },
+                  {
+                    key: 'attributes.request.desktops',
+                    type: 'input',
+                    className: '',
+                    hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
+                    defaultValue: 0,
+                    templateOptions: {
+                      min: 0,
+                      label: 'Desktops',
+                      addonLeft: {
+                        class: 'fas fa-desktop'
+                      },
+                      type: 'number',
+                      placeholder: '',
+                      required: true
+                    }
+                  },
+                {
+                    key: 'attributes.request.other',
+                    type: 'input',
+                    className: '',
+                    hideExpression: 'model.attributes.accepts.toString().indexOf(\'OTHER\') < 0',
+                    defaultValue: 0,
+                    templateOptions: {
+                      min: 0,
+                      max: 5,
+                      label: 'Other',
+                      description: '',
+                      addonLeft: {
+                        class: 'fas fa-laptop-house'
+                      },
+                      type: 'number',
+                      placeholder: '',
+                      required: true
+                    }
+                  },
+                  {
+                    key: 'attributes.request.commsDevices',
+                    type: 'input',
+                    className: '',
+                    hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
+                    defaultValue: 0,
+                    templateOptions: {
+                      min: 0,
+                      max: 5,
+                      label: 'Connectivity Devices',
+                      description: '',
+                      addonLeft: {
+                        class: 'fas fa-laptop-house'
+                      },
+                      type: 'number',
+                      placeholder: '',
+                      required: true
+                    }
+                  }
+              ]
+            }
+          ]
         },
         {
-          key: 'email',
-          type: 'input',
-          className: 'col-md-6',
-          defaultValue: '',
-          templateOptions: {
-            label: 'Primary Contact Email',
-            type: 'email',
-            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            placeholder: '',
-            required: true
-          },
-          expressionProperties: {
-            'templateOptions.required': '!model.phoneNumber.length'
-          }
-        },
-        {
-          key: 'phoneNumber',
-          type: 'input',
-          className: 'col-md-6',
-          defaultValue: '',
-          templateOptions: {
-            label: 'Primary Contact Phone Number',
-            required: true
-          },
-          expressionProperties: {
-            'templateOptions.required': '!model.email.length'
-          }
-        },
-        {
-          key: 'address',
-          type: 'place',
-          className: 'col-md-12',
-          defaultValue: '',
-          templateOptions: {
-            label: 'Address',
-            description: 'The address of the organisation',
-            placeholder: '',
-            postCode: false,
-            required: true
-          },
-          expressionProperties: {
-            'templateOptions.required': '!model.address.length'
-          }
+          fieldGroupClassName: 'd-flex flex-column justify-content-between',
+          className: 'col-md-4',
+          //column 3
+          fieldGroup: [
+            {
+              key: 'attributes.notes',
+              type: 'textarea',
+              className: '',
+              defaultValue: '',
+              templateOptions: {
+                label: 'Request fulfilment notes',
+                rows: 4,
+                required: false
+              }
+            },
+            {
+              key: 'attributes.needs',
+              type: 'multicheckbox',
+              className: '',
+              defaultValue: [],
+              templateOptions: {
+                type: 'array',
+                multiple: true,
+                label: 'Client needs',
+                options: [
+                  {value: 'internet', label: 'Has no home internet'},
+                  {value: 'mobility', label: 'Mobility issues'},
+                  {value: 'training', label: 'Training needs'}
+                ],
+                required: false
+             }
+            },
+          ]
         }
       ]
-    },
-    {
-      key: 'attributes.accepts',
-      type: 'multicheckbox',
-      className: '',
-      defaultValue: [],
-      templateOptions: {
-        type: 'array',
-        label: 'What types of devices are you looking for?',
-        multiple: true,
-        options: [
-          {value: 'LAPTOPS', label: 'Laptops'},
-          {value: 'PHONES', label: 'Phones'},
-          {value: 'TABLETS', label: 'Tablets' },
-          {value: 'ALLINONES', label: 'All In Ones' },
-          {value: 'DESKTOPS', label: 'Desktops' },
-          {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
-          {value: 'OTHER', label: 'Other' }
-        ],
-        required: true
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
-    {
-      fieldGroupClassName: 'row',
-      hideExpression: '!model.attributes.accepts.length',
-      fieldGroup: [
-        {
-          className: 'col-12',
-          template: `
-            <p>How many of the following items can you currently take?</p>
-          `
-        },
-        {
-          key: 'attributes.request.laptops',
-          type: 'input',
-          className: 'col-6',
-          defaultValue: 0,
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') < 0',
-          templateOptions: {
-            min: 0,
-            label: 'Laptops',
-            addonLeft: {
-              class: 'fas fa-laptop'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.request.phones',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: 'Phones',
-            addonLeft: {
-              class: 'fas fa-mobile-alt'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.request.tablets',
-          type: 'input',
-          className: 'col-6',
-          defaultValue: 0,
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') < 0',
-          templateOptions: {
-            min: 0,
-            label: 'Tablets',
-            addonLeft: {
-              class: 'fas fa-tablet-alt'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.request.allInOnes',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: 'All In Ones',
-            addonLeft: {
-              class: 'fas fa-desktop'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.request.desktops',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: 'Desktops',
-            addonLeft: {
-              class: 'fas fa-desktop'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.request.other',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'OTHER\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            max: 5,
-            label: 'Other',
-            description: 'Specify the other types of devices you would like in the additional details field below',
-            addonLeft: {
-              class: 'fas fa-laptop-house'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.request.commsDevices',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            max: 5,
-            label: 'Connectivity Devices',
-            description: 'Specify the other types of devices you would like in the additional details field below',
-            addonLeft: {
-              class: 'fas fa-laptop-house'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-      ]
-    },
-    {
-      key: 'attributes.alternateAccepts',
-      type: 'multicheckbox',
-      className: '',
-      hideExpression: '!model.attributes.accepts.length || model.attributes.accepts.length == 4',
-      defaultValue: [],
-      templateOptions: {
-        type: 'array',
-        label: 'If none of the items listed above are available, would you be willing to consider any of the following?',
-        multiple: true,
-        options: [
-          {value: 'LAPTOPS', label: 'Laptops'},
-          {value: 'PHONES', label: 'Phones'},
-          {value: 'TABLETS', label: 'Tablets' },
-          {value: 'ALLINONES', label: 'All In Ones' },
-          {value: 'DESKTOPS', label: 'Desktops' },
-          {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
-          {value: 'OTHER', label: 'Other' }
-        ],
-        required: false
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-        'templateOptions.options': (model, state) => {
-          const opts = [
-            {value: 'LAPTOPS', label: 'Laptops'},
-            {value: 'PHONES', label: 'Phones'},
-            {value: 'TABLETS', label: 'Tablets' },
-            {value: 'ALLINONES', label: 'All In Ones' },
-            {value: 'DESKTOPS', label: 'Desktops' },
-            {value: 'COMMSDEVICES', label: 'Connectivity Devices' },
-            {value: 'OTHER', label: 'Other' }
-          ];
-          const values = opts.filter(o => (model.attributes.accepts || []).indexOf(o.value) == -1);
-          return values;
-        }
-      }
-    },
-    {
-      fieldGroupClassName: 'row',
-      hideExpression: '!model.attributes.alternateAccepts.length',
-      fieldGroup: [
-        {
-          className: 'col-12',
-          template: `
-            <p>How many of the following alternate items are you willing to take?</p>
-          `
-        },
-        {
-          key: 'attributes.alternateRequest.laptops',
-          type: 'input',
-          className: 'col-6',
-          defaultValue: 0,
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'LAPTOP\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'LAPTOP\') < 0',
-          templateOptions: {
-            min: 0,
-            label: 'Laptops',
-            addonLeft: {
-              class: 'fas fa-laptop'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.alternateRequest.phones',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'PHONE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'PHONE\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: 'Phones',
-            addonLeft: {
-              class: 'fas fa-mobile-alt'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.alternateRequest.tablets',
-          type: 'input',
-          className: 'col-6',
-          defaultValue: 0,
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'TABLET\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'TABLET\') < 0',
-          templateOptions: {
-            min: 0,
-            label: 'Tablets',
-            addonLeft: {
-              class: 'fas fa-tablet-alt'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.alternateRequest.allInOnes',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'ALLINONE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'ALLINONE\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: 'All In Ones',
-            addonLeft: {
-              class: 'fas fa-desktop'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.alternateRequest.desktops',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'DESKTOP\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'DESKTOP\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            label: 'Desktops',
-            addonLeft: {
-              class: 'fas fa-desktop'
-            },
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.alternateRequest.other',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'OTHER\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'OTHER\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            max: 5,
-            label: 'Other',
-            addonLeft: {
-              class: 'fas fa-laptop-house'
-            },
-            description: 'Specify the other types of devices you would like in the additional details field below',
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-        {
-          key: 'attributes.alternateRequest.commsDevices',
-          type: 'input',
-          className: 'col-6',
-          hideExpression: 'model.attributes.accepts.toString().indexOf(\'COMMSDEVICE\') > -1 || model.attributes.alternateAccepts.toString().indexOf(\'COMMSDEVICE\') < 0',
-          defaultValue: 0,
-          templateOptions: {
-            min: 0,
-            max: 5,
-            label: 'Connectivity Devices',
-            addonLeft: {
-              class: 'fas fa-laptop-house'
-            },
-            description: 'Specify the other types of devices you would like in the additional details field below',
-            type: 'number',
-            placeholder: '',
-            required: true
-          }
-        },
-      ]
-    },
-    {
-      key: 'attributes.details',
-      type: 'textarea',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Any additional details about your request?',
-        description: 'If you have any additional details you would like to specify about your request, enter them here.',
-        rows: 3,
-        required: false
-      }
-    },
+    }
   ];
 
   private queryRef = this.apollo
@@ -812,7 +671,7 @@ export class OrgInfoComponent {
       this.entityName = this.model['name'];
       this.toastr.info(`
       <small>Successfully updated organisation ${this.entityName}</small>
-      `, 'Updated Template', {
+      `, 'Updated request', {
           enableHtml: true
         });
     }, err => {

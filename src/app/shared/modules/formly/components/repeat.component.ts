@@ -10,7 +10,7 @@ import { FieldArrayType } from '@ngx-formly/core';
                 <div class="w-100 d-flex justify-content-end">
                     <button *ngIf="!state.remove[i]" class="btn btn-sm btn-danger" type="button" (click)="markRemove(i)">
                         <i class="fas fa-trash-alt"></i>
-                        Remove
+                        {{ to.removeText }}
                     </button>
                     <div *ngIf="state.remove[i]" class="">
                         <button class="btn btn-sm btn-danger mr-1" type="button" (click)="delete(i)">
@@ -26,7 +26,7 @@ import { FieldArrayType } from '@ngx-formly/core';
             </div>
         </div>
       </div>
-      <div class="d-flex justify-content-between mt-3 mb-3">
+      <div class="d-flex justify-content-between mt-3 mb-3" *ngIf="!to.maxItems || size != to.maxItems">
         <span class="text-muted mr-1">{{to.description}}</span>
         <button class="btn btn-primary btn-sm" type="button" (click)="add()"><i class="fas fa-plus-circle"></i> {{ to.addText }}</button>
       </div>

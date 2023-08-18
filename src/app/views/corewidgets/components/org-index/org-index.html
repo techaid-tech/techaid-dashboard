@@ -35,7 +35,7 @@
                                 <tr>
                                     <th></th>
                                     <th>Name</th>
-                                    <th>Owner</th>
+                                    <th>Needs</th>
                                     <th>Devices</th>
                                     <th>Contact</th>
                                     <th>Email</th>
@@ -59,9 +59,9 @@
                                                 <div>
                                                     <a href="#" [routerLink]="['./', dt.id]">{{ dt.name }}</a>
                                                 </div>
-                                                <div>
-                                                    <a *ngIf="dt.website?.length" target="_blank" [href]="dt.website">{{dt.website}}</a>
-                                                </div>
+                                                <!-- <div> -->
+                                                <!--     <a *ngIf="dt.website?.length" target="_blank" [href]="dt.website">{{dt.website}}</a> -->
+                                                <!-- </div> -->
                                                 <div>
                                                     <span class="mr-1 mb-1" *ngFor="let g of dt.attributes?.accepts">
                                                         <span class="badge badge-primary">
@@ -86,12 +86,15 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span *ngIf="dt.volunteer?.id" class="mr-1 mb-1">
-                                            <span class="badge badge-info"><span class="badge badge-primary mr-1">Organiser</span> 
-                                            <a class="btn-info" [routerLink]="['/dashboard/volunteers', dt.volunteer.id]">{{dt.volunteer.name}}</a>
-                                            </span>
-                                        </span>
-                                        <span *ngIf="!dt.volunteer?.id">--</span>
+                                      <span *ngFor="let n of dt.attributes?.needs">
+                                        <span class="badge badge-secondary">{{n}}</span>
+                                      </span>
+                                      <!-- <span *ngIf="dt.volunteer?.id" class="mr-1 mb-1"> -->
+                                      <!--   <span class="badge badge-info"><span class="badge badge-primary mr-1">Organiser</span>  -->
+                                      <!--     <a class="btn-info" [routerLink]="['/dashboard/volunteers', dt.volunteer.id]">{{dt.volunteer.name}}</a> -->
+                                      <!--   </span> -->
+                                      <!-- </span> -->
+                                      <!-- <span *ngIf="!dt.volunteer?.id">--</span> -->
                                     </td>
                                     <td><span class="badge badge-info">{{dt.kitCount}}</span></td>
                                     <td>{{dt.contact}}</td>
