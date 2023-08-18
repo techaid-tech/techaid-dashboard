@@ -18,12 +18,6 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
     AND: {
       OR: [
         {
-          website: {
-            _contains: $term
-          }
-          AND: [$filter]
-        },
-        {
           phoneNumber: {
             _contains: $term
           }
@@ -55,6 +49,12 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
                 _text: {
                   _contains: $term
                 }
+              },
+              {
+                key: "clientRef",
+                _text: {
+                  _contains: $term
+                }
               }
             ]
           }
@@ -66,7 +66,6 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
     totalElements
     content{
      id
-     website
      phoneNumber
      contact
      name
@@ -86,6 +85,7 @@ query findAllOrgs($page: PaginationInput,, $term: String, $filter: OrganisationW
      attributes {
         notes
         details
+        needs
         accepts
         request {
           LAPTOPS: laptops
@@ -209,23 +209,6 @@ export class OrgIndexComponent {
         label: 'Name',
         placeholder: '',
         required: true
-      },
-      validation: {
-        show: false
-      },
-      expressionProperties: {
-        'validation.show': 'model.showErrorState',
-      }
-    },
-    {
-      key: 'website',
-      type: 'input',
-      className: 'col-md-12',
-      defaultValue: '',
-      templateOptions: {
-        label: 'Website',
-        placeholder: '',
-        required: false
       },
       validation: {
         show: false
@@ -641,25 +624,22 @@ export class OrgIndexComponent {
               {label: 'All In One (PC)', value: 'ALLINONES' },
               {label: 'Desktop', value: 'DESKTOPS' },
               {label: 'Connectivity Device', value: 'COMMSDEVICES' }
-            ],
+            ]
           }
         },
         {
-          key: 'alternateAccepts',
+          key: 'needs',
           type: 'multicheckbox',
           className: 'col-sm-4',
           defaultValue: [],
           templateOptions: {
-            label: 'Alternate Accepts',
+            label: 'Client needs',
             type: 'array',
             options: [
-              {label: 'Laptop', value: 'LAPTOPS' },
-              {label: 'Tablet', value: 'TABLETS' },
-              {label: 'Smart Phone', value: 'PHONES' },
-              {label: 'All In One (PC)', value: 'ALLINONES' },
-              {label: 'Desktop', value: 'DESKTOPS' },
-              {label: 'Connectivity Device', value: 'COMMSDEVICES' }
-            ],
+              {value: 'internet', label: 'Has no home internet'},
+              {value: 'mobility' , label: 'Mobility issues'},
+              {value: 'training', label: 'Training needs'}
+            ]
           }
         },
         {
@@ -703,6 +683,21 @@ export class OrgIndexComponent {
       };
       filter['AND'].push(filt);
     }
+    
+    if (data.needs && data.needs.length) {
+      count = count + data.needs.length;
+      const filt = {
+        attributes: {
+          filters: [
+            {
+              key: 'needs',
+              _in: data.needs
+            }
+          ]
+        }
+      };
+      filter['AND'].push(filt);
+    }
 
     if (data.alternateAccepts && data.alternateAccepts.length) {
       count = count + data.alternateAccepts.length;
@@ -734,6 +729,7 @@ export class OrgIndexComponent {
     this.filterCount = count;
     this.filterModel = data;
     this.table.ajax.reload(null, false);
+    console.log(this.filter)
   }
 
   modal(content) {
@@ -889,7 +885,7 @@ export class OrgIndexComponent {
       columns: [
         { data: null, width: '15px', orderable: false },
         { data: 'name' },
-        { data: 'volunteer.name'},
+        {data: 'needs'},
         { data: 'kitCount'},
         { data: 'contact' },
         { data: 'email' },

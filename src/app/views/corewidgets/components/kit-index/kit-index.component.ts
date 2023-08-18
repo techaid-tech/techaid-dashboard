@@ -159,11 +159,6 @@ query findAutocompleteOrgs($term: String, $ids: [Long!]) {
       email: {
         _contains: $term
       }
-    },
-    {
-      website: {
-        _contains: $term
-      }
     }]
   }){
     content  {

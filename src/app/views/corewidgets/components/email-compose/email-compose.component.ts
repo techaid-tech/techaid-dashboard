@@ -60,7 +60,6 @@ const QUERY_VARIABLES = gql`
         id
         name
         email
-        website
         contact
         phoneNumber
     }
