@@ -944,7 +944,7 @@ export class KitIndexComponent {
   }
 
   createEntity(data: any) {
-    data.status = 'NEW';
+    data.status = 'DONATION_NEW';
     data.attributes.images = (data.attributes.images || []).map(f => {
       return {
         image: f.image,

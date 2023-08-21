@@ -512,14 +512,13 @@ i.input-group-text {
 
 .kit-status .custom-control:nth-child(14),
 .kit-status .custom-control:nth-child(15),
-.kit-status .custom-control:nth-child(16),
-.kit-status .custom-control:nth-child(17){
+.kit-status .custom-control:nth-child(16){
     background-color: #cdcefd;
 }
 
+.kit-status .custom-control:nth-child(17),
 .kit-status .custom-control:nth-child(18),
-.kit-status .custom-control:nth-child(19),
-.kit-status .custom-control:nth-child(20){
+.kit-status .custom-control:nth-child(19){
     background-color: #bae3d7;
     border-radius: 0px 0px 5px 5px;
 }
