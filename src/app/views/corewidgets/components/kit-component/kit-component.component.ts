@@ -302,7 +302,7 @@ export class KitComponent {
               {label: 'No response from donor', value: 'DONATION_NO_RESPONSE'},
               {label: 'Device drop off scheduled by donor', value: 'DONATION_ARRANGED'},
               {label: 'Device received into CTA', value: 'PROCESSING_START'},
-              {label: 'Device wiped', value: 'PROCESSING_WIPED '},
+              {label: 'Device wiped', value: 'PROCESSING_WIPED'},
               {label: 'Device wipe failed', value: 'PROCESSING_FAILED_WIPE'},
               {label: 'OS installed', value: 'PROCESSING_OS_INSTALLED'},
               {label: 'OS installation failed', value: 'PROCESSING_FAILED_INSTALLATION'},
