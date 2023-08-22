@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "node ./build/build-pre.js && ng build --configuration=${NPM_ENV:-production} --aot --base-href / --output-path dist/ --deploy-url /",
+    "build": "node ./build/build-pre.js && ng build --configuration=${NODE_ENV:-production} --aot --base-href / --output-path dist/ --deploy-url /",
     "debug": "ng build --base-href /",
     "ng:test": "ng test",
     "ng:lint": "ng lint",
