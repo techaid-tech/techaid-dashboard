@@ -90,8 +90,8 @@
                                         </span>
                                         <span *ngIf="!dt.volunteers?.length">--</span>
                                     </td>
-                                    <td>{{ dt.createdAt}}</td>
-                                    <td>{{ dt.updatedAt}}</td>
+                                    <td>{{ dt.createdAt | date:'medium' }}</td>
+                                    <td>{{ dt.updatedAt | date:'medium' }}</td>
                                     <td>{{ ages[dt.age] }}</td>
                                     <td>{{ dt.type}}</td>
                                     <td>{{ statusTypes[dt.status] || dt.status }}</td>
