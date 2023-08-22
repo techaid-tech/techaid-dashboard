@@ -1,3 +1,6 @@
+ARG NODE_ENV=production
+ENV NODE_ENV ${NODE_ENV}
+
 FROM node:12.20.0-alpine3.10  as builder
 COPY ./ /app
 WORKDIR /app 
