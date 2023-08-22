@@ -1,8 +1,8 @@
 FROM node:12.20.0-alpine3.10  as builder
 
-#ARG NODE_ENV=production
-#ENV NODE_ENV ${NODE_ENV}
-#RUN echo $NODE_ENV
+ARG HOSTING_ENV=production
+ENV HOSTING_ENV ${HOSTING_ENV}
+RUN echo $HOSTING_ENV
 
 COPY ./ /app
 WORKDIR /app 

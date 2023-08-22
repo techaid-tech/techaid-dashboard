@@ -5,9 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "node ./build/build-pre.js && ng build --prod --aot --base-href / --output-path dist/ --deploy-url /",
-    "build-uat": "node ./build/build-pre.js && ng build --configuration=uat --aot --base-href / --output-path dist/ --deploy-url /",
-    "build-production": "node ./build/build-pre.js && ng build --configuration=production --aot --base-href / --output-path dist/ --deploy-url /",
+    "build": "node ./build/build-pre.js && ng build --configuration=${HOSTING_ENV:-production} --aot --base-href / --output-path dist/ --deploy-url /",
     "debug": "ng build --base-href /",
     "ng:test": "ng test",
     "ng:lint": "ng lint",
