@@ -7,7 +7,7 @@ RUN echo $NODE_ENV
 COPY ./ /app
 WORKDIR /app 
 RUN npm install
-RUN npm run build-${NODE_ENV}
+RUN npm run build
 
 FROM nginx:1.19.6-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
