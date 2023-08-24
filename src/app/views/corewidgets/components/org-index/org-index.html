@@ -103,10 +103,10 @@
                                     </td>
                                     <td>{{dt.phoneNumber}}</td>
                                     <td  [title]="dt.createdAt" class="cursor-hand" placement="left" ngbTooltip="{{dt.createdAt | date:'full'}}" triggers="click:blur">
-                                        {{ dt.createdAt | timeAgo }}
+                                        {{ dt.createdAt | date:'medium' }}
                                     </td>
                                     <td [title]="dt.updatedAt" class="cursor-hand" placement="left" ngbTooltip="{{dt.updatedAt | date:'full'}}" triggers="click:blur">
-                                        {{ dt.updatedAt | timeAgo }}
+                                        {{ dt.updatedAt | date:'medium' }}
                                     </td>
                                 </tr>
                             </tbody>
