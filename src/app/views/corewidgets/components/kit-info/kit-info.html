@@ -66,24 +66,6 @@
                     </div>
                 </ng-template>
             </ngb-tab>
-            <ngb-tab title="Comments">
-                <ng-template ngbTabContent>
-                    <div class="pt-3">
-                        <ngx-commento></ngx-commento>
-                    </div>
-                </ng-template>
-            </ngb-tab>
-            <ngb-tab title="Images" *ngIf="album.length">
-                <ng-template ngbTabContent>
-                    <div class="row p-3">
-                        <div class="col-lg-12">
-                            <span *ngFor="let f of model.attributes.images; let i=index;" class="mr-1 mb-1 thumbnail">
-                                <a href="#" (click)="open(i); false"><img class="img-thumbnail" [src]="f.url" /></a>
-                            </span>
-                        </div>
-                    </div>
-                </ng-template>
-            </ngb-tab>
             <ngb-tab title="Donor Emails" *ngIf="model?.donor?.email">
                 <ng-template ngbTabContent>
                     <div class="d-flex justify-content-end">

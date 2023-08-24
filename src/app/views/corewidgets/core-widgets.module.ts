@@ -41,7 +41,6 @@ import { OrgIndexComponent } from './components/org-index/org-index.component';
 import { OrgInfoComponent } from './components/org-info/org-info.component';
 import { DashboardIndexComponent } from './components/dashboard-index/dashboard-index.component';
 import { OrgRequestComponent } from './components/org-request/org-request';
-import { NgxCommentoComponent } from './components/comment.component';
 import { KitComponent } from './components/kit-component/kit-component.component';
 import { ReportsComponent} from './components/reports/reports.component';
 
@@ -135,7 +134,6 @@ const routes: Routes = [
     OrgInfoComponent,
     DashboardIndexComponent,
     OrgRequestComponent,
-    NgxCommentoComponent,
     KitComponent,
     ReportsComponent
   ],
