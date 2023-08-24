@@ -30,7 +30,7 @@
                             <span  class="badge badge-secondary mr-1 mb-1">{{dt.messages[0]?.address}}</span>
                             <div class="text-muted"><small [innerHtml]="dt.snippet || dt.messages[0]?.snippet"></small></div>
                         </td>
-                        <td (click)="selected = dt; modal(viewMessage)">{{ dt.messages[0]?.internalDate | timeAgo }}</td>
+                        <td (click)="selected = dt; modal(viewMessage)">{{ dt.messages[0]?.internalDate | date:'medium' }}</td>
                         <td>
                             <a title="Reply" [routerLink]="['/dashboard/email']" [queryParams]="{to: dt.messages[0]?.email, thread: dt.id, id: dt.messages[dt.messages.length -1].id}"><i class="fas fa-reply"></i></a>
                         </td>
@@ -72,7 +72,7 @@
                         <div>
                             <small>
                                 <span class="mr-1 mb-1">{{m.internalDate | date:'medium'}}</span>
-                                <span>( {{m.internalDate | timeAgo }} )</span>
+                                <span>( {{m.internalDate | date:'medium' }} )</span>
                             </small>
                         </div>
                     </div>

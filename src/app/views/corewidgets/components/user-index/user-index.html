@@ -76,7 +76,7 @@
                     </div>
                   </td>
                   <td>{{ dt.loginsCount }}</td>
-                  <td>{{ dt.lastLogin | timeAgo }}</td>
+                  <td>{{ dt.lastLogin | date:'medium' }}</td>
                 </tr>
               </tbody>
               <tbody *ngIf="entities?.length == 0">

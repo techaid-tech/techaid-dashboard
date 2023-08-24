@@ -61,10 +61,10 @@
                                     </td>
                                     <td>{{ dt.postCode }}</td>
                                     <td>
-                                        {{ dt.createdAt | timeAgo }}
+                                        {{ dt.createdAt | date:'medium' }}
                                     </td>
                                     <td>
-                                    {{ dt.updatedAt | timeAgo }}
+                                    {{ dt.updatedAt | date:'medium' }}
                                     </td>
                                     <td>
                                     {{ dt.consent | yesNo }}

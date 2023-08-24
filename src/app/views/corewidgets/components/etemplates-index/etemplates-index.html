@@ -51,7 +51,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                    {{ dt.updatedAt | timeAgo }}
+                                    {{ dt.updatedAt | date:'medium' }}
                                     </td>
                                     <td>
                                         <span *ngIf="dt.active" class="badge badge-success">Active</span>

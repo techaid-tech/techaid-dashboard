@@ -70,7 +70,7 @@
                                         <span class="badge badge-success">{{dt.kitCount}}</span>
                                     </td>
                                     <td>
-                                        {{ dt.createdAt | timeAgo }}
+                                        {{ dt.createdAt | date:'medium' }}
                                         <div class="text-muted" *ngIf="dt.availability.length">
                                             <i class="far fa-calendar-alt"></i>&nbsp;
                                             <small>{{dt.availability}}</small>
@@ -78,7 +78,7 @@
                                        <span class="badge badge-secondary mr-1" *ngFor="let g of dt.subGroup.split(',')">{{g}}</span>
                                     </td>
                                     <td>
-                                    {{ dt.updatedAt | timeAgo }}
+                                    {{ dt.updatedAt | date:'medium' }}
                                     </td>
                                     <td>{{dt.storage.toUpperCase()}}</td>
                                     <td>{{dt.transport.toUpperCase()}}</td>

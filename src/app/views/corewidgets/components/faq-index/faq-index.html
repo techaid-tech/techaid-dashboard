@@ -53,7 +53,7 @@
                                     </td>
                                     <td><span class="badge badge-secondary mr-1">{{dt.position}}</span></td>
                                     <td>
-                                    {{ dt.updatedAt | timeAgo }}
+                                    {{ dt.updatedAt | date:'medium' }}
                                     </td>
                                     <td>
                                         <span *ngIf="dt.published" class="badge badge-success">Published</span>
