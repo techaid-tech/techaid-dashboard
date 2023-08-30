@@ -7,7 +7,7 @@ var express = require('express'),
 var app = express();
 const STATIC_ROOT = path.join(__dirname, 'dist');
 
-app.set('port', (process.env.APP_PORT || 9292));
+app.set('port', (process.env.APP_PORT || 4200));
 app.set('config', {});
 
 app.use(express.static('dist', { redirect: false }));

@@ -1,13 +1,11 @@
 FROM node:12.20.0-alpine3.10  as builder
 
-ARG HOSTING_ENV=production
-ENV HOSTING_ENV ${HOSTING_ENV}
-RUN echo $HOSTING_ENV
+ARG CONFIGURATION=prod
 
 COPY ./ /app
 WORKDIR /app 
 RUN npm install
-RUN npm run build
+RUN npm run build-${CONFIGURATION}
 
 FROM nginx:1.19.6-alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
